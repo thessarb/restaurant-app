@@ -43,18 +43,24 @@
                 </ion-row>
             </ion-grid>
             <ion-list>
-                <ion-item lines="none">
-                    <ion-icon aria-hidden="true" :icon="personOutline" slot="start"></ion-icon>
-                    <ion-label>Personal information</ion-label>
-                </ion-item>
-                <ion-item lines="none">
-                    <ion-icon aria-hidden="true" :icon="lockClosedOutline" slot="start"></ion-icon>
-                    <ion-label>Security</ion-label>
-                </ion-item>
-                <ion-item lines="none">
-                    <ion-icon aria-hidden="true" :icon="informationCircleOutline" slot="start"></ion-icon>
-                    <ion-label>Privacy and Policy</ion-label>
-                </ion-item>
+                <a href="personalinfo">
+                    <ion-item lines="none">
+                        <ion-icon aria-hidden="true" :icon="personOutline" slot="start"></ion-icon>
+                        <ion-label>Personal information</ion-label>
+                    </ion-item>
+                </a>
+                <a href="security">
+                    <ion-item lines="none">
+                        <ion-icon aria-hidden="true" :icon="lockClosedOutline" slot="start"></ion-icon>
+                        <ion-label>Security</ion-label>
+                    </ion-item>
+                </a>
+                <a href="privacy">
+                    <ion-item lines="none">
+                        <ion-icon aria-hidden="true" :icon="informationCircleOutline" slot="start"></ion-icon>
+                        <ion-label>Privacy and Policy</ion-label>
+                    </ion-item>
+                </a>
             </ion-list>
             <!--  -->
             <ion-list class="logout">
@@ -80,7 +86,7 @@ import {
     IonList,
     IonItem,
     IonLabel,
-    IonIcon
+    IonIcon,
 } from '@ionic/vue';
 import { informationCircleOutline, lockClosedOutline, logOutOutline, personOutline } from 'ionicons/icons';
 

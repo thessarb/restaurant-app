@@ -1,11 +1,36 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
-import TabsPage from '../views/TabsPage.vue'
+import TabsPage from '@/views/TabsPage.vue';
+import Register from '@/views/Auth/Register.vue';
+import PersonalInfo from '@/views/Auth/PersonalInfo.vue';
+import Security from '@/views/Auth/Security.vue';
+import Login from '@/views/Auth/Login.vue';
+import Privacy from '@/views/Auth/Privacy.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    redirect: '/tabs/tab1'
+    redirect: '/tabs/events'
+  },
+  {
+    path: '/register',
+    component: () => Register
+  },
+  {
+    path: '/personalinfo',
+    component: () => PersonalInfo
+  },
+  {
+    path: '/security',
+    component: () => Security
+  },
+  {
+    path: '/login',
+    component: () => Login
+  },
+  {
+    path: '/privacy',
+    component: () => Privacy
   },
   {
     path: '/tabs/',
@@ -13,7 +38,7 @@ const routes: Array<RouteRecordRaw> = [
     children: [
       {
         path: '',
-        redirect: '/tabs/tab1'
+        redirect: '/tabs/events'
       },
       {
         path: 'events',
@@ -25,7 +50,7 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: 'profile',
-        component: () => import('@/views/Profile.vue')
+        component: () => import('@/views/Auth/Profile.vue')
       }
     ]
   }
