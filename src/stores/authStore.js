@@ -31,7 +31,7 @@ export const useAuthStore = defineStore('auth', {
 
         async logout() {
             try {
-                const response = await axios.delete(this.endpoint + this.user.id, {
+                await axios.delete(this.endpoint + this.user.id, {
                     headers: {
                         Accept: 'application/json',
                         Authorization: `Bearer ${this.token}`
@@ -41,13 +41,12 @@ export const useAuthStore = defineStore('auth', {
                 this.user = null;
                 this.token = null;
                 this.router.push({name: 'login'})
-                console.log('Logged out successfully', response);
             } catch (error) {
                 console.error('Logout failed:', error);
             }
         },
 
-        async fetchUserData(data) {
+        async w(data) {
             this.user = data.user
             this.isAuthenticated = true
             this.token = data.token

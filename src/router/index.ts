@@ -14,28 +14,29 @@ const routes: Array<RouteRecordRaw> = [
     },
     {
         path: "/register",
-        component: () => Register,
         name: "register",
+        component: () => import("@/views/Auth/Register.vue"),
     },
     {
         path: "/personalinfo",
-        component: () => PersonalInfo,
         name: "personalinfo",
+        component: () => import("@/views/Auth/PersonalInfo.vue"),
     },
     {
         path: "/security",
-        component: () => Security,
-        name: 'security'
+        name: 'security',
+        component: () => import("@/views/Auth/Security.vue"),
     },
     {
         path: "/login",
-        component: () => Login,
         name: "login",
+        component: () => import("@/views/Auth/Login.vue"),
     },
     {
         path: "/privacy",
-        component: () => Privacy,
         name: "privacy",
+        component: () => import("@/views/Auth/Privacy.vue"),
+        meta: { requiresAuth: true },
     },
     {
         path: "/tabs/",
@@ -47,19 +48,19 @@ const routes: Array<RouteRecordRaw> = [
             },
             {
                 path: "events",
-                component: () => import("@/views/Events.vue"),
                 name: "events",
+                component: () => import("@/views/Events.vue"),
             },
             {
                 path: "reservations",
-                component: () => import("@/views/Reservations.vue"),
                 name: "reservations",
+                component: () => import("@/views/Reservations.vue"),
                 meta: { requiresAuth: true },
             },
             {
                 path: "profile",
-                component: () => import("@/views/Auth/Profile.vue"),
                 name: "profile",
+                component: () => import("@/views/Auth/Profile.vue"),
                 meta: { requiresAuth: true },
             },
         ],

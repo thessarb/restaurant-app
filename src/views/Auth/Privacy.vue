@@ -12,6 +12,13 @@
     </ion-page>
 </template>
 <script setup lang="ts">
-import { arrowBack } from 'ionicons/icons';
+import { 
+    IonPage,
+    IonHeader,
+    IonToolbar,
+    IonIcon,
+    IonTitle
 
+ } from '@ionic/vue';
+import { arrowBack } from 'ionicons/icons';
 </script>
