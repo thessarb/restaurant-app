@@ -21,10 +21,10 @@
                     <ion-col>
                         <ion-list  lines="none">
                             <ion-item>
-                                <ion-label>Mateo Demirlika</ion-label>
+                                <ion-label>{{user?.name}} {{user?.surname}}</ion-label>
                             </ion-item>
                             <ion-item>
-                                <ion-label>phone +355685524309</ion-label>
+                                <ion-label>Phone {{user?.phone}}</ion-label>
                             </ion-item>
                         </ion-list>
                     </ion-col>
@@ -43,30 +43,30 @@
                 </ion-row>
             </ion-grid>
             <ion-list>
-                <a href="personalinfo">
+                <router-link :to="{ name: 'personalinfo'}">
                     <ion-item lines="none">
                         <ion-icon aria-hidden="true" :icon="personOutline" slot="start"></ion-icon>
                         <ion-label>Personal information</ion-label>
                     </ion-item>
-                </a>
-                <a href="security">
-                    <ion-item lines="none">
+                </router-link>
+                <router-link :to="{ name: 'security'}">
+                    <ion-item  lines="none">
                         <ion-icon aria-hidden="true" :icon="lockClosedOutline" slot="start"></ion-icon>
                         <ion-label>Security</ion-label>
                     </ion-item>
-                </a>
-                <a href="privacy">
+                </router-link>
+                <router-link :to="{ name: 'privacy'}">
                     <ion-item lines="none">
                         <ion-icon aria-hidden="true" :icon="informationCircleOutline" slot="start"></ion-icon>
                         <ion-label>Privacy and Policy</ion-label>
                     </ion-item>
-                </a>
+                </router-link>
             </ion-list>
             <!--  -->
             <ion-list class="logout">
-                <ion-item lines="none">
-                    <ion-icon aria-hidden="true" :icon="logOutOutline" slot="start"></ion-icon>
-                    <ion-label>Log Out</ion-label>
+                <ion-item @click="logout()" lines="none">
+                    <ion-icon  color="danger" aria-hidden="true" :icon="logOutOutline" slot="start"></ion-icon>
+                    <ion-label  color="danger">Log Out</ion-label>
                 </ion-item>
             </ion-list>
         </ion-content>
@@ -74,6 +74,7 @@
 </template>
 
 <script setup lang="ts">
+
 import { 
     IonPage, 
     IonHeader, 
@@ -89,6 +90,13 @@ import {
     IonIcon,
 } from '@ionic/vue';
 import { informationCircleOutline, lockClosedOutline, logOutOutline, personOutline } from 'ionicons/icons';
+import { useAuthStore } from "@/stores/authStore";
+
+const authStore = useAuthStore();
+const user = authStore.user;
+const logout = () => {
+    authStore.logout();
+}
 
 </script>
 <style lang="css">

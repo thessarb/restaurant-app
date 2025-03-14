@@ -48,7 +48,8 @@ import {
     IonCardHeader, 
     IonCardTitle, 
     IonCardContent, 
-    IonCardSubtitle
+    IonCardSubtitle,
+    IonButton
 } from '@ionic/vue';
 </script>
 
