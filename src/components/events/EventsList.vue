@@ -10,30 +10,19 @@
             </ion-col>
         </ion-row>
         <ion-row>
-            <ion-col>
-                <ion-card>
-                    <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png" />
-                    <ion-card-header>
-                        <ion-card-title>Card Title</ion-card-title>
-                        <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
-                    </ion-card-header>
+            <ion-col size="6" v-for="event in events" :key="event.id">
+                <router-link :to="{ name: 'event',params: {id: event.id}  }">
+                    <ion-card>
+                        <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png" />
+                        <ion-card-header>
+                            <ion-card-title>{{ event.name }}</ion-card-title>
+                        </ion-card-header>
 
-                    <ion-card-content>
-                        Here's a small text description for the card content. Nothing more, nothing less.
-                    </ion-card-content>
-                </ion-card>
-            </ion-col>
-            <ion-col>
-                <ion-card>
-                    <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png" />
-                    <ion-card-header>
-                        <ion-card-title>Card Title</ion-card-title>
-                        <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
-                    </ion-card-header>
-                    <ion-card-content>
-                        Here's a small text description for the card content. Nothing more, nothing less.
-                    </ion-card-content>
-                </ion-card>
+                        <ion-card-content>
+                            {{ event.description }}
+                        </ion-card-content>
+                    </ion-card>
+                </router-link>
             </ion-col>
         </ion-row>
     </ion-grid>
@@ -48,9 +37,12 @@ import {
     IonCardHeader, 
     IonCardTitle, 
     IonCardContent, 
-    IonCardSubtitle,
     IonButton
 } from '@ionic/vue';
+
+defineProps({
+    events: Array
+});
 </script>
 
 <style lang="css">

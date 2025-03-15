@@ -8,20 +8,21 @@ export const useAuthStore = defineStore('auth', {
         endpoint: import.meta.env.VITE_APP_ENDPOINT,
         user: null,
         token : null,
-        router: useRouter()
-
+        router: useRouter(),
+        register: null
     }),
 
     actions: {
         setAuthenticated(value) {
             this.isAuthenticated = value;
         },
+
         async login(data) {
             try {
                 const response = await axios.post(this.endpoint + 'login', data);
                 if (response.data) {
                     await this.fetchUserData(response.data);
-                    this.router.push({name: 'profile'})
+                    this.router.push({name: 'profile'});
                 }
             } catch (error) {
                 console.error('Error during login:', error);
@@ -46,10 +47,27 @@ export const useAuthStore = defineStore('auth', {
             }
         },
 
-        async w(data) {
-            this.user = data.user
-            this.isAuthenticated = true
-            this.token = data.token
+        async register(){
+            try {
+                await axios.post(this.endpoint, {
+                    name: this.register.name,
+                    email: this.register.email,
+                    phone: this.register.phone,
+                    password: this.register.password
+                });
+                this.login({
+                    email: this.register.email,
+                    password: this.register.password
+                });
+            } catch(error) {
+                console.error('Logout failed:', error);  
+            }
+        },
+
+        async fetchUserData(data) {
+            this.user = data.user;
+            this.isAuthenticated = true;
+            this.token = data.token;
         },
     },
 });

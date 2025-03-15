@@ -73,9 +73,8 @@ const login = async () => {
     try {
         await authStore.login(data);
         if (authStore.isAuthenticated) {
-            console.log('User logged in:', authStore.user);
-            email.value = ''
-            password.value = ''
+            email.value = '';
+            password.value = '';
         } else {
             console.log('Login failed');
         }

@@ -1,11 +1,6 @@
 import { createRouter, createWebHistory } from "@ionic/vue-router";
 import { RouteRecordRaw } from "vue-router";
 import TabsPage from "@/views/TabsPage.vue";
-import Register from "@/views/Auth/Register.vue";
-import PersonalInfo from "@/views/Auth/PersonalInfo.vue";
-import Security from "@/views/Auth/Security.vue";
-import Login from "@/views/Auth/Login.vue";
-import Privacy from "@/views/Auth/Privacy.vue";
 import { useAuthStore } from "@/stores/authStore";
 const routes: Array<RouteRecordRaw> = [
     {
@@ -15,27 +10,27 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: "/register",
         name: "register",
-        component: () => import("@/views/Auth/Register.vue"),
+        component: () => import("@/views/auth/Register.vue"),
     },
     {
         path: "/personalinfo",
         name: "personalinfo",
-        component: () => import("@/views/Auth/PersonalInfo.vue"),
+        component: () => import("@/views/auth/PersonalInfo.vue"),
     },
     {
         path: "/security",
         name: 'security',
-        component: () => import("@/views/Auth/Security.vue"),
+        component: () => import("@/views/auth/Security.vue"),
     },
     {
         path: "/login",
         name: "login",
-        component: () => import("@/views/Auth/Login.vue"),
+        component: () => import("@/views/auth/Login.vue"),
     },
     {
         path: "/privacy",
         name: "privacy",
-        component: () => import("@/views/Auth/Privacy.vue"),
+        component: () => import("@/views/auth/Privacy.vue"),
         meta: { requiresAuth: true },
     },
     {
@@ -49,18 +44,29 @@ const routes: Array<RouteRecordRaw> = [
             {
                 path: "events",
                 name: "events",
-                component: () => import("@/views/Events.vue"),
+                component: () => import("@/views/events/List.vue"),
+            },
+            {
+                path: "event/:id",
+                name: "event",
+                component: () => import("@/views/events/Detail.vue"),
             },
             {
                 path: "reservations",
                 name: "reservations",
-                component: () => import("@/views/Reservations.vue"),
+                component: () => import("@/views/reservations/List.vue"),
+                meta: { requiresAuth: true },
+            },
+            {
+                path: "reservation/:id",
+                name: "reservation",
+                component: () => import("@/views/reservations/Detail.vue"),
                 meta: { requiresAuth: true },
             },
             {
                 path: "profile",
                 name: "profile",
-                component: () => import("@/views/Auth/Profile.vue"),
+                component: () => import("@/views/auth/Profile.vue"),
                 meta: { requiresAuth: true },
             },
         ],
