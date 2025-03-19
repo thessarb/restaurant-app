@@ -12,6 +12,7 @@
 Thumbs.db
 UserInterfaceState.xcuserstate
 $RECYCLE.BIN/
+public/manifest.webmanifest
 
 *.log
 log.txt
@@ -32,3 +33,4 @@ npm-debug.log*
 /www
 /android
 /ios
+/icons

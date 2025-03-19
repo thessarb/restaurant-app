@@ -1,9 +1,19 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
-  appName: 'restaurant',
-  webDir: 'dist'
+  appId: 'com.vendor.thezonenyc',
+  appName: 'The Zone NYC',
+  webDir: 'dist',
+  plugins: {
+    SplashScreen: {
+      launchShowDuration: 500,
+      launchAutoHide: true,
+      launchFadeOutDuration: 500,
+      backgroundColor: "#00000000",
+      splashFullScreen: true,
+      splashImmersive: true,
+    }
+  }
 };
 
 export default config;
