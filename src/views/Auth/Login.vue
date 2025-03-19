@@ -11,7 +11,7 @@
                 <ion-row>
                     <ion-col>
                         <ion-input v-model="email"  color="tertiary" fill="outline" placeholder="Email">
-                            <ion-icon slot="start" :icon="person" aria-hidden="true"></ion-icon>
+                            <ion-icon slot="start" :icon="person" ></ion-icon>
                         </ion-input>                    
                     </ion-col>
                 </ion-row>

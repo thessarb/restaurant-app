@@ -10,16 +10,16 @@
             </ion-col>
         </ion-row>
         <ion-row>
-            <ion-col size="6" v-for="event in events" :key="event.id">
-                <router-link :to="{ name: 'event',params: {id: event.id}  }">
+            <ion-col size="6" v-for="event in events" :key="event?.id">
+                <router-link :to="{ name: 'event',params: {id: event?.id}  }">
                     <ion-card>
                         <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png" />
                         <ion-card-header>
-                            <ion-card-title>{{ event.name }}</ion-card-title>
+                            <ion-card-title>{{ event?.name }}</ion-card-title>
                         </ion-card-header>
 
                         <ion-card-content>
-                            {{ event.description }}
+                            {{ event?.description }}
                         </ion-card-content>
                     </ion-card>
                 </router-link>
@@ -39,9 +39,17 @@ import {
     IonCardContent, 
     IonButton
 } from '@ionic/vue';
-
+import { PropType } from 'vue';
+interface Event {
+  id: number;
+  name: string;
+  description: string;
+}
 defineProps({
-    events: Array
+    events: {
+    type: Array as PropType<Event[]>,
+    required: true
+  }
 });
 </script>
 

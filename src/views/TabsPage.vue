@@ -1,20 +1,20 @@
 <template>
   <ion-page>
     <ion-tabs>
-      <ion-router-outlet></ion-router-outlet>
+      <ion-router-outlet aria-label="pages" aria-hidden="false"></ion-router-outlet>
       <ion-tab-bar slot="bottom">
         <ion-tab-button tab="events" href="/tabs/events">
-          <ion-icon aria-hidden="true" :icon="star" />
+          <ion-icon aria-label="event" :icon="star" />
           <ion-label>Events</ion-label>
         </ion-tab-button>
 
         <ion-tab-button tab="reservations" href="/tabs/reservations">
-          <ion-icon aria-hidden="true" :icon="ticket" />
+          <ion-icon aria-label="reservation" :icon="ticket" />
           <ion-label>Reservations</ion-label>
         </ion-tab-button>
 
         <ion-tab-button tab="profile" href="/tabs/profile">
-          <ion-icon aria-hidden="true" :icon="person" />
+          <ion-icon aria-label="profile" :icon="person" />
           <ion-label>Profile</ion-label>
         </ion-tab-button>
       </ion-tab-bar>

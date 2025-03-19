@@ -45,19 +45,19 @@
             <ion-list>
                 <router-link :to="{ name: 'personalinfo'}">
                     <ion-item lines="none">
-                        <ion-icon aria-hidden="true" :icon="personOutline" slot="start"></ion-icon>
+                        <ion-icon  :icon="personOutline" slot="start"></ion-icon>
                         <ion-label>Personal information</ion-label>
                     </ion-item>
                 </router-link>
                 <router-link :to="{ name: 'security'}">
                     <ion-item  lines="none">
-                        <ion-icon aria-hidden="true" :icon="lockClosedOutline" slot="start"></ion-icon>
+                        <ion-icon  :icon="lockClosedOutline" slot="start"></ion-icon>
                         <ion-label>Security</ion-label>
                     </ion-item>
                 </router-link>
                 <router-link :to="{ name: 'privacy'}">
                     <ion-item lines="none">
-                        <ion-icon aria-hidden="true" :icon="informationCircleOutline" slot="start"></ion-icon>
+                        <ion-icon  :icon="informationCircleOutline" slot="start"></ion-icon>
                         <ion-label>Privacy and Policy</ion-label>
                     </ion-item>
                 </router-link>
@@ -65,7 +65,7 @@
             <!--  -->
             <ion-list class="logout">
                 <ion-item @click="logout()" lines="none">
-                    <ion-icon  color="danger" aria-hidden="true" :icon="logOutOutline" slot="start"></ion-icon>
+                    <ion-icon  color="danger"  :icon="logOutOutline" slot="start"></ion-icon>
                     <ion-label  color="danger">Log Out</ion-label>
                 </ion-item>
             </ion-list>

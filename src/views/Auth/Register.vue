@@ -11,14 +11,14 @@
                 <ion-row>
                     <ion-col>
                         <ion-input color="tertiary" fill="outline" placeholder="Name">
-                            <ion-icon slot="start" :icon="person" aria-hidden="true"></ion-icon>
+                            <ion-icon slot="start" :icon="person" ></ion-icon>
                         </ion-input>                    
                     </ion-col>
                 </ion-row>
                 <ion-row>
                     <ion-col>
                         <ion-input color="tertiary" fill="outline" placeholder="Surame">
-                            <ion-icon slot="start" :icon="person" aria-hidden="true"></ion-icon>
+                            <ion-icon slot="start" :icon="person" ></ion-icon>
                         </ion-input>
                     </ion-col>
                 </ion-row>

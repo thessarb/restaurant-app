@@ -1,5 +1,5 @@
 <template>
-    <ion-page>
+    <ion-page aria-label="page" aria-hidden="false">
         <ion-header>
             <ion-toolbar>
                 <ion-icon  @click="$router.go(-1);" slot="start" :icon="arrowBack" size="large"></ion-icon>

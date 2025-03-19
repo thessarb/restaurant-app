@@ -4,7 +4,7 @@
         <ion-row>
             <ion-col size="12">
                 <ion-card>
-                    <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png" />
+                    <img v-if=" event?.image" alt="Silhouette of mountains" :src="'https://restaurant.ddev.site/storage/'+ event?.image?.url " />
                     <ion-card-header>
                         <ion-card-title>{{ event?.name }}</ion-card-title>
                         <ion-card-subtitle></ion-card-subtitle>
@@ -45,12 +45,8 @@
                 </ion-list>
             </ion-col>
         </ion-row>
-        <ion-row>
-            <ion-col>
-                <ion-button expand="block" color="tertiary">Reserve</ion-button>
-            </ion-col>
-        </ion-row>
     </ion-grid>
+    <ReservationDialog :event="event"/>
 </template>
 
 <script setup lang="ts">
@@ -63,13 +59,13 @@ import {
     IonCardHeader,
     IonCardSubtitle,
     IonCardTitle,
-    IonButton,
     IonList,
     IonItem,
     IonIcon,
     IonLabel
 } from '@ionic/vue';
 import { alarm, calendar, document, location, people } from 'ionicons/icons';
+import ReservationDialog from './ReservationDialog.vue';
 
 defineProps({
     event: Object
