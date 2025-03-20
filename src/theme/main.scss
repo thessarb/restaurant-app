@@ -1,7 +1,5 @@
 /* For information on how to create your own theme, please see:
 http://ionicframework.com/docs/theming/ */
 
-ion-list.list-md {
-    background: unset;
-}
-  
+// Base
+@use 'typography/fonts';
