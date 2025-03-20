@@ -7,7 +7,7 @@
             </ion-toolbar>
         </ion-header>
         <ion-content :fullscreen="true">
-            <ion-grid>
+            <ion-grid class="security__container">
                 <ion-row>
                     <ion-col>
                         <ion-input fill="outline" placeholder="Enter your password" type="password">
@@ -26,7 +26,7 @@
                 </ion-row>
                 <ion-row>
                     <ion-col>
-                        <ion-button color="primary" expand="block">Complete Registration</ion-button>
+                        <ion-button color="primary" expand="block">Change password</ion-button>
                     </ion-col>
                 </ion-row>
             </ion-grid> 

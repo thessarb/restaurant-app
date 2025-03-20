@@ -1,13 +1,13 @@
 <template>
     <ion-page>
         <ion-header>
-            <ion-toolbar>
+            <ion-toolbar class="ionic__toolbar">
                 <ion-icon slot="start" :icon="arrowBack" size="large"></ion-icon>
                 <ion-title class="ion-text-left">Register</ion-title>
             </ion-toolbar>
         </ion-header>
         <ion-content :fullscreen="true">
-            <ion-grid>
+            <ion-grid class="registration__container">
                 <ion-row>
                     <ion-col>
                         <ion-input color="primary" fill="outline" placeholder="Name">

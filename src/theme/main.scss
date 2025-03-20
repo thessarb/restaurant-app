@@ -15,5 +15,7 @@ http://ionicframework.com/docs/theming/ */
 
 // Templates
 @use 'templates/login';
+@use 'templates/personalinfo';
+@use 'templates/security';
 @use 'templates/profile';
 @use 'templates/eventlist';

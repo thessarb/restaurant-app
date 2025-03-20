@@ -3,13 +3,17 @@
 <template>
     <ion-page>
         <ion-header>
-            <ion-toolbar>
+            <ion-toolbar class="ionic__toolbar">
                 <ion-icon  @click="$router.go(-1);" slot="start" :icon="arrowBack" size="large"></ion-icon>
                 <ion-title class="ion-text-left">Personal Information</ion-title>
             </ion-toolbar>
         </ion-header>
         <ion-content :fullscreen="true">
-            <ion-grid>
+            <ion-grid class="personalinfo__container">
+                <ion-row class="personalinfo__logo-container">
+                    <img class="personalinfo__logo" src="/favicon.png" alt="Logo">
+                    <ion-icon class="personalinfo__edit-icon" :icon="camera"></ion-icon>
+                </ion-row>
                 <ion-row>
                     <ion-col>
                         <ion-input fill="outline" placeholder="Email">
@@ -47,7 +51,7 @@ import {
     IonGrid,
     IonIcon
 } from '@ionic/vue';
-import { arrowBack, mailOutline, call } from 'ionicons/icons';
+import { arrowBack, mailOutline, call, camera } from 'ionicons/icons';
 
 </script>
 <style lang="css">

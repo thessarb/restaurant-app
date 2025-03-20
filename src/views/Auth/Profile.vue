@@ -1,7 +1,7 @@
 <template>
     <ion-page>
         <ion-header>
-            <ion-toolbar>
+            <ion-toolbar class="ionic__toolbar">
                 <ion-title class="ion-text-center">Profile</ion-title>
             </ion-toolbar>
         </ion-header>
