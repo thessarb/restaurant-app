@@ -17,12 +17,21 @@
                 <router-link :to="{ name: 'event', params: {id: event?.id}  }" class="eventlist__detail-link">
                     <ion-card class="eventlist__card">
                         <img alt="Silhouette of mountains" class="eventlist__image" src="https://ionicframework.com/docs/img/demos/card-media.png" />
-                        <ion-card-header>
-                            <ion-card-title>{{ event?.name }}</ion-card-title>
+                        <ion-card-header class="eventlist__card-header">
+                            <ion-card-title class="eventlist__card-title">{{ event?.name }}</ion-card-title>
                         </ion-card-header>
 
-                        <ion-card-content>
-                            {{ event?.description }}
+                        <ion-card-content class="eventlist__card-content">
+                            <ion-list lines="none">
+                                <ion-item>
+                                    <ion-icon class="eventlist__card-icon" aria-hidden="true" :icon="location" slot="start"></ion-icon>
+                                    <ion-label class="eventlist__card-label">{{ getZoneLabel(event?.restaurant_id) }}</ion-label>
+                                </ion-item>
+                                <ion-item>
+                                    <ion-icon class="eventlist__card-icon" aria-hidden="true" :icon="calendar" slot="start"></ion-icon>
+                                    <ion-label class="eventlist__card-label">{{ formatDate(event?.date_start) }}</ion-label>
+                                </ion-item>
+                            </ion-list>
                         </ion-card-content>
                     </ion-card>
                 </router-link>
@@ -32,28 +41,41 @@
 </template>
 
 <script setup lang="ts">
-import { 
-    IonGrid, 
-    IonRow, 
-    IonCol, 
-    IonCard, 
-    IonCardHeader, 
-    IonCardTitle, 
-    IonCardContent, 
-    IonButton
-} from '@ionic/vue';
-import { PropType } from 'vue';
-interface Event {
-  id: number;
-  name: string;
-  description: string;
-}
-defineProps({
-    events: {
-    type: Array as PropType<Event[]>,
-    required: true
-  }
-});
+    import { 
+        IonGrid, 
+        IonRow, 
+        IonCol, 
+        IonCard, 
+        IonCardHeader, 
+        IonCardTitle, 
+        IonCardContent, 
+        IonButton
+    } from '@ionic/vue';
+    import { calendar, location } from 'ionicons/icons';
+    import { PropType } from 'vue';
+    interface Event {
+    id: number;
+    name: string;
+    description: string;
+    }
+    defineProps({
+        events: {
+        type: Array as PropType<Event[]>,
+        required: true
+    }
+    });
+    const formatDate = (dateString) => {
+        const dateObj = new Date(dateString);
+
+        const day = dateObj.getDate();
+        const month = new Intl.DateTimeFormat("en", { month: "long" }).format(dateObj);
+        const weekday = new Intl.DateTimeFormat("en", { weekday: "long" }).format(dateObj);
+
+        return `${day} ${month} - ${weekday}`;
+    };
+    const getZoneLabel = (id) => {
+        return id || (Math.random() < 0.5 ? "Zone 1" : "Zone 2");
+    };
 </script>
 
 <style lang="css">
