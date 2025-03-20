@@ -1,14 +1,6 @@
 /* For information on how to create your own theme, please see:
 http://ionicframework.com/docs/theming/ */
 
-ion-toolbar,
-ion-list,
-ion-content,
-ion-item,
-ion-tab-bar {
-    --background: unset !important;
-}
-
 ion-list.list-md {
     background: unset;
 }
