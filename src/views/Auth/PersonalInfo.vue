@@ -19,14 +19,14 @@
                 </ion-row>
                 <ion-row>
                     <ion-col>
-                        <ion-input color="tertiary" fill="outline" placeholder="Phone">
+                        <ion-input color="primary" fill="outline" placeholder="Phone">
                             <ion-icon slot="start" :icon="call"></ion-icon>
                         </ion-input>
                     </ion-col>
                 </ion-row>
                 <ion-row>
                     <ion-col>
-                        <ion-button color="tertiary" expand="block">Continue</ion-button>
+                        <ion-button color="primary" expand="block">Continue</ion-button>
                     </ion-col>
                 </ion-row>
             </ion-grid> 

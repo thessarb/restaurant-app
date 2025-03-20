@@ -5,7 +5,7 @@
                 <ion-title class="ion-text-center">Profile</ion-title>
             </ion-toolbar>
         </ion-header>
-        <ion-content :fullscreen="true">
+        <ion-content :fullscreen="true" class="profile">
             <ion-header collapse="condense">
                 <ion-toolbar>
                     <ion-title size="large">Profile</ion-title>
@@ -13,10 +13,10 @@
             </ion-header>
             <!--  -->
             
-            <ion-grid>
+            <ion-grid class="profile__data">
                 <ion-row>
-                    <ion-col size="auto">
-                        <img class="rounded" alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
+                    <ion-col class="profile__image-container" size="auto">
+                        <img class="rounded profile__image" alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
                     </ion-col>
                     <ion-col>
                         <ion-list  lines="none">
