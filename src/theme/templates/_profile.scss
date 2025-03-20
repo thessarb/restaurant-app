@@ -1,7 +1,7 @@
 /* Profile template related styling */
 .profile {
-    overflow: scroll;
-    
+    height: 100%;
+
     &__data {
         padding: 16px;
     }
@@ -9,5 +9,13 @@
     &__image-container {
         display: flex;
         align-items: center;
+    }
+
+    &__logout {
+        position: static !important;
+
+        ion-icon {
+            margin-left: 2px;
+        }
     }
 }
