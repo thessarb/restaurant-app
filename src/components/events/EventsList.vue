@@ -8,9 +8,8 @@
         <ion-row class="scrollable-row">
             <ion-col>
                 <ion-button color="primary">All</ion-button>
-                <ion-button fill="outline" color="primary">Elite</ion-button>
-                <ion-button fill="outline" color="primary">Magic</ion-button>
-                <ion-button fill="outline" color="primary">Star</ion-button>
+                <ion-button fill="outline" color="primary">Zone 1</ion-button>
+                <ion-button fill="outline" color="primary">Zone 2</ion-button>
             </ion-col>
         </ion-row>
         <ion-row class="eventlist__list">
