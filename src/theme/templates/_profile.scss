@@ -1,0 +1,12 @@
+/* Profile template related styling */
+.profile {
+    &__data {
+        padding: 16px;
+        background: var(--ion-background-color-step-50);
+    }
+
+    &__image-container {
+        display: flex;
+        align-items: center;
+    }
+}

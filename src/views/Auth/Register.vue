@@ -10,21 +10,21 @@
             <ion-grid>
                 <ion-row>
                     <ion-col>
-                        <ion-input color="tertiary" fill="outline" placeholder="Name">
+                        <ion-input color="primary" fill="outline" placeholder="Name">
                             <ion-icon slot="start" :icon="person" ></ion-icon>
                         </ion-input>                    
                     </ion-col>
                 </ion-row>
                 <ion-row>
                     <ion-col>
-                        <ion-input color="tertiary" fill="outline" placeholder="Surame">
+                        <ion-input color="primary" fill="outline" placeholder="Surame">
                             <ion-icon slot="start" :icon="person" ></ion-icon>
                         </ion-input>
                     </ion-col>
                 </ion-row>
                 <ion-row>
                     <ion-col>
-                        <ion-segment color="tertiary" value="male">
+                        <ion-segment color="primary" value="male">
                             <ion-segment-button value="male">
                                  <ion-label>Male</ion-label>
                             </ion-segment-button>
@@ -36,7 +36,7 @@
                 </ion-row>
                 <ion-row>
                     <ion-col>
-                        <ion-button color="tertiary" expand="block">Continue</ion-button>
+                        <ion-button color="primary" expand="block">Continue</ion-button>
                     </ion-col>
                 </ion-row>
             </ion-grid> 

@@ -1,7 +1,7 @@
 <template>
     <ion-page aria-label="page" aria-hidden="false">
         <ion-header>
-            <ion-toolbar>
+            <ion-toolbar class="ionic__toolbar">
                 <ion-icon  @click="$router.go(-1);" slot="start" :icon="arrowBack" size="large"></ion-icon>
                 <ion-title class="ion-text-left">Event detail</ion-title>            
             </ion-toolbar>

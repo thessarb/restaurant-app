@@ -1,18 +1,18 @@
 <template>
     
-    <ion-grid>
+    <ion-grid class="eventlist">
         <ion-row class="scrollable-row">
             <ion-col>
-                <ion-button color="tertiary">All</ion-button>
-                <ion-button fill="outline" color="tertiary">Elite</ion-button>
-                <ion-button fill="outline" color="tertiary">Magic</ion-button>
-                <ion-button fill="outline" color="tertiary">Star</ion-button>
+                <ion-button color="primary">All</ion-button>
+                <ion-button fill="outline" color="primary">Elite</ion-button>
+                <ion-button fill="outline" color="primary">Magic</ion-button>
+                <ion-button fill="outline" color="primary">Star</ion-button>
             </ion-col>
         </ion-row>
-        <ion-row>
-            <ion-col size="6" v-for="event in events" :key="event?.id">
-                <router-link :to="{ name: 'event',params: {id: event?.id}  }">
-                    <ion-card>
+        <ion-row class="eventlist__list">
+            <ion-col class="eventlist__item" v-for="event in events" :key="event?.id">
+                <router-link :to="{ name: 'event', params: {id: event?.id}  }" class="eventlist__detail-link">
+                    <ion-card class="eventlist__card">
                         <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png" />
                         <ion-card-header>
                             <ion-card-title>{{ event?.name }}</ion-card-title>

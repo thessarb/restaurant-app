@@ -1,0 +1,26 @@
+/* Event list styles */
+.eventlist {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    &__list {
+        gap: 16px;
+    }
+
+    &__item {
+        min-width: calc(50% - 16px);
+    }
+
+    &__detail-link {
+        display: block;
+        height: 100%;
+        text-decoration: none;
+    }
+
+    &__card {
+        height: 100%;
+        border-radius: var(--border-radius);
+    }
+}

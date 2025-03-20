@@ -1,0 +1,21 @@
+/* Styles to be applied through the entire app */
+
+ion-row,
+ion-col,
+ion-grid,
+ion-card {
+    padding: 0;
+    margin: 0;
+}
+
+ion-button {
+    margin: 0;
+}
+
+.input-fill-outline.sc-ion-input-md-h {
+    --padding-start: 20px;
+}
+
+a {
+    text-decoration: none;
+}

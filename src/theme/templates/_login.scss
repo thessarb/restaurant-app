@@ -1,0 +1,23 @@
+/* Login related styling */
+.login {
+    &__container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: calc(90vh - var(--offset-top));
+        padding: 16px;
+        gap: 16px;
+    }
+
+    &__logo {
+        width: 120px;
+        height: 120px;
+        border-radius: var(--border-radius);
+
+        &-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 32px;
+        }
+    }
+}
