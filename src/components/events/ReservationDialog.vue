@@ -1,6 +1,6 @@
 <template>
 <ion-content class="ion-padding">
-    <ion-button color="primary" id="open-modal" expand="block">Open</ion-button>
+    <ion-button color="primary" id="open-modal" expand="block">Reserve</ion-button>
     <ion-modal ref="modal" trigger="open-modal" @willDismiss="onWillDismiss">
       <ion-header>
         <ion-toolbar>

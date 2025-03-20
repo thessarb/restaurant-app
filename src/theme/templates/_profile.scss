@@ -1,8 +1,9 @@
 /* Profile template related styling */
 .profile {
+    overflow: scroll;
+    
     &__data {
         padding: 16px;
-        background: var(--ion-background-color-step-50);
     }
 
     &__image-container {

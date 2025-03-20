@@ -3,9 +3,16 @@
 ion-row,
 ion-col,
 ion-grid,
-ion-card {
+ion-card,
+ion-tab-button,
+ion-toolbar,
+ion-list,
+ion-list.list-md,
+ion-item,
+ion-tab-bar {
     padding: 0;
     margin: 0;
+    --background: var(--ion-background-color);
 }
 
 ion-button {

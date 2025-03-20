@@ -5,6 +5,7 @@
             <ion-col size="12">
                 <ion-card>
                     <img v-if=" event?.image" alt="Silhouette of mountains" :src="'https://restaurant.ddev.site/storage/'+ event?.image?.url " />
+                    <img v-else alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png" />
                     <ion-card-header>
                         <ion-card-title>{{ event?.name }}</ion-card-title>
                         <ion-card-subtitle></ion-card-subtitle>
@@ -29,7 +30,7 @@
                     </ion-item>
                     <ion-item>
                         <ion-icon aria-hidden="true" :icon="alarm" slot="start"></ion-icon>
-                        <ion-label>Starts at 23:0</ion-label>
+                        <ion-label>Starts at 23:00</ion-label>
                     </ion-item>
                     <ion-item>
                         <ion-icon aria-hidden="true" :icon="people" slot="start"></ion-icon>
