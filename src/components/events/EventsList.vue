@@ -49,7 +49,11 @@
         IonCardHeader, 
         IonCardTitle, 
         IonCardContent, 
-        IonButton
+        IonButton,
+        IonIcon,
+        IonLabel,
+        IonList,
+        IonItem
     } from '@ionic/vue';
     import { calendar, location } from 'ionicons/icons';
     import { PropType } from 'vue';
@@ -58,13 +62,23 @@
     name: string;
     description: string;
     }
+    interface Event {
+        id: number;
+        name: string;
+        date_start: string;
+        description: string;
+        rules: string;
+        restaurant_id: string | null;
+        created_at: string;
+        updated_at: string;
+    }
     defineProps({
         events: {
         type: Array as PropType<Event[]>,
         required: true
     }
     });
-    const formatDate = (dateString) => {
+    const formatDate = (dateString: string) => {
         const dateObj = new Date(dateString);
 
         const day = dateObj.getDate();
@@ -73,7 +87,7 @@
 
         return `${day} ${month} - ${weekday}`;
     };
-    const getZoneLabel = (id) => {
+    const getZoneLabel = (id: number | string | null) => {
         return id || (Math.random() < 0.5 ? "Zone 1" : "Zone 2");
     };
 </script>

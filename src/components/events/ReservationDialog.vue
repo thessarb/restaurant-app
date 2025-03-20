@@ -28,7 +28,8 @@
     IonHeader,
     IonContent,
     IonToolbar,
-    IonTitle
+    IonTitle,
+    IonGrid
   } from '@ionic/vue';
   import { OverlayEventDetail } from '@ionic/core/components';
   import { ref } from 'vue';
