@@ -1,0 +1,49 @@
+/* Profile info related styling */
+.personalinfo {
+    &__container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: calc(90vh - var(--offset-top));
+        padding: 16px;
+        gap: 16px;
+    }
+
+    &__logo {
+        &-container {
+            position: relative;
+            align-self: center;
+            min-width: 120px;
+            max-width: 120px;
+            min-height: 120px;
+            max-height: 120px;
+            margin-bottom: 32px;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+    }
+
+    &__edit-icon {
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        padding: 2px;
+        contain: unset;
+        width: 18px;
+        height: 18px;
+        color: white;
+        z-index: 1;
+    }
+
+    &__edit-icon::after {
+        content: "";
+        position: absolute;
+        top: -12px;
+        left: -12px;
+        width: 100px;
+        height: 100px;
+        background: rgba(0, 0, 0, 0.5);
+        transform: rotate(45deg);
+        z-index: -1;
+    }
+}

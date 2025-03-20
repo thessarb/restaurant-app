@@ -1,12 +1,21 @@
 /* Profile template related styling */
 .profile {
+    height: 100%;
+
     &__data {
         padding: 16px;
-        background: var(--ion-background-color-step-50);
     }
 
     &__image-container {
         display: flex;
         align-items: center;
+    }
+
+    &__logout {
+        position: static !important;
+
+        ion-icon {
+            margin-left: 2px;
+        }
     }
 }

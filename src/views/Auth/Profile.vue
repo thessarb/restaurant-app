@@ -1,7 +1,7 @@
 <template>
     <ion-page>
         <ion-header>
-            <ion-toolbar>
+            <ion-toolbar class="ionic__toolbar">
                 <ion-title class="ion-text-center">Profile</ion-title>
             </ion-toolbar>
         </ion-header>
@@ -63,7 +63,7 @@
                 </router-link>
             </ion-list>
             <!--  -->
-            <ion-list class="logout">
+            <ion-list class="logout profile__logout">
                 <ion-item @click="logout()" lines="none">
                     <ion-icon  color="danger"  :icon="logOutOutline" slot="start"></ion-icon>
                     <ion-label  color="danger">Log Out</ion-label>

@@ -6,11 +6,9 @@
     gap: 16px;
 
     &__list {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
         gap: 16px;
-    }
-
-    &__item {
-        min-width: calc(50% - 16px);
     }
 
     &__detail-link {
@@ -22,5 +20,30 @@
     &__card {
         height: 100%;
         border-radius: var(--border-radius);
+        --background: var(--ion-background-color-step-50);
+    }
+
+    &__image {
+        aspect-ratio: 1.5;
+        object-fit: cover;
+    }
+}
+
+@media (min-width: 768px)  {
+    .eventlist {
+        padding: 24px;
+
+        &__list {
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 24px;
+        }
+    }
+}
+
+@media (min-width: 1024px)  {
+    .eventlist {
+        &__list {
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+        }
     }
 }

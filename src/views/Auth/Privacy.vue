@@ -1,7 +1,7 @@
 <template>
      <ion-page>
         <ion-header>
-            <ion-toolbar>
+            <ion-toolbar class="ionic__toolbar">
                 <ion-icon  @click="$router.go(-1);" slot="start" :icon="arrowBack" size="large"></ion-icon>
                 <ion-title class="ion-text-left">Privacy and Policy</ion-title>
             </ion-toolbar>

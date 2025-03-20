@@ -1,0 +1,11 @@
+/* Security related styling */
+.security {
+    &__container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: calc(80vh - var(--offset-top));
+        padding: 16px;
+        gap: 16px;
+    }
+}
