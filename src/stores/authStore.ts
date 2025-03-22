@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
+import { Storage } from '@ionic/storage';
 
 // Define types for state and actions
 interface RegisterData {
@@ -10,10 +11,22 @@ interface RegisterData {
     password: string;
 }
 
+interface User {
+    id: number;
+    name: string;
+    email: string;
+    phone: string;
+    role_id: number;
+    email_verified_at: string;  // or Date if you'd prefer to store it as Date
+    created_at: string;         // or Date
+    updated_at: string;         // or Date
+    image: string | null;
+}
+
 interface AuthState {
     isAuthenticated: boolean;
     endpoint: string;
-    user: any;  // You can replace `any` with a more specific type for the user
+    user: User | null;  // Define user type here instead of `any`
     token: string | null;
     router: ReturnType<typeof useRouter>;
     register: RegisterData | null;
@@ -30,6 +43,18 @@ export const useAuthStore = defineStore('auth', {
     }),
 
     actions: {
+        async initialize() {
+            const store = new Storage();
+            await store.create();
+            const storedUser = await store.get('user');
+            const storedToken = await store.get('token');
+
+            if (storedUser && storedToken) {
+                this.user = storedUser;
+                this.token = storedToken;
+                this.isAuthenticated = true;
+            }
+        },
         setAuthenticated(value: boolean) {
             this.isAuthenticated = value;
         },
@@ -59,6 +84,7 @@ export const useAuthStore = defineStore('auth', {
                     this.isAuthenticated = false;
                     this.user = null;
                     this.token = null;
+                    this.deleteUserStore();
                     this.router.push({ name: 'login' });
                 }
             } catch (error) {
@@ -85,10 +111,52 @@ export const useAuthStore = defineStore('auth', {
             }
         },
 
-        async fetchUserData(data: { user: any; token: string }) {
+        async fetchUserData(data: { user: User; token: string }) {
             this.user = data.user;
             this.isAuthenticated = true;
             this.token = data.token;
+        
+            const sanitizedUser = {
+                ...this.user,
+                email_verified_at: new Date(this.user.email_verified_at).toISOString(),
+                created_at: new Date(this.user.created_at).toISOString(),
+                updated_at: new Date(this.user.updated_at).toISOString(),
+            };
+        
+            try {
+                const store = new Storage();
+                await store.create();
+                await store.set('user', sanitizedUser);
+                await this.storeUser(sanitizedUser);
+                await store.set('token', this.token);
+
+            } catch (error) {
+                console.error('Error during login:', error);
+            }
+        },
+        
+
+        async storeUser(user: User | null) {
+            if (!user) return;
+
+            const store = new Storage();
+            await store.create();
+
+            const sanitizedUser = {
+                ...user,
+                email_verified_at: new Date(user.email_verified_at).toISOString(),
+                created_at: new Date(user.created_at).toISOString(),
+                updated_at: new Date(user.updated_at).toISOString(),
+            };
+
+            await store.set('user', sanitizedUser);
+        },
+
+        async deleteUserStore() {
+            const store = new Storage();
+            await store.create();
+            await store.remove('user');
+            await store.remove('token');
         },
     },
 });
