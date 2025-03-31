@@ -2,7 +2,7 @@
   <ion-page>
     <ion-tabs>
       <ion-router-outlet aria-label="pages" aria-hidden="false"></ion-router-outlet>
-      <ion-tab-bar slot="bottom">
+      <ion-tab-bar class="ionic__tabs" slot="bottom">
         <ion-tab-button tab="events" href="/tabs/events">
           <ion-icon aria-label="event" :icon="calendarNumberOutline" />
           <ion-label>Events</ion-label>

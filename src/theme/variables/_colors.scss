@@ -3,3 +3,9 @@
 :root {
     --ion-color-primary: #A23B3B;
 }
+
+@media (prefers-color-scheme: light) {
+    :root {
+        --ion-background-color: #f9f9f9;
+    }
+}

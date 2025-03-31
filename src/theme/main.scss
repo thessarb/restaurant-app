@@ -11,9 +11,10 @@ http://ionicframework.com/docs/theming/ */
 
 // Components
 @use 'components/buttons';
-@use 'components/toolbar';
+@use 'components/ionic';
 
 // Templates
+@use 'templates/connection';
 @use 'templates/login';
 @use 'templates/personalinfo';
 @use 'templates/security';
