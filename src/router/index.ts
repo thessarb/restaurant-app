@@ -92,6 +92,7 @@ const internetStatus = async () => {
 
 router.beforeEach((to, from, next) => {
     const authStore = useAuthStore();
+    authStore.initialize()
     
     internetStatus().then((status) => {
         if (!status.connected && to.path !== "/connection") {
