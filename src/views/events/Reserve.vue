@@ -12,10 +12,6 @@
                     <ion-title size="large">Reserve {{ event?.name }}</ion-title>
                 </ion-toolbar>
             </ion-header>
-            <ion-select label="Type" v-model="type">
-                <ion-select-option value="standart">Standart</ion-select-option>
-                <ion-select-option value="vip">Vip</ion-select-option>
-            </ion-select>
             <ion-card v-if="type == 'standart'" >
                 <ion-card-content>
                     <ion-list lines="none">
@@ -59,8 +55,6 @@ import {
     IonTitle, 
     IonContent,
     IonIcon,
-    IonSelect,
-    IonSelectOption,
     IonButton,
     IonCard,
     IonList,
@@ -74,7 +68,6 @@ import { useRoute,useRouter } from 'vue-router'
 import { arrowBack, calendar, cash, map} from 'ionicons/icons';
 import ReservationDialog from '@/components/events/ReservationDialog.vue';
 const stripe = ref<Stripe | null>(null);
-const checkout = ref<StripeError | null>(null);
 const process = ref(false);
 const sessionStatus = ref('');
 const customerEmail = ref('');
