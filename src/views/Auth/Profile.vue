@@ -43,13 +43,13 @@
                 </ion-row>
             </ion-grid>
             <ion-list>
-                <router-link :to="{ name: 'personalinfo'}">
+                <router-link :to="{ name: 'personal'}">
                     <ion-item lines="none">
                         <ion-icon  :icon="personOutline" slot="start"></ion-icon>
                         <ion-label>Personal information</ion-label>
                     </ion-item>
                 </router-link>
-                <router-link :to="{ name: 'security'}">
+                <router-link :to="{ name: 'password'}">
                     <ion-item  lines="none">
                         <ion-icon  :icon="lockClosedOutline" slot="start"></ion-icon>
                         <ion-label>Security</ion-label>

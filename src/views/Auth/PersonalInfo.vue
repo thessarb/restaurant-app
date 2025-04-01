@@ -1,5 +1,3 @@
-
-
 <template>
     <ion-page>
         <ion-header>

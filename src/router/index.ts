@@ -54,7 +54,7 @@ const routes: Array<RouteRecordRaw> = [
                 component: () => import("@/views/events/List.vue"),
             },
             {
-                path: "event/:id",
+                path: "events/:id",
                 name: "event",
                 component: () => import("@/views/events/Detail.vue"),
             },
@@ -65,15 +65,32 @@ const routes: Array<RouteRecordRaw> = [
                 meta: { requiresAuth: true },
             },
             {
-                path: "reservation/:id",
-                name: "reservation",
-                component: () => import("@/views/reservations/Detail.vue"),
+                path: "reservetype/:id",
+                name: "reservetype",
+                component: () => import("@/views/events/ReserveType.vue"),
+            },
+            {
+                path: "reserve/:id",
+                name: "reserve",
+                component: () => import("@/views/events/Reserve.vue"),
                 meta: { requiresAuth: true },
             },
             {
                 path: "profile",
                 name: "profile",
                 component: () => import("@/views/auth/Profile.vue"),
+                meta: { requiresAuth: true },
+            },
+            {
+                path: "profile/personal",
+                name: "personal",
+                component: () => import("@/views/profile/Personal.vue"),
+                meta: { requiresAuth: true },
+            },
+            {
+                path: "profile/password",
+                name: 'password',
+                component: () => import("@/views/profile/Password.vue"),
                 meta: { requiresAuth: true },
             },
         ],
@@ -93,8 +110,7 @@ const internetStatus = async () => {
 router.beforeEach((to, from, next) => {
     const authStore = useAuthStore();
     authStore.initialize()
-    
-    internetStatus().then((status) => {
+        internetStatus().then((status) => {
         if (!status.connected && to.path !== "/connection") {
             next("/connection");
         } else if (to.meta.requiresAuth && !authStore.isAuthenticated) {

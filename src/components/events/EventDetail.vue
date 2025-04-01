@@ -4,15 +4,15 @@
         <ion-row>
             <ion-col size="12">
                 <ion-card>
-                    <img v-if=" event?.image" alt="Silhouette of mountains" :src="'https://restaurant.ddev.site/storage/'+ event?.image?.url " />
+                    <img v-if=" props.event?.image" alt="Silhouette of mountains" :src="'https://restaurant.ddev.site/storage/'+ props.event?.image?.url " />
                     <img v-else alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png" />
                     <ion-card-header>
-                        <ion-card-title>{{ event?.name }}</ion-card-title>
+                        <ion-card-title>{{ props.event?.name }}</ion-card-title>
                         <ion-card-subtitle></ion-card-subtitle>
                     </ion-card-header>
 
                     <ion-card-content>
-                        {{event?.description}}
+                        {{props.event?.description}}
                     </ion-card-content>
                 </ion-card>
             </ion-col>
@@ -47,7 +47,10 @@
             </ion-col>
         </ion-row>
     </ion-grid>
-    <ReservationDialog :event="event"/>
+    <router-link v-if="props.event" :to="{ name: 'reservetype', params: { id: props.event?.id } }">
+        <ion-button class="ion-padding" expand="block">Reserve</ion-button>
+    </router-link>
+    <!-- <ReservationDialog :event="event"/> -->
 </template>
 
 <script setup lang="ts">
@@ -63,13 +66,16 @@ import {
     IonList,
     IonItem,
     IonIcon,
-    IonLabel
+    IonLabel,
+    IonButton
 } from '@ionic/vue';
 import { alarm, calendar, document, location, people } from 'ionicons/icons';
-import ReservationDialog from './ReservationDialog.vue';
 
-defineProps({
-    event: Object
+const props = defineProps({
+    event: {
+        type: Object,
+        default: () => ({ id: null })
+    }
 });
 </script>
 
