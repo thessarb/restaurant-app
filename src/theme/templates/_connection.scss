@@ -1,0 +1,23 @@
+.connection {
+    &__container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        text-align: center;
+    }
+
+    &__row {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    &__wifi-icon {
+        font-size: 80px;
+        color: var(--ion-color-danger);
+        margin-bottom: 16px;
+    }
+}

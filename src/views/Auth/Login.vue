@@ -2,7 +2,7 @@
     <ion-page>
         <ion-header>
             <ion-toolbar class="ionic__toolbar">
-                <ion-icon @click="$router.go(-1);" slot="start" :icon="arrowBack" size="large"></ion-icon>
+                <ion-icon @click="$router.replace('/');" slot="start" :icon="arrowBack" size="large"></ion-icon>
                 <ion-title class="ion-text-left">Back</ion-title>
             </ion-toolbar>
         </ion-header>
@@ -13,7 +13,7 @@
                 </ion-row>
                 <ion-row>
                     <ion-col>
-                        <ion-input v-model="email"  color="primary" fill="outline" placeholder="Email">
+                        <ion-input v-model="email" type="email" color="primary" fill="outline" placeholder="Email">
                             <ion-icon slot="start" :icon="person" ></ion-icon>
                         </ion-input>                    
                     </ion-col>

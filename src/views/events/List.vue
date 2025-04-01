@@ -1,11 +1,6 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">Events</ion-title>
-        </ion-toolbar>
-      </ion-header>
         <EventsList :events="events"/>
     </ion-content>
   </ion-page>

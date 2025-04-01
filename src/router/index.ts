@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from "@ionic/vue-router";
 import { RouteRecordRaw } from "vue-router";
 import TabsPage from "@/views/TabsPage.vue";
 import { useAuthStore } from "@/stores/authStore";
+import { Network } from '@capacitor/network';
+
 const routes: Array<RouteRecordRaw> = [
     {
         path: "/",
@@ -32,6 +34,11 @@ const routes: Array<RouteRecordRaw> = [
         name: "privacy",
         component: () => import("@/views/auth/Privacy.vue"),
         meta: { requiresAuth: true },
+    },
+    {
+        path: "/connection",
+        name: "connection",
+        component: () => import("@/views/general/Connection.vue"),
     },
     {
         path: "/tabs/",
@@ -78,15 +85,24 @@ const router = createRouter({
     routes,
 });
 
+const internetStatus = async () => {
+    const status = await Network.getStatus();
+    return status;
+};
+
 router.beforeEach((to, from, next) => {
     const authStore = useAuthStore();
     authStore.initialize()
-
-    if (to.meta.requiresAuth && !authStore.isAuthenticated) {
-        next("/login");
-    } else {
-        next();
-    }
+    
+    internetStatus().then((status) => {
+        if (!status.connected && to.path !== "/connection") {
+            next("/connection");
+        } else if (to.meta.requiresAuth && !authStore.isAuthenticated) {
+            next("/login");
+        } else {
+            next();
+        }
+    })
 });
 
 export default router;
