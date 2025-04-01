@@ -21,10 +21,10 @@
                     <ion-col>
                         <ion-list  lines="none">
                             <ion-item>
-                                <ion-label>{{user?.name}} {{user?.surname}}</ion-label>
+                                <ion-label>{{user?.name}}</ion-label>
                             </ion-item>
                             <ion-item>
-                                <ion-label>Phone {{user?.phone}}</ion-label>
+                                <ion-label>Phone: {{user?.phone}}</ion-label>
                             </ion-item>
                         </ion-list>
                     </ion-col>
