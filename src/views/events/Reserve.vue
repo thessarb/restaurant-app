@@ -217,7 +217,7 @@ const getTicket = async () => {
                 "Authorization": `Bearer ${authStore.token}`,
             }
         });
-        return response.ticket;
+        return response.data.ticket;
     } catch (error) {
         console.error('Error fetching client secret:', error);
     }

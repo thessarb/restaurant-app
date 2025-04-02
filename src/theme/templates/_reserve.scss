@@ -1,0 +1,38 @@
+.reserve {
+    &__type {
+        border: none;
+        border-radius: 16px;
+        background: var(--ion-background-color-step-50);
+        overflow: hidden;
+
+        &-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        &-grid {
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            width: 100%;
+            height: 100%;
+        }
+
+        &-button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+        }
+
+        &-title {
+            font-size: 22px;
+        }
+
+        &-icon {
+            font-size: 32px;
+            color: var(--ion-color-primary);
+        }
+    }
+}
