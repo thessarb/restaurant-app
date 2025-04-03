@@ -30,9 +30,7 @@
                     </ion-list>
                 </ion-card-content>
                 <ion-button :disabled="process" color="primary" expand="block" @click="paymentFlow">Buy Ticket</ion-button>
-                    <!-- Display a payment form -->
                 <ion-card class="ion-padding" id="checkout">
-                <!-- Checkout will insert the payment form here -->
                 </ion-card>
                 <section v-if="success" id="success" class="hidden">
                     <p>
@@ -47,7 +45,7 @@
 </template>
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { loadStripe, Stripe, StripeError } from '@stripe/stripe-js';
+import { loadStripe, Stripe} from '@stripe/stripe-js';
 import { 
     IonPage, 
     IonHeader, 

@@ -1,19 +1,31 @@
 <template>
     <ion-grid>
         <ion-row>
-            <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png" />
+            <img alt="Silhouette of mountains" :src="image" />
         </ion-row>
     </ion-grid>
     <ion-grid class="eventlist">
         <ion-row class="scrollable-row">
             <ion-col>
-                <ion-button color="primary">All</ion-button>
-                <ion-button fill="outline" color="primary">Zone 1</ion-button>
-                <ion-button fill="outline" color="primary">Zone 2</ion-button>
+                <ion-button 
+                    :fill="activeButton === 'all' ? 'solid' : 'outline'" 
+                    color="primary" 
+                    @click="setActive('all')"
+                >
+                    All
+                </ion-button>
+                
+                <ion-button v-for="restaurant in restaurants" :key="restaurant.id"
+                    :fill="activeButton === restaurant.id ? 'solid' : 'outline'" 
+                    color="primary" 
+                    @click="setActive(restaurant.id)"
+                >
+                    {{ restaurant?.name }}
+                </ion-button>
             </ion-col>
         </ion-row>
         <ion-row class="eventlist__list">
-            <ion-col class="eventlist__item" v-for="event in events" :key="event?.id">
+            <ion-col class="eventlist__item" v-for="event in eventList" :key="event?.id">
                 <router-link :to="{ name: 'event', params: {id: event?.id}  }" class="eventlist__detail-link">
                     <ion-card class="eventlist__card">
                         <img alt="Silhouette of mountains" class="eventlist__image" src="https://ionicframework.com/docs/img/demos/card-media.png" />
@@ -56,12 +68,21 @@
         IonItem
     } from '@ionic/vue';
     import { calendar, location } from 'ionicons/icons';
-    import { PropType } from 'vue';
-    interface Event {
-    id: number;
-    name: string;
-    description: string;
-    }
+    import { PropType, onMounted, ref } from 'vue';
+    import axios from 'axios';
+    // Reactive state for active button
+
+    // Method to change active button
+    type Zone = 'all' | number | string;
+
+    // Reactive state for active button
+    const activeButton = ref<Zone>('all');
+
+    // Method to change active button
+    const setActive = (zone: Zone) => {
+        activeButton.value = zone;
+        getEvents(zone);
+    };
     interface Event {
         id: number;
         name: string;
@@ -72,12 +93,22 @@
         created_at: string;
         updated_at: string;
     }
+    interface Restaurant {
+        id: number;
+        name: string;
+        location: string;
+        created_at: string;
+        updated_at: string;
+    }
+    
     defineProps({
         events: {
-        type: Array as PropType<Event[]>,
-        required: true
-    }
+            type: Array as PropType<Event[]>,
+            required: true
+        }
     });
+    const restaurants = ref<Restaurant[]>([]);
+    const eventList = ref<Event[]>([]);
     const formatDate = (dateString: string) => {
         const dateObj = new Date(dateString);
 
@@ -90,6 +121,40 @@
     const getZoneLabel = (id: number | string | null) => {
         return id || (Math.random() < 0.5 ? "Zone 1" : "Zone 2");
     };
+    const image = ref('https://ionicframework.com/docs/img/demos/card-media.png')
+    const settings = async () => {
+        try {
+            const response = await axios.get(import.meta.env.VITE_APP_ENDPOINT+'settings/data', {
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            if (response.data && response.data.image) {
+                image.value = import.meta.env.VITE_APP_BASE+'storage/'+response.data.image.value;
+            }
+        } catch (error) {
+            console.error('Error fetching settings:', error);
+        }
+    };
+    const getEvents = async (restaurant = 'all') => {
+        try {
+            const response = await axios.get(`${import.meta.env.VITE_APP_ENDPOINT}event?restaurant=${restaurant}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+            eventList.value = response.data.events;
+            restaurants.value = response.data.restaurants;
+        } catch (error) {
+            console.error('Error fetching events:', error);
+        }
+    };
+
+    onMounted(() => {
+        settings();
+        getEvents()
+    })
 </script>
 
 <style lang="css">
