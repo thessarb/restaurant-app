@@ -15,21 +15,27 @@
             <ion-card v-if="type == 'standart'" >
                 <ion-card-content>
                     <ion-list lines="none">
-                        <ion-item>
-                            <ion-icon  :icon="map" slot="start"></ion-icon>
-                            <ion-label>Location: </ion-label>
-                        </ion-item>
+                        <a target="_blank" :href="event.restaurant?.location">
+                            <ion-item>
+                                <ion-icon  :icon="map" slot="start"></ion-icon>
+                                <ion-label>Location: {{ event?.restaurant?.name }}</ion-label>
+                            </ion-item>
+                        </a>
                         <ion-item>
                             <ion-icon  :icon="cash" slot="start"></ion-icon>
-                            <ion-label>Price: </ion-label>
+                            <ion-label>Price: {{ event.price_per_ticket }} $</ion-label>
                         </ion-item>
                         <ion-item>
                             <ion-icon  :icon="calendar" slot="start"></ion-icon>
-                            <ion-label>Event: </ion-label>
+                            <ion-label>Event: {{ event?.name }}</ion-label>
+                        </ion-item>
+                        <ion-item>
+                            <ion-icon  :icon="calendarNumberOutline" slot="start"></ion-icon>
+                            <ion-label>Date: {{ event?.date_start }}</ion-label>
                         </ion-item>
                     </ion-list>
                 </ion-card-content>
-                <ion-button :disabled="process" color="primary" expand="block" @click="paymentFlow">Buy Ticket</ion-button>
+                <ion-button v-if="event?.price_per_ticket" :disabled="process" color="primary" expand="block" @click="paymentFlow">Buy Ticket</ion-button>
                 <ion-card class="ion-padding" id="checkout">
                 </ion-card>
                 <section v-if="success" id="success" class="hidden">
@@ -63,7 +69,7 @@ import {
 import axios from 'axios';
 import { useAuthStore } from "@/stores/authStore";
 import { useRoute,useRouter } from 'vue-router'
-import { arrowBack, calendar, cash, map} from 'ionicons/icons';
+import { arrowBack, calendar, calendarNumberOutline, cash, map} from 'ionicons/icons';
 import ReservationDialog from '@/components/events/ReservationDialog.vue';
 const stripe = ref<Stripe | null>(null);
 const process = ref(false);
@@ -73,14 +79,24 @@ const authStore = useAuthStore();
 interface Event {
   id: number;
   name: string;
-  date_start: string; // You may want to use a Date type if you're working with actual Date objects
+  date_start: string;
   description: string;
   rules: string;
   nr_tikets: number;
-  restaurant_id: number | null; // Can be null
-  created_at: string; // You may want to use a Date type if you're working with actual Date objects
-  updated_at: string; // You may want to use a Date type if you're working with actual Date objects
-  image: string | null; // Can be null
+  price_per_ticket: number;
+  restaurant_id: number | null;
+  restaurant: Restaurant | null;
+  created_at: string;
+  updated_at: string;
+  image: string | null;
+}
+
+interface Restaurant {
+    id: number;
+    name: string;
+    location: string;
+    created_at: string;
+    updated_at: string;
 }
 
 const event = ref<Event>({
@@ -90,7 +106,9 @@ const event = ref<Event>({
   description: "Indulge in a variety of delicious pizzas made fresh from our oven.",
   rules: "Take-out options available.",
   nr_tikets: 0,
+  price_per_ticket: 0,
   restaurant_id: null,
+  restaurant: null,
   created_at: "2025-03-29T12:17:50.000000Z",
   updated_at: "2025-03-29T12:17:50.000000Z",
   image: null

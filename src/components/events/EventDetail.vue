@@ -20,10 +20,12 @@
         <ion-row>
             <ion-col>
                 <ion-list lines="none">
-                    <ion-item>
-                        <ion-icon aria-hidden="true" :icon="location" slot="start"></ion-icon>
-                        <ion-label>Location 1</ion-label>
-                    </ion-item>
+                    <a target="_blank" :href="event.restaurant?.location">
+                        <ion-item>
+                            <ion-icon aria-hidden="true" :icon="location" slot="start"></ion-icon>
+                            <ion-label>{{event.restaurant?.name}}</ion-label>
+                        </ion-item>
+                    </a>
                     <ion-item>
                         <ion-icon aria-hidden="true" :icon="calendar" slot="start"></ion-icon>
                         <ion-label>15 March - Saturday</ion-label>
@@ -31,10 +33,6 @@
                     <ion-item>
                         <ion-icon aria-hidden="true" :icon="alarm" slot="start"></ion-icon>
                         <ion-label>Starts at 23:00</ion-label>
-                    </ion-item>
-                    <ion-item>
-                        <ion-icon aria-hidden="true" :icon="people" slot="start"></ion-icon>
-                        <ion-label>6 people per table</ion-label>
                     </ion-item>
                     <ion-item>
                         <ion-icon aria-hidden="true" :icon="document" slot="start"></ion-icon>
@@ -69,7 +67,7 @@ import {
     IonLabel,
     IonButton
 } from '@ionic/vue';
-import { alarm, calendar, document, location, people } from 'ionicons/icons';
+import { alarm, calendar, document, location } from 'ionicons/icons';
 
 const props = defineProps({
     event: {

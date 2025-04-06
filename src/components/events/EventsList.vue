@@ -28,7 +28,7 @@
             <ion-col class="eventlist__item" v-for="event in eventList" :key="event?.id">
                 <router-link :to="{ name: 'event', params: {id: event?.id}  }" class="eventlist__detail-link">
                     <ion-card class="eventlist__card">
-                        <img alt="Silhouette of mountains" class="eventlist__image" src="https://ionicframework.com/docs/img/demos/card-media.png" />
+                        <img alt="Silhouette of mountains" class="eventlist__image" :src="event.image ? baseUrl+'storage/'+event?.image?.url : 'https://ionicframework.com/docs/img/demos/card-media.png'" />
                         <ion-card-header class="eventlist__card-header">
                             <ion-card-title class="eventlist__card-title">{{ event?.name }}</ion-card-title>
                         </ion-card-header>
@@ -37,7 +37,7 @@
                             <ion-list lines="none">
                                 <ion-item>
                                     <ion-icon class="eventlist__card-icon" aria-hidden="true" :icon="location" slot="start"></ion-icon>
-                                    <ion-label class="eventlist__card-label">{{ getZoneLabel(event?.restaurant_id) }}</ion-label>
+                                    <ion-label class="eventlist__card-label">{{ event?.restaurant?.name }}</ion-label>
                                 </ion-item>
                                 <ion-item>
                                     <ion-icon class="eventlist__card-icon" aria-hidden="true" :icon="calendar" slot="start"></ion-icon>
@@ -73,7 +73,7 @@
     // Reactive state for active button
 
     // Method to change active button
-    type Zone = 'all' | number | string;
+    type Zone = 'all' | number | string | undefined;
 
     // Reactive state for active button
     const activeButton = ref<Zone>('all');
@@ -90,6 +90,8 @@
         description: string;
         rules: string;
         restaurant_id: string | null;
+        restaurant: Restaurant | null
+        image: object | null
         created_at: string;
         updated_at: string;
     }
@@ -107,6 +109,7 @@
             required: true
         }
     });
+    const baseUrl = ref(import.meta.env.VITE_APP_BASE);
     const restaurants = ref<Restaurant[]>([]);
     const eventList = ref<Event[]>([]);
     const formatDate = (dateString: string) => {
@@ -118,9 +121,7 @@
 
         return `${day} ${month} - ${weekday}`;
     };
-    const getZoneLabel = (id: number | string | null) => {
-        return id || (Math.random() < 0.5 ? "Zone 1" : "Zone 2");
-    };
+
     const image = ref('https://ionicframework.com/docs/img/demos/card-media.png')
     const settings = async () => {
         try {

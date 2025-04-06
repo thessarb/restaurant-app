@@ -43,9 +43,8 @@ const settings = async () => {
             }
         });
 
-        // Ensure response data is structured correctly
         if (response.data && response.data.privacy) {
-            privacy.value = response.data.privacy.value; // Update privacy policy content
+            privacy.value = response.data.privacy.value;
         }
     } catch (error) {
         console.error('Error fetching settings:', error);
