@@ -8,9 +8,9 @@
         <ion-row class="scrollable-row">
             <ion-col>
                 <ion-button 
-                    :fill="activeButton === 'all' ? 'solid' : 'outline'" 
+                    :fill="activeButton === 99 ? 'solid' : 'outline'" 
                     color="primary" 
-                    @click="setActive('all')"
+                    @click="setActive(99)"
                 >
                     All
                 </ion-button>
@@ -70,16 +70,12 @@
     import { calendar, location } from 'ionicons/icons';
     import { PropType, onMounted, ref } from 'vue';
     import axios from 'axios';
-    // Reactive state for active button
-
-    // Method to change active button
-    type Zone = 'all' | number | string | undefined;
 
     // Reactive state for active button
-    const activeButton = ref<Zone>('all');
+    const activeButton = ref(99);
 
     // Method to change active button
-    const setActive = (zone: Zone) => {
+    const setActive = (zone: number) => {
         activeButton.value = zone;
         getEvents(zone);
     };
@@ -91,7 +87,7 @@
         rules: string;
         restaurant_id: string | null;
         restaurant: Restaurant | null
-        image: object | null
+        image: Image | null
         created_at: string;
         updated_at: string;
     }
@@ -101,6 +97,10 @@
         location: string;
         created_at: string;
         updated_at: string;
+    }
+    interface Image {
+        id: number;
+        url: string;
     }
     
     defineProps({
@@ -138,7 +138,7 @@
             console.error('Error fetching settings:', error);
         }
     };
-    const getEvents = async (restaurant = 'all') => {
+    const getEvents = async (restaurant = 99) => {
         try {
             const response = await axios.get(`${import.meta.env.VITE_APP_ENDPOINT}event?restaurant=${restaurant}`, {
                 headers: {

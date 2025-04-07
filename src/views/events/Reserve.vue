@@ -157,8 +157,8 @@ const fetchClientSecret = async () => {
     try {
         const response = await axios.post(import.meta.env.VITE_APP_ENDPOINT + 'stripe/checkout',
         {
-            price: 50.00,
-            app: ''
+            price: event.value.price_per_ticket+'00',
+            app: 'andoid'
         },
         {
             headers: {

@@ -4,7 +4,7 @@
         <ion-row>
             <ion-col size="12">
                 <ion-card>
-                    <img v-if=" props.event?.image" alt="Silhouette of mountains" :src="'https://restaurant.ddev.site/storage/'+ props.event?.image?.url " />
+                    <img v-if=" props.event?.image" alt="Silhouette of mountains" :src="event.image ? baseUrl+'storage/'+event?.image?.url : 'https://ionicframework.com/docs/img/demos/card-media.png'" />
                     <img v-else alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png" />
                     <ion-card-header>
                         <ion-card-title>{{ props.event?.name }}</ion-card-title>
@@ -52,6 +52,7 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
 import { 
     IonGrid, 
     IonRow, 
@@ -68,6 +69,7 @@ import {
     IonButton
 } from '@ionic/vue';
 import { alarm, calendar, document, location } from 'ionicons/icons';
+const baseUrl = ref(import.meta.env.VITE_APP_BASE);
 
 const props = defineProps({
     event: {
