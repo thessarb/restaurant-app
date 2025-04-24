@@ -15,9 +15,6 @@
             
             <ion-grid class="profile__data">
                 <ion-row>
-                    <ion-col class="profile__image-container" size="auto">
-                        <img class="rounded profile__image" alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
-                    </ion-col>
                     <ion-col>
                         <ion-list  lines="none">
                             <ion-item>
@@ -30,15 +27,15 @@
                     </ion-col>
                 </ion-row>
             </ion-grid>
-            <ion-grid>
+            <ion-grid class="profile__history">
                 <ion-row>
                     <ion-col>
                         <ion-item lines="none" class="ion-text-center">1</ion-item>
-                        <ion-item lines="none">reservations</ion-item>
+                        <ion-item lines="none">upcomming reservations</ion-item>
                     </ion-col>
                     <ion-col>
-                        <ion-item lines="none" class="ion-text-center">1</ion-item>
-                        <ion-item lines="none">places visited</ion-item>
+                        <ion-item lines="none" class="ion-text-center">10</ion-item>
+                        <ion-item lines="none">total reservations</ion-item>
                     </ion-col>
                 </ion-row>
             </ion-grid>
@@ -58,7 +55,7 @@
                 <router-link :to="{ name: 'privacy'}">
                     <ion-item lines="none">
                         <ion-icon  :icon="informationCircleOutline" slot="start"></ion-icon>
-                        <ion-label>Privacy and Policy</ion-label>
+                        <ion-label>Privacy Policy</ion-label>
                     </ion-item>
                 </router-link>
             </ion-list>

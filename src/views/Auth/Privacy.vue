@@ -9,7 +9,7 @@
         <ion-content :fullscreen="true">
             <ion-card>
                 <ion-card-header>
-                    <ion-card-title>Privacy & Policy</ion-card-title>
+                    <ion-card-title>Privacy Policy</ion-card-title>
                 </ion-card-header>
 
                 <ion-card-content v-html="privacy"/>

@@ -3,12 +3,11 @@
     height: 100%;
 
     &__data {
-        padding: 16px;
+        padding: 16px 0;
     }
 
-    &__image-container {
-        display: flex;
-        align-items: center;
+    &__history {
+        margin-bottom: 16px;
     }
 
     &__logout {
