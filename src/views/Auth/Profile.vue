@@ -88,6 +88,8 @@ import {
 } from '@ionic/vue';
 import { informationCircleOutline, lockClosedOutline, logOutOutline, personOutline } from 'ionicons/icons';
 import { useAuthStore } from "@/stores/authStore";
+import { ref } from 'vue';
+const baseUrl = ref(import.meta.env.VITE_APP_BASE);
 
 const authStore = useAuthStore();
 const user = authStore.user;

@@ -21,15 +21,14 @@ interface User {
     email_verified_at: string;  // or Date if you'd prefer to store it as Date
     created_at: string;         // or Date
     updated_at: string;         // or Date
+    image: string | null;
 }
-
 interface UserRole {
     id: number;
     name: string;
     created_at: string;
     updated_at: string;   
 }
-
 interface AuthState {
     isAuthenticated: boolean;
     endpoint: string;
@@ -73,7 +72,7 @@ export const useAuthStore = defineStore('auth', {
                     await this.fetchUserData(response.data);
                     this.router.push({ name: 'profile' });
                 }
-            } catch (error) {
+            } catch (error: any) {
                 console.error('Error during login:', error);
                 this.isAuthenticated = false;
             }
@@ -94,7 +93,7 @@ export const useAuthStore = defineStore('auth', {
                     this.deleteUserStore();
                     this.router.push({ name: 'login' });
                 }
-            } catch (error) {
+            } catch (error: any) {
                 console.error('Logout failed:', error);
             }
         },
@@ -133,29 +132,19 @@ export const useAuthStore = defineStore('auth', {
             try {
                 const store = new Storage();
                 await store.create();
-                await store.set('user', sanitizedUser);
                 await this.storeUser(sanitizedUser);
-                await store.set('token', this.token);
-
-            } catch (error) {
-                console.error('Error during login:', error);
+            } catch (error: any) {
+                // console.error('Error during login:', error);
             }
         },
         
 
         async storeUser(user: User | null) {
             if (!user) return;
-
             const store = new Storage();
             await store.create();
-
-            const sanitizedUser = {
-                ...user,
-                email_verified_at: new Date(user.email_verified_at).toISOString(),
-                created_at: new Date(user.created_at).toISOString(),
-                updated_at: new Date(user.updated_at).toISOString(),
-            };
-
+            await store.set('token', this.token);
+            const sanitizedUser = JSON.parse(JSON.stringify(user));
             await store.set('user', sanitizedUser);
         },
 

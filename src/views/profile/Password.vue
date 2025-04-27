@@ -13,12 +13,13 @@
                     <ion-input v-model="password" fill="outline" placeholder="Enter your password" type="password">
                         <ion-icon slot="start" :icon="lockClosed"></ion-icon>
                         <ion-input-password-toggle color="primary" slot="end"></ion-input-password-toggle>
+                        <p v-if="errors.password">{{ errors.password[0] }}</p>
                     </ion-input>                    
                 </ion-col>
             </ion-row>
             <ion-row>
                 <ion-col>
-                    <ion-input v-model="password_confirm" color="primary" fill="outline" placeholder="Confirm your password" type="password">
+                    <ion-input v-model="password_confirmation" color="primary" fill="outline" placeholder="Confirm your password" type="password">
                         <ion-icon slot="start" :icon="lockClosed"></ion-icon>
                         <ion-input-password-toggle color="primary" slot="end"></ion-input-password-toggle>
                     </ion-input>
@@ -29,6 +30,7 @@
                     <ion-button @click="passwordUpdate" color="primary" expand="block">Change password</ion-button>
                 </ion-col>
             </ion-row>
+            <p v-if="success">{{ success }}</p>
         </ion-grid> 
     </ion-content>
 </ion-page>
@@ -54,14 +56,20 @@ import { ref } from 'vue';
 import { useAuthStore } from '@/stores/authStore';
 const authStore = useAuthStore();
 const password = ref('');
-const password_confirm = ref('');
+const password_confirmation = ref('');
 const success = ref('');
+interface FormErrors {
+  password?: string[];  // Email errors
+  [key: string]: string[] | undefined; // Additional dynamic keys if needed
+}
+const errors = ref<FormErrors>({}); 
+
 const passwordUpdate = async () => {
     try {
-        await axios.put(import.meta.env.VITE_APP_ENDPOINT +'/user/' +authStore.user?.id + '/update',
+        const response = await axios.post(import.meta.env.VITE_APP_ENDPOINT +'profile/' +authStore.user?.id + '/password',
         {
-            password: password,
-            password_confirm: password_confirm
+            password: password.value,
+            password_confirmation: password_confirmation.value
         },
         {
             headers: {
@@ -69,11 +77,12 @@ const passwordUpdate = async () => {
                 "Authorization": `Bearer ${authStore.token}`,
             }
         });
+        console.log(response)
         success.value = 'Password updated successful!'
         password.value = ''
-        password_confirm.value = ''
-    } catch (error) {
-        console.error('Password:', error);
+        password_confirmation.value = ''
+    } catch (error: any) {
+        errors.value = error.response.data.errors;
     }
 };
 </script>

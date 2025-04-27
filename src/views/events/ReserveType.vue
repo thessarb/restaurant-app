@@ -20,7 +20,7 @@
                         </ion-col>
                     </router-link>
 
-                    <router-link :to="{ name: 'reserve', params: { id: event.id } }">
+                    <router-link :to="{ name: 'reservevip', params: { id: event.id } }">
                         <ion-col class="reserve__type-col">
                             <ion-card class="reserve__type">
                                 <ion-card-content class="reserve__type-button">

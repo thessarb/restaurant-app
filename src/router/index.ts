@@ -3,6 +3,8 @@ import { RouteRecordRaw } from "vue-router";
 import TabsPage from "@/views/TabsPage.vue";
 import { useAuthStore } from "@/stores/authStore";
 import { Network } from '@capacitor/network';
+import { App ,URLOpenListenerEvent} from '@capacitor/app';
+
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -68,6 +70,13 @@ const routes: Array<RouteRecordRaw> = [
                 path: "reservetype/:id",
                 name: "reservetype",
                 component: () => import("@/views/events/ReserveType.vue"),
+                meta: { requiresAuth: true },
+            },
+            {
+                path: "reservetype/:id/vip",
+                name: "reservevip",
+                component: () => import("@/views/events/Vip.vue"),
+                meta: { requiresAuth: true }
             },
             {
                 path: "reserve/:id",
@@ -113,18 +122,40 @@ const internetStatus = async () => {
     return status;
 };
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
     const authStore = useAuthStore();
-    authStore.initialize()
-        internetStatus().then((status) => {
-        if (!status.connected && to.path !== "/connection") {
-            next("/connection");
-        } else if (to.meta.requiresAuth && !authStore.isAuthenticated) {
-            next("/login");
-        } else {
-            next();
-        }
-    })
+    await authStore.initialize();
+
+    const status = await internetStatus();
+    if (!status.connected && to.path !== "/connection") {
+        next("/connection");
+    } else if (to.meta.requiresAuth && !authStore.isAuthenticated) {
+        next({ path: "/login", query: { redirect: to.fullPath } });
+    } else {
+        next();
+    }
+});
+
+App.addListener('appUrlOpen', async (event: URLOpenListenerEvent) => {
+    const url = event.url;
+    
+    // Extract the eventId from the URL (assuming it's part of the path)
+    const slug = url.split('usarestaurant.tech').pop();
+    const eventIdMatch = slug?.match(/tabs\/reserve\/([^?]+)/); // Match event_id in the URL
+    const sessionIdMatch = slug?.match(/session_id=([^&]+)/); // Match session_id in the URL
+    
+    if (eventIdMatch && sessionIdMatch) {
+        const eventId = eventIdMatch[1];
+        const sessionId = sessionIdMatch[1];
+
+        // Now you have both eventId and sessionId
+        // Push the route using Vue Router or your app's routing system
+        router.push({
+            name: 'reserve', 
+            params: { id: eventId },
+            query: { session_id: sessionId }
+        });
+    }
 });
 
 export default router;

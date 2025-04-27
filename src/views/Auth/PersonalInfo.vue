@@ -8,10 +8,6 @@
         </ion-header>
         <ion-content :fullscreen="true">
             <ion-grid class="personalinfo__container">
-                <ion-row class="personalinfo__logo-container">
-                    <img class="personalinfo__logo" src="/favicon.png" alt="Logo">
-                    <ion-icon class="personalinfo__edit-icon" :icon="camera"></ion-icon>
-                </ion-row>
                 <ion-row>
                     <ion-col>
                         <ion-input fill="outline" placeholder="Email">

@@ -22,10 +22,6 @@
                             </ion-item>
                         </a>
                         <ion-item>
-                            <ion-icon  :icon="cash" slot="start"></ion-icon>
-                            <ion-label>Price: {{ event.price_per_ticket }} $</ion-label>
-                        </ion-item>
-                        <ion-item>
                             <ion-icon  :icon="calendar" slot="start"></ion-icon>
                             <ion-label>Event: {{ event?.name }}</ion-label>
                         </ion-item>
@@ -34,8 +30,35 @@
                             <ion-label>Date: {{ event?.date_start }}</ion-label>
                         </ion-item>
                     </ion-list>
+                    <ion-grid class="tables">
+                        <ion-row>
+                            <ion-col>1</ion-col>
+                            <ion-col>2</ion-col>
+                            <ion-col>3</ion-col>
+                        </ion-row>
+                        <ion-row>
+                            <ion-col>4</ion-col>
+                            <ion-col>5</ion-col>
+                            <ion-col>6</ion-col>
+                        </ion-row>
+                        <ion-row>
+                            <ion-col>7</ion-col>
+                            <ion-col>8</ion-col>
+                            <ion-col>9</ion-col>
+                        </ion-row>
+                        <ion-row>
+                            <ion-col>10</ion-col>
+                            <ion-col>11</ion-col>
+                            <ion-col>12</ion-col>
+                        </ion-row>
+                        <ion-row>
+                            <ion-col>13</ion-col>
+                            <ion-col>14</ion-col>
+                            <ion-col>15</ion-col>
+                        </ion-row>
+                    </ion-grid>
                 </ion-card-content>
-                <ion-button v-if="event?.price_per_ticket" :disabled="process" color="primary" expand="block" @click="paymentFlow">Buy Ticket</ion-button>
+                <ion-button :disabled="process" color="primary" expand="block" @click="paymentFlow">Reserve</ion-button>
                 <ion-card class="ion-padding" id="checkout">
                 </ion-card>
                 <section v-if="success" id="success" class="hidden">
@@ -46,70 +69,35 @@
                 </section>
             </ion-card>
             <ReservationDialog v-else :event="event" />
-            <ion-row v-for="item in ticket" :key="item.id" class="ticket">
-                <ion-col>
-                    <ion-card>
-                        <ion-card-title>
-                           Ticket {{ item.status }}
-                        </ion-card-title>
-                        <ion-card-content>
-                            <ion-list>
-                                <ion-item>
-                                    <ion-label>{{item.user.name}}</ion-label>
-                                </ion-item>
-                                <ion-item>
-                                    <ion-label>{{item.price}} $</ion-label>
-                                </ion-item>
-                            </ion-list>
-                        </ion-card-content>
-                    </ion-card>
-                </ion-col>
-            </ion-row>
         </ion-content>
     </ion-page>
 </template>
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { loadStripe, Stripe} from '@stripe/stripe-js';
+
 import axios from 'axios';
 import { useAuthStore } from "@/stores/authStore";
 import { useRoute,useRouter } from 'vue-router'
 import { arrowBack, calendar, calendarNumberOutline, cash, map} from 'ionicons/icons';
-import { 
-    IonPage, 
-    IonHeader, 
-    IonToolbar, 
-    IonTitle, 
-    IonContent,
-    IonIcon,
-    IonButton,
-    IonCard,
-    IonList,
-    IonCardContent,
-    IonItem,
-    IonLabel,
-} from '@ionic/vue';
-// import ReservationDialog from '@/components/events/ReservationDialog.vue';
-
-
-const stripe = ref<Stripe | null>(null);
+// const stripe = ref<Stripe | null>(null);
 const process = ref(false);
 const sessionStatus = ref('');
 const customerEmail = ref('');
 const authStore = useAuthStore();
 interface Event {
-  id: number;
-  name: string;
-  date_start: string;
-  description: string;
-  rules: string;
-  nr_tikets: number;
-  price_per_ticket: number;
-  restaurant_id: number | null;
-  restaurant: Restaurant | null;
-  created_at: string;
-  updated_at: string;
-  image: string | null;
+    id: number;
+    name: string;
+    date_start: string;
+    description: string;
+    rules: string;
+    nr_tikets: number;
+    price_per_ticket: number;
+    restaurant_id: number | null;
+    restaurant: Restaurant | null;
+    created_at: string;
+    updated_at: string;
+    image: string | null;
 }
 
 interface Restaurant {
@@ -119,7 +107,7 @@ interface Restaurant {
     created_at: string;
     updated_at: string;
 }
-
+    
 const event = ref<Event>({
   id: 8,
   name: "Pizza Night",
@@ -139,7 +127,8 @@ const type = ref('standart');
 const success = ref(false);
 const route = useRoute();
 const router = useRouter();
-const ticket = ref();
+// const ticket = ref();
+const tables = ref([]);
 const detail = async () => {
     try {
         const response = await axios.get(`${authStore.endpoint}event/${route.params.id}`, {
@@ -148,56 +137,59 @@ const detail = async () => {
             },
         });
         event.value = response.data.data
-        ticket.value = await getTicket()
+        fetchTables(event.value?.restaurant_id);
+
+        // ticket.value = getTicket()
 
     } catch (error) {
         console.error(error);
     }
 };
 
-const initializeStripe = async () => {
-    // const clientSecret = await fetchClientSecret();
-    stripe.value = await loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
-    if (stripe.value) {
-        const ch = await stripe.value.initEmbeddedCheckout({
-            fetchClientSecret,
-        });
+// const initializeStripe = async () => {
+//     // const clientSecret = await fetchClientSecret();
+//     stripe.value = await loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
+//     if (stripe.value) {
+//         const ch = await stripe.value.initEmbeddedCheckout({
+//             fetchClientSecret,
+//         });
 
-        // Mount Checkout
-        ch.mount('#checkout');
-        // const result = await stripe.value.redirectToCheckout({ sessionId: clientSecret });
-        // if (result.error) {
-        //     checkout.value = result.error;
-        // } else {
-        //     checkout.value = null;
-        // }
-    }
-};
+//         // Mount Checkout
+//         ch.mount('#checkout');
+//         // const result = await stripe.value.redirectToCheckout({ sessionId: clientSecret });
+//         // if (result.error) {
+//         //     checkout.value = result.error;
+//         // } else {
+//         //     checkout.value = null;
+//         // }
+//     }
+// };
   
-const fetchClientSecret = async () => {
-    try {
-        const response = await axios.post(import.meta.env.VITE_APP_ENDPOINT + 'stripe/checkout',
-        {
-            price: event.value.price_per_ticket+'00',
-            name: 'Ticket for '+event.value.name, 
-            app: 'andoid',
-            event_id: event.value.id
-        },
-        {
-            headers: {
-                "Accept": "application/json",
-                "Authorization": `Bearer ${authStore.token}`,
-            }
-        });
-        const { clientSecret } = response.data;
-        process.value = true;
-        return clientSecret;
-    } catch (error) {
-        console.error('Error fetching client secret:', error);
-    }
-};
+// const fetchClientSecret = async () => {
+//     try {
+//         const response = await axios.post(import.meta.env.VITE_APP_ENDPOINT + 'stripe/checkout',
+//         {
+//             price: event.value.price_per_ticket+'00',
+//             app: 'andoid'
+//         },
+//         {
+//             headers: {
+//                 "Accept": "application/json",
+//                 "Authorization": `Bearer ${authStore.token}`,
+//             }
+//         });
+//         const { clientSecret } = response.data;
+//         process.value = true;
+//         return clientSecret;
+//     } catch (error) {
+//         console.error('Error fetching client secret:', error);
+//     }
+// };
   
-const returnFunc = async (sessionId: string) => {
+const returnFunc = async () => {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const sessionId = urlParams.get('session_id');
 
     try {
         const response = await axios.post(import.meta.env.VITE_APP_ENDPOINT + 'stripe/status',
@@ -215,7 +207,7 @@ const returnFunc = async (sessionId: string) => {
         if (session.status === 'open') {
           router.push({ path: '/checkout' });
         } else if (session.status === 'complete') {
-            storeTicket();
+            // storeTicket();
             sessionStatus.value = 'complete';
             customerEmail.value = session.customer_email;
         }
@@ -224,36 +216,53 @@ const returnFunc = async (sessionId: string) => {
     }
 };
 const paymentFlow = () => {
-    initializeStripe();
+    // initializeStripe();
 }
-const storeTicket = async () => {
+// const storeTicket = async () => {
+//     try {
+//         await axios.post(import.meta.env.VITE_APP_ENDPOINT + 'ticket/store',
+//         {
+//             event_id: event?.value?.id,
+//             user_id: authStore.user?.id,
+//             price: 50.00,
+//         },
+//         {
+//             headers: {
+//                 "Accept": "application/json",
+//                 "Authorization": `Bearer ${authStore.token}`,
+//             }
+//         });
+//     } catch (error) {
+//         console.error('Ticket:', error);
+//     }
+// };
+// const getTicket = async () => {
+//     try {
+//        const response =  await axios.get(import.meta.env.VITE_APP_ENDPOINT + `ticket?user_id=${authStore?.user?.id}&event_id=${event.value.id}`,
+//         {
+//             headers: {
+//                 "Accept": "application/json",
+//                 "Authorization": `Bearer ${authStore.token}`,
+//             }
+//         });
+//         return response.data.ticket;
+//     } catch (error) {
+//         console.error('Error fetching client secret:', error);
+//     }
+// }
+
+const fetchTables = async (restaurant: number | null | string) => {
     try {
-        await axios.post(import.meta.env.VITE_APP_ENDPOINT + 'ticket/store',
-        {
-            event_id: event?.value?.id,
-            user_id: authStore.user?.id,
-            price: 50.00,
-        },
+        const response = await axios.get(import.meta.env.VITE_APP_ENDPOINT + 'tables/'+ restaurant,
         {
             headers: {
                 "Accept": "application/json",
                 "Authorization": `Bearer ${authStore.token}`,
             }
         });
-    } catch (error) {
-        console.error('Ticket:', error);
-    }
-};
-const getTicket = async () => {
-    try {
-       const response =  await axios.get(import.meta.env.VITE_APP_ENDPOINT + `ticket?user_id=${authStore?.user?.id}&event_id=${event.value.id}`,
-        {
-            headers: {
-                "Accept": "application/json",
-                "Authorization": `Bearer ${authStore.token}`,
-            }
-        });
-        return response.data.ticket;
+
+        tables.value = response.data.tables
+
     } catch (error) {
         console.error('Error fetching client secret:', error);
     }
@@ -261,22 +270,25 @@ const getTicket = async () => {
 // Combine both mounted hooks into one to simplify async logic
 onMounted(() => {
     detail();
-    const route = useRoute();
-    const rawSessionId = route.query.session_id;
-    const sessionId = Array.isArray(rawSessionId) ? rawSessionId[0] : rawSessionId;
-
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const sessionId = urlParams.get('session_id');
     if(sessionId){
-        returnFunc(sessionId);
-        getTicket();
+        returnFunc();
     }
+   
 });  
 
 </script>
 <style scoped>
-.ticket {
+.tables ion-col {
+    margin-bottom: 10px;
+}
+.tables ion-col {
     border: 1px solid red;
     margin-bottom: 10px;
-    padding: 10px;
-    border-radius: 10px;
+}
+.tables ion-row {
+    gap: 10px   ;
 }
 </style>

@@ -4,6 +4,13 @@ const config: CapacitorConfig = {
   appId: 'com.vendor.thezonenyc',
   appName: 'The Zone NYC',
   webDir: 'dist',
+  server: {
+    androidScheme: 'myapp',
+    cleartext: true,
+  },
+  android: {
+    allowMixedContent: true 
+  },
   plugins: {
     SplashScreen: {
       launchShowDuration: 500,
