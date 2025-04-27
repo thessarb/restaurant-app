@@ -16,11 +16,18 @@ interface User {
     name: string;
     email: string;
     phone: string;
+    role: UserRole | null;
     role_id: number;
     email_verified_at: string;  // or Date if you'd prefer to store it as Date
     created_at: string;         // or Date
     updated_at: string;         // or Date
-    image: string | null;
+}
+
+interface UserRole {
+    id: number;
+    name: string;
+    created_at: string;
+    updated_at: string;   
 }
 
 interface AuthState {

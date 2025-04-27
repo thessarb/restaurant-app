@@ -1,0 +1,38 @@
+.scanner {
+    &__container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        padding: 16px;
+    }
+
+    &__button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 16px;
+
+        &-container {
+            background: var(--ion-background-color-step-50);
+            border-radius: 16px;
+            max-width: 300px;
+        }
+    }
+
+    &__label {
+        font-size: 22px;
+    }
+
+    &__icon {
+        font-size: 32px;
+        color: var(--ion-color-primary);
+    }
+
+    &__result {
+        margin-top: 1rem;
+        display: block;
+        text-align: center;
+    }
+}

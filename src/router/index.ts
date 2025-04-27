@@ -93,6 +93,12 @@ const routes: Array<RouteRecordRaw> = [
                 component: () => import("@/views/profile/Password.vue"),
                 meta: { requiresAuth: true },
             },
+            {
+                path: "scanner",
+                name: "scanner",
+                component: () => import("@/views/auth/Scanner.vue"),
+                meta: { requiresAuth: true },
+            },
         ],
     },
 ];
