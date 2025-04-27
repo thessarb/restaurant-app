@@ -13,6 +13,9 @@ http://ionicframework.com/docs/theming/ */
 @use 'components/buttons';
 @use 'components/ionic';
 
+// Animations
+@use 'animations/image_loading';
+
 // Templates
 @use 'templates/connection';
 @use 'templates/login';

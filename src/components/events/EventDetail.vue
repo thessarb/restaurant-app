@@ -4,8 +4,10 @@
         <ion-row>
             <ion-col size="12">
                 <ion-card>
-                    <img v-if=" props.event?.image" alt="Silhouette of mountains" :src="event.image ? baseUrl+'storage/'+event?.image?.url : 'https://ionicframework.com/docs/img/demos/card-media.png'" />
-                    <img v-else alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png" />
+                    <img v-show="imageLoaded" @load="onLoad" class="eventdetail__image" alt="Silhouette of mountains" :src="event.image ? baseUrl+'storage/'+event?.image?.url : 'https://ionicframework.com/docs/img/demos/card-media.png'" />
+                        <ion-row v-if="!imageLoaded" class="image-loading__wrapper">
+                            <ion-col class="image-loading__placeholder"></ion-col>
+                        </ion-row>
                     <ion-card-header>
                         <ion-card-title>{{ props.event?.name }}</ion-card-title>
                         <ion-card-subtitle></ion-card-subtitle>
@@ -77,9 +79,20 @@ const props = defineProps({
         default: () => ({ id: null })
     }
 });
+
+const imageLoaded = ref(false);
+
+function onLoad() {
+  imageLoaded.value = true;
+}
 </script>
 
 <style lang="css">
+
+.eventdetail__image {
+    aspect-ratio: 16/9;
+    object-fit: cover;
+}
 
 ion-button {
     flex-shrink: 0;

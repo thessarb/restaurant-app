@@ -54,6 +54,10 @@
         aspect-ratio: 1;
         object-fit: cover;
     }
+
+    .image-loading__wrapper {
+        aspect-ratio: 1;
+    }
 }
 
 @media (min-width: 768px)  {
