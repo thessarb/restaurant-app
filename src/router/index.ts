@@ -102,12 +102,6 @@ const routes: Array<RouteRecordRaw> = [
                 component: () => import("@/views/profile/Password.vue"),
                 meta: { requiresAuth: true },
             },
-            {
-                path: "scanner",
-                name: "scanner",
-                component: () => import("@/views/auth/Scanner.vue"),
-                meta: { requiresAuth: true },
-            },
         ],
     },
 ];
@@ -139,17 +133,14 @@ router.beforeEach(async (to, from, next) => {
 App.addListener('appUrlOpen', async (event: URLOpenListenerEvent) => {
     const url = event.url;
     
-    // Extract the eventId from the URL (assuming it's part of the path)
     const slug = url.split('usarestaurant.tech').pop();
-    const eventIdMatch = slug?.match(/tabs\/reserve\/([^?]+)/); // Match event_id in the URL
-    const sessionIdMatch = slug?.match(/session_id=([^&]+)/); // Match session_id in the URL
+    const eventIdMatch = slug?.match(/tabs\/reserve\/([^?]+)/);
+    const sessionIdMatch = slug?.match(/session_id=([^&]+)/); 
     
     if (eventIdMatch && sessionIdMatch) {
         const eventId = eventIdMatch[1];
         const sessionId = sessionIdMatch[1];
 
-        // Now you have both eventId and sessionId
-        // Push the route using Vue Router or your app's routing system
         router.push({
             name: 'reserve', 
             params: { id: eventId },
