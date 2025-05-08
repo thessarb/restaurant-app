@@ -48,22 +48,20 @@ import {
     IonGrid,
     IonIcon
 } from '@ionic/vue';
-import { arrowBack, mailOutline, call, camera } from 'ionicons/icons';
+import { arrowBack, mailOutline, call } from 'ionicons/icons';
 import { ref } from 'vue';
 import { useAuthStore } from '@/stores/authStore';
 import axios from 'axios';
 interface FormErrors {
-  email?: string[];  // Email errors
-  phone?: string[];  // Phone errors
-  [key: string]: string[] | undefined; // Additional dynamic keys if needed
+  email?: string[];
+  phone?: string[];
+  [key: string]: string[] | undefined;
 }
 const authStore = useAuthStore();
-const user = authStore.user;
 const email = ref(authStore.user?.email);
 const phone = ref(authStore.user?.phone);
 const success = ref('');
 const errors = ref<FormErrors>({}); 
-const baseUrl = ref(import.meta.env.VITE_APP_BASE);
 
 const profileUpdate = async () => {
     try {

@@ -68,18 +68,35 @@
                     </p>
                 </section>
             </ion-card>
-            <ReservationDialog v-else :event="event" />
+            <!-- <ReservationDialog v-else :event="event" /> -->
         </ion-content>
     </ion-page>
 </template>
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { loadStripe, Stripe} from '@stripe/stripe-js';
+// import { loadStripe, Stripe} from '@stripe/stripe-js';
 
 import axios from 'axios';
 import { useAuthStore } from "@/stores/authStore";
-import { useRoute,useRouter } from 'vue-router'
-import { arrowBack, calendar, calendarNumberOutline, cash, map} from 'ionicons/icons';
+import { useRoute,useRouter } from 'vue-router';
+import {
+    IonPage,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonContent,
+    IonButton,
+    IonCol,
+    IonRow,
+    IonGrid,
+    IonIcon,
+    IonList,
+    IonCardContent,
+    IonCard,
+    IonLabel,
+    IonItem
+} from '@ionic/vue';
+import { arrowBack, calendar, calendarNumberOutline, map} from 'ionicons/icons';
 // const stripe = ref<Stripe | null>(null);
 const process = ref(false);
 const sessionStatus = ref('');

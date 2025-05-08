@@ -60,14 +60,14 @@ const authStore = useAuthStore();
 interface Event {
     id: number;
     name: string;
-    date_start: string; // You may want to use a Date type if you're working with actual Date objects
+    date_start: string;
     description: string;
     rules: string;
     nr_tikets: number;
-    restaurant_id: number | null; // Can be null
-    created_at: string; // You may want to use a Date type if you're working with actual Date objects
-    updated_at: string; // You may want to use a Date type if you're working with actual Date objects
-    image: string | null; // Can be null
+    restaurant_id: number | null;
+    created_at: string;
+    updated_at: string;
+    image: string | null;
 }
 
 const event = ref<Event>({
@@ -99,7 +99,6 @@ const detail = async () => {
     }
 };
 
-// Combine both mounted hooks into one to simplify async logic
 onMounted(() => {
     detail();
 });

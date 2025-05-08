@@ -26,9 +26,15 @@
                         </ion-input>
                     </ion-col>
                 </ion-row>
+                <p v-if="authStore.loginErrors?.message">{{ authStore.loginErrors.message }}</p>
                 <ion-row>
                     <ion-col>
                         <ion-button @click="login" color="primary" expand="block">Login</ion-button>
+                    </ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col>
+                        <ion-button fill="outline" @click="router.push({path: 'register'})" color="primary" expand="block">Register</ion-button>
                     </ion-col>
                 </ion-row>
             </ion-grid> 
@@ -53,6 +59,7 @@ import {
 import { arrowBack, lockClosed, person } from 'ionicons/icons';
 import { ref,watch } from 'vue';
 import { useAuthStore } from "@/stores/authStore";
+import router from '@/router';
 
 const authStore = useAuthStore();
 
@@ -78,11 +85,9 @@ const login = async () => {
         if (authStore.isAuthenticated) {
             email.value = '';
             password.value = '';
-        } else {
-            console.log('Login failed');
         }
-    } catch (error) {
-        console.error('Login failed:', error);
+    } catch (error:any) {
+        console.log(error)
     }
 };
 </script>

@@ -45,7 +45,7 @@
                     </p>
                 </section>
             </ion-card>
-            <ReservationDialog v-else :event="event" />
+            <!-- <ReservationDialog v-else :event="event" /> -->
             <ion-row v-for="item in ticket" :key="item.id" class="ticket">
                 <ion-col>
                     <ion-card>
@@ -88,6 +88,9 @@ import {
     IonCardContent,
     IonItem,
     IonLabel,
+    IonRow,
+    IonCardTitle,
+    IonCol
 } from '@ionic/vue';
 // import ReservationDialog from '@/components/events/ReservationDialog.vue';
 

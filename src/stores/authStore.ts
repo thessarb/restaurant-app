@@ -3,12 +3,14 @@ import axios from 'axios';
 import { useRouter } from 'vue-router';
 import { Storage } from '@ionic/storage';
 
-// Define types for state and actions
 interface RegisterData {
-    name: string;
-    email: string;
-    phone: string;
-    password: string;
+    name: any;
+    surname: any;
+    email: any;
+    phone: any;
+    gender: any;
+    password: any;
+    password_confirmation: any;
 }
 
 interface User {
@@ -18,9 +20,9 @@ interface User {
     phone: string;
     role: UserRole | null;
     role_id: number;
-    email_verified_at: string;  // or Date if you'd prefer to store it as Date
-    created_at: string;         // or Date
-    updated_at: string;         // or Date
+    email_verified_at: string;
+    created_at: string;
+    updated_at: string;
     image: string | null;
 }
 interface UserRole {
@@ -35,7 +37,9 @@ interface AuthState {
     user: User | null;  // Define user type here instead of `any`
     token: string | null;
     router: ReturnType<typeof useRouter>;
-    register: RegisterData | null;
+    registerData: RegisterData | null;
+    isNormalUser: boolean;
+    loginErrors: object|null;
 }
 
 export const useAuthStore = defineStore('auth', {
@@ -45,7 +49,9 @@ export const useAuthStore = defineStore('auth', {
         user: null,
         token: null,
         router: useRouter(),
-        register: null,
+        registerData: null,
+        isNormalUser: false,
+        loginErrors:{}
     }),
 
     actions: {
@@ -71,9 +77,14 @@ export const useAuthStore = defineStore('auth', {
                 if (response.data) {
                     await this.fetchUserData(response.data);
                     this.router.push({ name: 'profile' });
+                    this.isNormalUser = response.data.user.role_id !== 3 || response.data.user.role_id !== undefined;
+                    this.loginErrors = null
                 }
             } catch (error: any) {
                 console.error('Error during login:', error);
+                this.loginErrors = {
+                    message: error.response.data?.message,
+                }
                 this.isAuthenticated = false;
             }
         },
@@ -90,6 +101,7 @@ export const useAuthStore = defineStore('auth', {
                     this.isAuthenticated = false;
                     this.user = null;
                     this.token = null;
+                    this.isNormalUser = true;
                     this.deleteUserStore();
                     this.router.push({ name: 'login' });
                 }
@@ -99,17 +111,19 @@ export const useAuthStore = defineStore('auth', {
         },
 
         async register() {
-            if (this.register) {
+            if (this.registerData) {
                 try {
-                    await axios.post(this.endpoint, {
-                        name: this.register.name,
-                        email: this.register.email,
-                        phone: this.register.phone,
-                        password: this.register.password,
+                    await axios.post(this.endpoint+'register', {
+                        name: this.registerData.name,
+                        email: this.registerData.email,
+                        phone: this.registerData.phone,
+                        gender: this.registerData.gender,
+                        password: this.registerData.password,
+                        password_confirmation: this.registerData.password_confirmation,
                     });
                     this.login({
-                        email: this.register.email,
-                        password: this.register.password,
+                        email: this.registerData.email,
+                        password: this.registerData.password,
                     });
                 } catch (error) {
                     console.error('Registration failed:', error);

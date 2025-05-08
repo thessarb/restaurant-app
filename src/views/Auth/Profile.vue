@@ -10,9 +10,7 @@
                 <ion-toolbar>
                     <ion-title size="large">Profile</ion-title>
                 </ion-toolbar>
-            </ion-header>
-            <!--  -->
-            
+            </ion-header>            
             <ion-grid class="profile__data">
                 <ion-row>
                     <ion-col>
@@ -59,7 +57,6 @@
                     </ion-item>
                 </router-link>
             </ion-list>
-            <!--  -->
             <ion-list class="logout profile__logout">
                 <ion-item @click="logout()" lines="none">
                     <ion-icon  color="danger"  :icon="logOutOutline" slot="start"></ion-icon>
@@ -69,9 +66,7 @@
         </ion-content>
     </ion-page>
 </template>
-
 <script setup lang="ts">
-
 import { 
     IonPage, 
     IonHeader, 
@@ -88,8 +83,6 @@ import {
 } from '@ionic/vue';
 import { informationCircleOutline, lockClosedOutline, logOutOutline, personOutline } from 'ionicons/icons';
 import { useAuthStore } from "@/stores/authStore";
-import { ref } from 'vue';
-const baseUrl = ref(import.meta.env.VITE_APP_BASE);
 
 const authStore = useAuthStore();
 const user = authStore.user;
