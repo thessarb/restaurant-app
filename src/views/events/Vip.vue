@@ -30,33 +30,9 @@
                             <ion-label>Date: {{ event?.date_start }}</ion-label>
                         </ion-item>
                     </ion-list>
-                    <ion-grid class="tables">
-                        <ion-row>
-                            <ion-col>1</ion-col>
-                            <ion-col>2</ion-col>
-                            <ion-col>3</ion-col>
-                        </ion-row>
-                        <ion-row>
-                            <ion-col>4</ion-col>
-                            <ion-col>5</ion-col>
-                            <ion-col>6</ion-col>
-                        </ion-row>
-                        <ion-row>
-                            <ion-col>7</ion-col>
-                            <ion-col>8</ion-col>
-                            <ion-col>9</ion-col>
-                        </ion-row>
-                        <ion-row>
-                            <ion-col>10</ion-col>
-                            <ion-col>11</ion-col>
-                            <ion-col>12</ion-col>
-                        </ion-row>
-                        <ion-row>
-                            <ion-col>13</ion-col>
-                            <ion-col>14</ion-col>
-                            <ion-col>15</ion-col>
-                        </ion-row>
-                    </ion-grid>
+
+                    <Tables />
+         
                 </ion-card-content>
                 <ion-button :disabled="process" color="primary" expand="block" @click="paymentFlow">Reserve</ion-button>
                 <ion-card class="ion-padding" id="checkout">
@@ -79,6 +55,7 @@ import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import { useAuthStore } from "@/stores/authStore";
 import { useRoute,useRouter } from 'vue-router';
+import Tables from '@/components/tables/Tables.vue';
 import {
     IonPage,
     IonHeader,
@@ -86,15 +63,14 @@ import {
     IonTitle,
     IonContent,
     IonButton,
-    IonCol,
-    IonRow,
     IonGrid,
     IonIcon,
     IonList,
     IonCardContent,
     IonCard,
     IonLabel,
-    IonItem
+    IonItem,
+    IonRow
 } from '@ionic/vue';
 import { arrowBack, calendar, calendarNumberOutline, map} from 'ionicons/icons';
 // const stripe = ref<Stripe | null>(null);
@@ -298,14 +274,5 @@ onMounted(() => {
 
 </script>
 <style scoped>
-.tables ion-col {
-    margin-bottom: 10px;
-}
-.tables ion-col {
-    border: 1px solid red;
-    margin-bottom: 10px;
-}
-.tables ion-row {
-    gap: 10px   ;
-}
+
 </style>
