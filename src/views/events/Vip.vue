@@ -29,14 +29,12 @@
                             <ion-icon  :icon="calendarNumberOutline" slot="start"></ion-icon>
                             <ion-label>Date: {{ event?.date_start }}</ion-label>
                         </ion-item>
-                    </ion-list>
-
-                    <Tables />
-         
+                    </ion-list>         
                 </ion-card-content>
-                <ion-button :disabled="process" color="primary" expand="block" @click="paymentFlow">Reserve</ion-button>
+                <!-- <ion-button :disabled="process" color="primary" expand="block" @click="paymentFlow">Reserve</ion-button> -->
                 <ion-card class="ion-padding" id="checkout">
                 </ion-card>
+                <Tables />
                 <section v-if="success" id="success" class="hidden">
                     <p>
                         We appreciate your business! A confirmation email will be sent to <span id="customer-email"></span>.
@@ -44,6 +42,7 @@
                     </p>
                 </section>
             </ion-card>
+            
             <!-- <ReservationDialog v-else :event="event" /> -->
         </ion-content>
     </ion-page>
@@ -62,19 +61,16 @@ import {
     IonToolbar,
     IonTitle,
     IonContent,
-    IonButton,
-    IonGrid,
     IonIcon,
     IonList,
     IonCardContent,
     IonCard,
     IonLabel,
     IonItem,
-    IonRow
 } from '@ionic/vue';
 import { arrowBack, calendar, calendarNumberOutline, map} from 'ionicons/icons';
 // const stripe = ref<Stripe | null>(null);
-const process = ref(false);
+// const process = ref(false);
 const sessionStatus = ref('');
 const customerEmail = ref('');
 const authStore = useAuthStore();
