@@ -70,6 +70,7 @@
     import { calendar, location } from 'ionicons/icons';
     import { PropType, onMounted, ref } from 'vue';
     import axios from 'axios';
+    import { useDataStore } from "@/stores/dataStroe";
 
     // Reactive state for active button
     const activeButton = ref(99);
@@ -109,6 +110,7 @@
             required: true
         }
     });
+    const dataStore = useDataStore();
     const baseUrl = ref(import.meta.env.VITE_APP_BASE);
     const restaurants = ref<Restaurant[]>([]);
     const eventList = ref<Event[]>([]);
@@ -155,6 +157,7 @@
     onMounted(() => {
         settings();
         getEvents()
+        dataStore.storeTable1();
     })
 </script>
 

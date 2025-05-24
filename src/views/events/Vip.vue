@@ -34,7 +34,7 @@
                 <!-- <ion-button :disabled="process" color="primary" expand="block" @click="paymentFlow">Reserve</ion-button> -->
                 <ion-card class="ion-padding" id="checkout">
                 </ion-card>
-                <Tables />
+                <TablesList />
                 <section v-if="success" id="success" class="hidden">
                     <p>
                         We appreciate your business! A confirmation email will be sent to <span id="customer-email"></span>.
@@ -48,8 +48,8 @@
     </ion-page>
 </template>
 <script setup lang="ts">
+import TablesList from '@/components/tables/TablesList.vue';
 import { ref, onMounted } from 'vue';
-import * as Tables from '@/components/tables/Tables.vue';
 // import { loadStripe, Stripe} from '@stripe/stripe-js';
 
 import axios from 'axios';
