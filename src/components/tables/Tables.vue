@@ -4,13 +4,15 @@
 	</ion-row>
 </template>
   
-  <script setup>
+  <script setup  lang="ts">
   import { ref, onMounted, nextTick } from 'vue'
+  import type { Ref } from 'vue';
+
   import {
 
     IonRow
 } from '@ionic/vue';
-  const svgContainer = ref(null)
+const svgContainer: Ref<HTMLElement | null> = ref(null);
   const text = ref('')
   
   onMounted(async () => {
@@ -20,13 +22,13 @@
   
       await nextTick() // Wait for Vue to update the DOM
   
-      const clickableElements = Array.from(svgContainer.value.querySelectorAll('[id^="table"]'))
-      .filter(el => {
+      const clickableElements = Array.from(svgContainer.value!.querySelectorAll('[id^="table"]'))
+      .filter((el: any) => {
         const match = el.id.match(/^table(\d+)$/);
         return match && Number(match[1]) >= 1 && Number(match[1]) <= 15;
       });
-      clickableElements.forEach(el => {
-        el.addEventListener('click', (e) => {
+      clickableElements.forEach((el: any) => {
+        el.addEventListener('click', (e: any) => {
             const clickedId = e.currentTarget.id; // This gives the ID of the element you attached the listener to
           console.log(`Clicked ID: ${clickedId}`);      
         })

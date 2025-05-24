@@ -39,7 +39,7 @@ interface AuthState {
     router: ReturnType<typeof useRouter>;
     registerData: RegisterData | null;
     isNormalUser: boolean;
-    loginErrors: object|null;
+    loginErrors: { message?: string } | null;
 }
 
 export const useAuthStore = defineStore('auth', {

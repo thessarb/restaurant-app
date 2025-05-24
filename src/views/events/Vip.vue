@@ -49,12 +49,12 @@
 </template>
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+import * as Tables from '@/components/tables/Tables.vue';
 // import { loadStripe, Stripe} from '@stripe/stripe-js';
 
 import axios from 'axios';
 import { useAuthStore } from "@/stores/authStore";
 import { useRoute,useRouter } from 'vue-router';
-import Tables from '@/components/tables/Tables.vue';
 import {
     IonPage,
     IonHeader,
