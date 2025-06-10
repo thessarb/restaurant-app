@@ -13,7 +13,7 @@
   
     <ion-row v-if="selectedSegment === 'upcoming'">
         <ion-col size="12" v-for="reservation in reservations?.upcoming" :key="reservation.id">
-            <ion-card>
+            <ion-card @click="setOpen(true)">
                 <ion-list>
                     <ion-item>
                         <ion-thumbnail slot="start">
@@ -39,7 +39,7 @@
     </ion-row>
     <ion-row v-else-if="selectedSegment === 'completed'">
         <ion-col size="12" v-for="reservation in reservations?.completed" :key="reservation.id">
-            <ion-card>
+            <ion-card @click="setOpen(true)">
                 <ion-list>
                     <ion-item>
                         <ion-thumbnail slot="start">
@@ -63,17 +63,53 @@
             </ion-card>
         </ion-col>
     </ion-row>
+    
     <ion-row v-else-if="selectedSegment === 'cancelled'">
       <!-- Cancelled View -->
       <p>Showing cancelled events...</p>
     </ion-row>
+    <ion-modal :is-open="isOpen">
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Modal</ion-title>
+          <ion-buttons slot="end">
+            <ion-button @click="setOpen(false)">Close</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni illum quidem recusandae ducimus quos
+          reprehenderit. Veniam, molestias quos, dolorum consequuntur nisi deserunt omnis id illo sit cum qui. Eaque,
+          dicta.
+        </p>
+      </ion-content>
+    </ion-modal>
   </template>
   
   <script setup lang="ts">
   import {
     IonSegment,
     IonSegmentButton,
-    IonLabel
+    IonLabel, 
+    IonButtons, 
+    IonButton, 
+    IonModal, 
+    IonHeader, 
+    IonToolbar, 
+    IonContent, 
+    IonTitle,
+    IonCol,
+    IonRow,
+    IonCard,
+    IonItem,
+    IonCardHeader,
+    IonCardTitle,
+    IonCardContent,
+    IonThumbnail,
+    IonIcon,
+    IonList,
+    IonCardSubtitle 
   } from '@ionic/vue'
   import { ref,onMounted } from 'vue'
   import axios from 'axios'
@@ -82,8 +118,27 @@
 import { useAuthStore } from '@/stores/authStore'
 import { calendarOutline, pricetagOutline } from 'ionicons/icons'
 
+  const isOpen = ref(false);
+
+  const setOpen = (open: boolean) => (isOpen.value = open);
+interface Event {
+  name: string
+}
+interface Reservation {
+  id: string | number
+  type: string
+  event: Event
+  date_start: string
+}
+interface Reservations {
+  upcoming: Reservation[]
+  completed: Reservation[]
+}
 const authStore = useAuthStore();
-const reservations = ref([]);
+const reservations = ref<Reservations>({
+  upcoming: [],
+  completed: []
+})
 const getReservations = async () => {
     try {
        const response =  await axios.get(import.meta.env.VITE_APP_ENDPOINT + `reservation/reservations?user_id=${authStore?.user?.id}`,
