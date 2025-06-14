@@ -1,33 +1,33 @@
 <template>
-  <ion-content>
-    <ion-modal ref="modal" trigger="open-modal" @willDismiss="onWillDismiss">
-      <ion-header>
-        <ion-toolbar>
-          <ion-buttons slot="start">
-            <ion-button @click="cancel()">Cancel</ion-button>
-          </ion-buttons>
-          <ion-title>Welcome</ion-title>
-          <ion-buttons slot="end">
-            <ion-button :strong="true" @click="confirm()">Confirm</ion-button>
-          </ion-buttons>
-        </ion-toolbar>
-      </ion-header>
-      <ion-content class="ion-padding">
-        <ion-item>
-          <ion-input
-            label="Enter your name"
-            label-placement="stacked"
-            ref="input"
-            type="text"
-            placeholder="Your name"
-          ></ion-input>
-        </ion-item>
-      </ion-content>
-    </ion-modal>
-  </ion-content>
-  <ion-row>
-  <div class="svg-wrapper tablelist" ref="svgContainer" v-html="text"></div>
-</ion-row>
+    <ion-content>
+        <ion-modal ref="modal" trigger="open-modal" @willDismiss="onWillDismiss">
+        <ion-header>
+            <ion-toolbar>
+                <ion-buttons slot="start">
+                    <ion-button @click="cancel()">Cancel</ion-button>
+                </ion-buttons>
+                <ion-title>Welcome</ion-title>
+                <ion-buttons slot="end">
+                    <ion-button :strong="true" @click="confirm()">Confirm</ion-button>
+                </ion-buttons>
+            </ion-toolbar>
+        </ion-header>
+        <ion-content class="ion-padding">
+            <ion-row>
+                <div class="svg-wrapper tablelist" ref="svgContainer" v-html="text"></div>
+            </ion-row>
+            <ion-item>
+                <ion-input
+                    label="Enter your name"
+                    label-placement="stacked"
+                    ref="input"
+                    type="text"
+                    placeholder="Your name"
+                ></ion-input>
+            </ion-item>
+        </ion-content>
+        </ion-modal>
+    </ion-content>
 </template>
 <script setup lang="ts">
 import { ref, onMounted, nextTick } from 'vue';
@@ -102,6 +102,6 @@ onMounted(async () => {
 </script>
 <style scoped>
 	.svg-wrapper {
-		width: 100%
+		width: 100%;
 	}
 </style>

@@ -80,6 +80,7 @@
         activeButton.value = zone;
         getEvents(zone);
     };
+
     interface Event {
         id: number;
         name: string;
@@ -92,6 +93,7 @@
         created_at: string;
         updated_at: string;
     }
+
     interface Restaurant {
         id: number;
         name: string;
@@ -99,6 +101,7 @@
         created_at: string;
         updated_at: string;
     }
+    
     interface Image {
         id: number;
         url: string;

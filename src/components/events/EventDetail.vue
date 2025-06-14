@@ -19,22 +19,22 @@
         <ion-row>
             <ion-col>
                 <ion-list lines="none">
-                    <a target="_blank" :href="event.restaurant?.location">
+                    <a target="_blank" :href="event.restaurant?.locationOutline">
                         <ion-item class="default-bg">
-                            <ion-icon aria-hidden="true" :icon="location" slot="start"></ion-icon>
+                            <ion-icon aria-hidden="true" :icon="locationOutline" slot="start"></ion-icon>
                             <ion-label>{{event.restaurant?.name}}</ion-label>
                         </ion-item>
                     </a>
                     <ion-item class="default-bg">
-                        <ion-icon aria-hidden="true" :icon="calendar" slot="start"></ion-icon>
+                        <ion-icon aria-hidden="true" :icon="calendarOutline" slot="start"></ion-icon>
                         <ion-label>15 March - Saturday</ion-label>
                     </ion-item>
                     <ion-item class="default-bg">
-                        <ion-icon aria-hidden="true" :icon="alarm" slot="start"></ion-icon>
+                        <ion-icon aria-hidden="true" :icon="alarmOutline" slot="start"></ion-icon>
                         <ion-label>Starts at 23:00</ion-label>
                     </ion-item>
                     <ion-item class="default-bg">
-                        <ion-icon aria-hidden="true" :icon="document" slot="start"></ion-icon>
+                        <ion-icon aria-hidden="true" :icon="documentOutline" slot="start"></ion-icon>
                         <ion-label>Rules:</ion-label>
                     </ion-item>
                     <ion-item class="default-bg">
@@ -67,7 +67,7 @@ import {
     IonLabel,
     IonButton
 } from '@ionic/vue';
-import { alarm, calendar, document, location } from 'ionicons/icons';
+import { alarmOutline, calendarOutline, documentOutline, locationOutline } from 'ionicons/icons';
 const baseUrl = ref(import.meta.env.VITE_APP_BASE);
 
 const props = defineProps({

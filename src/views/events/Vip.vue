@@ -31,12 +31,7 @@ import {
     IonToolbar,
     IonTitle,
     IonContent,
-    IonIcon,
-    IonList,
-    IonCardContent,
-    IonCard,
-    IonLabel,
-    IonItem,
+    IonIcon
 } from '@ionic/vue';
 import { arrowBack, calendar, calendarNumberOutline, map} from 'ionicons/icons';
 // const stripe = ref<Stripe | null>(null);
@@ -68,18 +63,18 @@ interface Restaurant {
 }
     
 const event = ref<Event>({
-  id: 8,
-  name: "Pizza Night",
-  date_start: "2025-05-13 12:17:50",
-  description: "Indulge in a variety of delicious pizzas made fresh from our oven.",
-  rules: "Take-out options available.",
-  nr_tikets: 0,
-  price_per_ticket: 0,
-  restaurant_id: null,
-  restaurant: null,
-  created_at: "2025-03-29T12:17:50.000000Z",
-  updated_at: "2025-03-29T12:17:50.000000Z",
-  image: null
+    id: 8,
+    name: "Pizza Night",
+    date_start: "2025-05-13 12:17:50",
+    description: "Indulge in a variety of delicious pizzas made fresh from our oven.",
+    rules: "Take-out options available.",
+    nr_tikets: 0,
+    price_per_ticket: 0,
+    restaurant_id: null,
+    restaurant: null,
+    created_at: "2025-03-29T12:17:50.000000Z",
+    updated_at: "2025-03-29T12:17:50.000000Z",
+    image: null
 });
 
 const type = ref('standard');
@@ -239,6 +234,3 @@ onMounted(() => {
 });  
 
 </script>
-<style scoped>
-
-</style>

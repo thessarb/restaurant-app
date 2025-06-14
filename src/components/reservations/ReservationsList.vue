@@ -41,7 +41,7 @@
         <ion-col class="reservation__item" size="12" v-for="reservation in reservations?.completed" :key="reservation.id">
             <ion-card @click="setReservation(reservation)">
                 <ion-list lines="none">
-                    <ion-item>
+                    <ion-item class="reservation__item-bg">
                         <ion-label class="reservation__item-card">
                             <ion-thumbnail slot="start">
                                 <ion-icon v-if="reservation.type == 'ticket'" :icon="ticketOutline" size="large" />
@@ -68,21 +68,39 @@
         <!-- Cancelled View -->
         <p>Showing cancelled events...</p>
     </ion-row>
-    <ion-modal :is-open="isOpen">
+    <ion-modal ref="modal" :initial-breakpoint="0.85" :is-open="isOpen">
         <ion-header>
-            <ion-toolbar>
-                <ion-title>{{selectedReservation.type[0].toUpperCase() + selectedReservation.type.slice(1)}}: {{selectedReservation.event.name}}</ion-title>
+            <ion-toolbar class="default-bg">
+                <ion-title>{{selectedReservationTitle}}</ion-title>
                 <ion-buttons slot="end">
-                    <ion-button @click="setOpen(false)">Close</ion-button>
+                    <ion-button class="modal-button" @click="setOpen(false)">Close</ion-button>
                 </ion-buttons>
             </ion-toolbar>
         </ion-header>
         <ion-content class="ion-padding">
-            <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni illum quidem recusandae ducimus quos
-            reprehenderit. Veniam, molestias quos, dolorum consequuntur nisi deserunt omnis id illo sit cum qui. Eaque,
-            dicta.
-            </p>
+            <ion-row>
+                <ion-col>
+                    <ion-list lines="none">
+                        <a target="_blank" :href="selectedReservation?.restaurant?.location">
+                            <ion-item class="default-bg">
+                                <ion-icon aria-hidden="true" :icon="locationOutline" slot="start"></ion-icon>
+                                <ion-label>{{selectedReservation?.restaurant?.name}}</ion-label>
+                            </ion-item>
+                        </a>
+                        <ion-item class="default-bg">
+                            <ion-icon aria-hidden="true" :icon="calendarOutline" slot="start"></ion-icon>
+                            <ion-label>{{ formatDate(selectedReservation?.event?.date_start) }}</ion-label>
+                        </ion-item>
+                        <ion-item class="default-bg">
+                            <ion-icon aria-hidden="true" :icon="alarmOutline" slot="start"></ion-icon>
+                            <ion-label>Starts at {{ formatTime(selectedReservation?.event?.date_start) }}</ion-label>
+                        </ion-item>
+                        <ion-item class="default-bg" v-if="selectedReservation?.event?.description">
+                            {{ selectedReservation?.event?.description }}
+                        </ion-item>
+                    </ion-list>
+                </ion-col>
+            </ion-row>
         </ion-content>
     </ion-modal>
 </template>
@@ -116,24 +134,75 @@
   
     const selectedSegment = ref<'upcoming' | 'completed' | 'cancelled'>('upcoming')
     import { useAuthStore } from '@/stores/authStore'
-    import { calendarOutline, ticketOutline } from 'ionicons/icons'
+    import { calendarOutline, ticketOutline, alarmOutline, locationOutline } from 'ionicons/icons'
 
-    const selectedReservation = ref<Reservation | null>(null);
+    const selectedReservation = ref< Reservation | null >(null);
+    const selectedReservationTitle = ref('');
     const isOpen = ref(false);
 
-    const setReservation = (reservation: Reservation|null) => {
+    const setReservation = (reservation: Reservation) => {
+        if (!reservation|| !reservation.type || !reservation.type.length || !reservation.event?.name) selectedReservationTitle.value = '';
+        selectedReservationTitle.value = `${reservation.type[0].toUpperCase()}${reservation.type.slice(1)}: ${reservation.event.name}`;
         selectedReservation.value = reservation;
         isOpen.value = true;
     };
+
+    const formatDate = (dateString: string | undefined) => {
+        // Ensure the dateString is in a valid format
+        if (!dateString) return '01 January - Monday';
+        const dateObj = new Date(dateString);
+
+        const day = dateObj.getDate();
+        const month = new Intl.DateTimeFormat("en", { month: "long" }).format(dateObj);
+        const weekday = new Intl.DateTimeFormat("en", { weekday: "long" }).format(dateObj);
+
+        return `${day} ${month} - ${weekday}`;
+    };
+
+    const formatTime = (dateString: string | undefined): string => {
+        if (!dateString) return '00:00';
+        
+        const dateObj = new Date(dateString.replace(' ', 'T')); // Convert to ISO format
+
+        const hours = String(dateObj.getHours()).padStart(2, '0');
+        const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+
+        return `${hours}:${minutes}`;
+    };
+
     const setOpen = (open: boolean) => (isOpen.value = open);
 
     interface Event {
-        name: string
+        id: number;
+        name: string;
+        date_start: string;
+        description: string;
+        rules: string;
+        restaurant_id: string | null;
+        restaurant: Restaurant | null
+        image: Image | null
+        created_at: string;
+        updated_at: string;
     }
+
+    interface Restaurant {
+        id: number;
+        name: string;
+        location: string;
+        created_at: string;
+        updated_at: string;
+    }
+
+    interface Image {
+        id: number;
+        url: string;
+    }
+
     interface Reservation {
         id: string | number
         type: string
         event: Event
+        restaurant: Restaurant
         date_start: string
     }
 
@@ -165,4 +234,10 @@
         getReservations()
     });
 </script>
+<style scoped>
+    ion-segment-button.ios::part(indicator-background) {
+        background: var(--ion-color-primary);
+        border-radius: 16px;
+    }
+</style>
   

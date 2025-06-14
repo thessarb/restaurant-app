@@ -7,6 +7,10 @@
         gap: 16px;
         padding: 16px !important;
         background: var(--ion-background-color);
+
+        &--no-padding {
+            padding: 0 !important;
+        }
     }
 
     &__item {
@@ -14,8 +18,14 @@
         border-radius: var(--border-radius);
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.22);
         overflow: hidden;
+        background: var(--background);
         --border-radius: 16px;
         --background: var(--ion-background-color-step-50);
+
+        &-bg {
+            background: var(--background);
+            --background: var(--ion-background-color-step-50);
+        }
         
         &-card {
             display: flex !important;
@@ -28,6 +38,8 @@
         
         &-info {
             box-shadow: none;
+            background: var(--background);
+            --background: var(--ion-background-color-step-50);
         }
 
         ion-card {
