@@ -17,14 +17,14 @@
                 <ion-list>
                     <ion-item>
                         <ion-thumbnail slot="start">
-                            <ion-icon v-if="reservation.type == 'ticket'" :icon="pricetagOutline" size="large" />
+                            <ion-icon v-if="reservation.type == 'ticket'" :icon="ticketOutline" size="large" />
                             <ion-icon v-else :icon="calendarOutline" size="large" />
                         </ion-thumbnail>
                         <ion-label>
                             <ion-card>
                                 <ion-card-header>
-                                <ion-card-title>{{reservation.type}}</ion-card-title>
-                                    <ion-card-subtitle>{{reservation.event.name}}</ion-card-subtitle>
+                                    <ion-card-title>{{reservation.event.name}}</ion-card-title>
+                                    <ion-card-subtitle>{{reservation.type[0].toUpperCase() + reservation.type.slice(1)}}</ion-card-subtitle>
                                 </ion-card-header>
 
                                 <ion-card-content>
@@ -37,23 +37,23 @@
             </ion-card>
         </ion-col>
     </ion-row>
-    <ion-row v-else-if="selectedSegment === 'completed'">
-        <ion-col size="12" v-for="reservation in reservations?.completed" :key="reservation.id">
+    <ion-row class="reservation__items" v-else-if="selectedSegment === 'completed'">
+        <ion-col class="reservation__item" size="12" v-for="reservation in reservations?.completed" :key="reservation.id">
             <ion-card @click="setOpen(true)">
-                <ion-list>
+                <ion-list lines="none">
                     <ion-item>
-                        <ion-thumbnail slot="start">
-                            <ion-icon v-if="reservation.type == 'ticket'" :icon="pricetagOutline" size="large" />
-                            <ion-icon v-else :icon="calendarOutline" size="large" />
-                        </ion-thumbnail>
-                        <ion-label>
-                            <ion-card>
+                        <ion-label class="reservation__item-card">
+                            <ion-thumbnail slot="start">
+                                <ion-icon v-if="reservation.type == 'ticket'" :icon="ticketOutline" size="large" />
+                                <ion-icon v-else :icon="calendarOutline" size="large" />
+                            </ion-thumbnail>
+                            <ion-card class="reservation__item-info">
                                 <ion-card-header>
-                                <ion-card-title>{{reservation.type}}</ion-card-title>
-                                    <ion-card-subtitle>{{reservation.event.name}}</ion-card-subtitle>
+                                    <ion-card-title>{{reservation.event.name}}</ion-card-title>
+                                    <ion-card-subtitle>{{reservation.type[0].toUpperCase() + reservation.type.slice(1)}}</ion-card-subtitle>
                                 </ion-card-header>
 
-                                <ion-card-content>
+                                <ion-card-content v-if="reservation.date_start">
                                     {{reservation.date_start}}
                                 </ion-card-content>
                             </ion-card>
@@ -116,7 +116,7 @@
   
   const selectedSegment = ref<'upcoming' | 'completed' | 'cancelled'>('upcoming')
 import { useAuthStore } from '@/stores/authStore'
-import { calendarOutline, pricetagOutline } from 'ionicons/icons'
+import { calendarOutline, ticketOutline } from 'ionicons/icons'
 
   const isOpen = ref(false);
 
