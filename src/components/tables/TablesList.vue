@@ -26,8 +26,8 @@
     </ion-modal>
   </ion-content>
   <ion-row>
-    <div  class="svg-wrapper" ref="svgContainer" v-html="text"></div>
-  </ion-row>
+  <div class="svg-wrapper tablelist" ref="svgContainer" v-html="text"></div>
+</ion-row>
 </template>
 <script setup lang="ts">
 import { ref, onMounted, nextTick } from 'vue';

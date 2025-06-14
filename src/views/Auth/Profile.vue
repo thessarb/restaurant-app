@@ -7,7 +7,7 @@
         </ion-header>
         <ion-content :fullscreen="true" class="profile">
             <ion-header collapse="condense">
-                <ion-toolbar>
+                <ion-toolbar class="default-bg">
                     <ion-title size="large">Profile</ion-title>
                 </ion-toolbar>
             </ion-header>            
@@ -15,10 +15,10 @@
                 <ion-row>
                     <ion-col>
                         <ion-list  lines="none">
-                            <ion-item>
+                            <ion-item class="default-bg">
                                 <ion-label>{{user?.name}}</ion-label>
                             </ion-item>
-                            <ion-item>
+                            <ion-item class="default-bg">
                                 <ion-label>Phone: {{user?.phone}}</ion-label>
                             </ion-item>
                         </ion-list>
@@ -28,37 +28,37 @@
             <ion-grid class="profile__history">
                 <ion-row>
                     <ion-col>
-                        <ion-item lines="none" class="ion-text-center">1</ion-item>
-                        <ion-item lines="none">upcomming reservations</ion-item>
+                        <ion-item lines="none" class="default-bg ion-text-center">1</ion-item>
+                        <ion-item lines="none" class="default-bg">upcomming reservations</ion-item>
                     </ion-col>
                     <ion-col>
-                        <ion-item lines="none" class="ion-text-center">10</ion-item>
-                        <ion-item lines="none">total reservations</ion-item>
+                        <ion-item lines="none" class="default-bg ion-text-center">10</ion-item>
+                        <ion-item lines="none" class="default-bg">total reservations</ion-item>
                     </ion-col>
                 </ion-row>
             </ion-grid>
             <ion-list>
                 <router-link :to="{ name: 'personal'}">
-                    <ion-item lines="none">
+                    <ion-item class="default-bg" lines="none">
                         <ion-icon  :icon="personOutline" slot="start"></ion-icon>
                         <ion-label>Personal information</ion-label>
                     </ion-item>
                 </router-link>
                 <router-link :to="{ name: 'password'}">
-                    <ion-item  lines="none">
+                    <ion-item class="default-bg" lines="none">
                         <ion-icon  :icon="lockClosedOutline" slot="start"></ion-icon>
                         <ion-label>Security</ion-label>
                     </ion-item>
                 </router-link>
                 <router-link :to="{ name: 'privacy'}">
-                    <ion-item lines="none">
+                    <ion-item class="default-bg" lines="none">
                         <ion-icon  :icon="informationCircleOutline" slot="start"></ion-icon>
                         <ion-label>Privacy Policy</ion-label>
                     </ion-item>
                 </router-link>
             </ion-list>
             <ion-list class="logout profile__logout">
-                <ion-item @click="logout()" lines="none">
+                <ion-item class="default-bg" @click="logout()" lines="none">
                     <ion-icon  color="danger"  :icon="logOutOutline" slot="start"></ion-icon>
                     <ion-label  color="danger">Log Out</ion-label>
                 </ion-item>

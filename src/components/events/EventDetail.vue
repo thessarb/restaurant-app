@@ -1,9 +1,8 @@
 <template>
-
     <ion-grid>
         <ion-row>
             <ion-col size="12">
-                <ion-card>
+                <ion-card class="default-bg">
                     <img v-if=" props.event?.image" alt="Silhouette of mountains" :src="event.image ? baseUrl+'storage/'+event?.image?.url : 'https://ionicframework.com/docs/img/demos/card-media.png'" />
                     <img v-else alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png" />
                     <ion-card-header>
@@ -21,24 +20,24 @@
             <ion-col>
                 <ion-list lines="none">
                     <a target="_blank" :href="event.restaurant?.location">
-                        <ion-item>
+                        <ion-item class="default-bg">
                             <ion-icon aria-hidden="true" :icon="location" slot="start"></ion-icon>
                             <ion-label>{{event.restaurant?.name}}</ion-label>
                         </ion-item>
                     </a>
-                    <ion-item>
+                    <ion-item class="default-bg">
                         <ion-icon aria-hidden="true" :icon="calendar" slot="start"></ion-icon>
                         <ion-label>15 March - Saturday</ion-label>
                     </ion-item>
-                    <ion-item>
+                    <ion-item class="default-bg">
                         <ion-icon aria-hidden="true" :icon="alarm" slot="start"></ion-icon>
                         <ion-label>Starts at 23:00</ion-label>
                     </ion-item>
-                    <ion-item>
+                    <ion-item class="default-bg">
                         <ion-icon aria-hidden="true" :icon="document" slot="start"></ion-icon>
                         <ion-label>Rules:</ion-label>
                     </ion-item>
-                    <ion-item>
+                    <ion-item class="default-bg">
                         Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quam alias, harum officia, doloribus rem tempora accusantium voluptatibus voluptates quaerat fuga in? Consectetur quaerat molestiae dicta vel. Repellendus deleniti sapiente non.
                     </ion-item>
                 </ion-list>

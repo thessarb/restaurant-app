@@ -12,16 +12,26 @@
     &__item {
         width: 100%;
         border-radius: var(--border-radius);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.22);
+        overflow: hidden;
         --border-radius: 16px;
         --background: var(--ion-background-color-step-50);
         
         &-card {
             display: flex !important;
-            --background: var(--ion-background-color-step-50);
+            align-items: center;
+            margin: 0;
+            padding: 16px;
+            border-radius: var(--border-radius);
+            --border-radius: 16px;
         }
         
         &-info {
-            --background: var(--ion-background-color-step-50);
+            box-shadow: none;
+        }
+
+        ion-card {
+            box-shadow: none;
         }
     }
 }

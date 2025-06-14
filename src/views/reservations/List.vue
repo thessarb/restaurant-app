@@ -1,13 +1,13 @@
 <template>
   <ion-page>
     <ion-header>
-      <ion-toolbar>
+      <ion-toolbar class="default-bg">
         <ion-title class="ion-text-center">Reservations</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="true">
       <ion-header collapse="condense">
-        <ion-toolbar>
+        <ion-toolbar class="default-bg">
           <ion-title size="large">Reservations</ion-title>
         </ion-toolbar>
       </ion-header>

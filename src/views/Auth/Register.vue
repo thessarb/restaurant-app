@@ -17,7 +17,7 @@
                 </ion-row>
                 <ion-row>
                     <ion-col>
-                        <ion-input v-model="surname" color="primary" fill="outline" placeholder="Surame">
+                        <ion-input v-model="surname" color="primary" fill="outline" placeholder="Surname">
                             <ion-icon slot="start" :icon="person" ></ion-icon>
                         </ion-input>
                     </ion-col>

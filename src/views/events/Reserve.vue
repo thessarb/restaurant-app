@@ -8,7 +8,7 @@
         </ion-header>
         <ion-content :fullscreen="true" class="ion-padding">
             <ion-header collapse="condense">
-                <ion-toolbar>
+                <ion-toolbar class="default-bg">
                     <ion-title size="large">Reserve {{ event?.name }}</ion-title>
                 </ion-toolbar>
             </ion-header>

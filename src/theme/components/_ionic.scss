@@ -2,6 +2,7 @@
 .ionic {
     &__toolbar {
         padding: 0 16px;
+        --background: var(--ion-background-color);
     }
 
     &__tabs {

@@ -12,37 +12,7 @@
                     <ion-title size="large">Reserve {{ event?.name }}</ion-title>
                 </ion-toolbar>
             </ion-header>
-            <ion-card v-if="type == 'standart'" >
-                <ion-card-content>
-                    <ion-list lines="none">
-                        <a target="_blank" :href="event.restaurant?.location">
-                            <ion-item>
-                                <ion-icon  :icon="map" slot="start"></ion-icon>
-                                <ion-label>Location: {{ event?.restaurant?.name }}</ion-label>
-                            </ion-item>
-                        </a>
-                        <ion-item>
-                            <ion-icon  :icon="calendar" slot="start"></ion-icon>
-                            <ion-label>Event: {{ event?.name }}</ion-label>
-                        </ion-item>
-                        <ion-item>
-                            <ion-icon  :icon="calendarNumberOutline" slot="start"></ion-icon>
-                            <ion-label>Date: {{ event?.date_start }}</ion-label>
-                        </ion-item>
-                    </ion-list>         
-                </ion-card-content>
-                <!-- <ion-button :disabled="process" color="primary" expand="block" @click="paymentFlow">Reserve</ion-button> -->
-                <ion-card class="ion-padding" id="checkout">
-                </ion-card>
-                <TablesList />
-                <section v-if="success" id="success" class="hidden">
-                    <p>
-                        We appreciate your business! A confirmation email will be sent to <span id="customer-email"></span>.
-                        If you have any questions, please email <a :href="'mailto:'+customerEmail">{{ customerEmail }}</a>.
-                    </p>
-                </section>
-            </ion-card>
-            
+            <TablesList />
             <!-- <ReservationDialog v-else :event="event" /> -->
         </ion-content>
     </ion-page>
@@ -112,7 +82,7 @@ const event = ref<Event>({
   image: null
 });
 
-const type = ref('standart');
+const type = ref('standard');
 const success = ref(false);
 const route = useRoute();
 const router = useRouter();
