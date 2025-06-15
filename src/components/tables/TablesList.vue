@@ -47,31 +47,32 @@ import {
     IonInput,
     IonRow
   } from '@ionic/vue';
-	const storage = new Storage();
-	const svgContainer: Ref<HTMLElement | null> = ref(null);
-	const text = ref('');
-	const message = ref('This modal example uses triggers to automatically open a modal when the button is clicked.');
+const storage = new Storage();
+const svgContainer: Ref<HTMLElement | null> = ref(null);
+const text = ref('');
+const message = ref('This modal example uses triggers to automatically open a modal when the button is clicked.');
 
-	const modal = ref();
-	const input = ref();
+const modal = ref();
+const input = ref();
 
-	const cancel = () => modal.value.$el.dismiss(null, 'cancel');
+const cancel = () => modal.value.$el.dismiss(null, 'cancel');
 
-	const confirm = () => {
-		const name = input.value.$el.value;
-		modal.value.$el.dismiss(name, 'confirm');
-	};
+const confirm = () => {
+	const name = input.value.$el.value;
+	modal.value.$el.dismiss(name, 'confirm');
+};
 
-	const onWillDismiss = (event: CustomEvent<OverlayEventDetail>) => {
-		if (event.detail.role === 'confirm') {
+const onWillDismiss = (event: CustomEvent<OverlayEventDetail>) => {
+	if (event.detail.role === 'confirm') {
 		message.value = `Hello, ${event.detail.data}!`;
-		}
-	};
-	const clickedTableId = ref('');
-		const openModal = async (id: string) => {
-		clickedTableId.value = id;
-		await modal.value.$el.present();
-	};
+	}
+};
+
+const clickedTableId = ref('');
+const openModal = async (id: string) => {
+	clickedTableId.value = id;
+	await modal.value.$el.present();
+};
 
 onMounted(async () => {
   	try {

@@ -2,7 +2,7 @@
     <ion-page>
         <ion-header>
             <ion-toolbar class="ionic__toolbar">
-                <ion-icon @click="$router.replace('/');" slot="start" :icon="arrowBack" size="large"></ion-icon>
+                <ion-icon @click="$router.go(-1);" slot="start" :icon="arrowBack" size="large"></ion-icon>
                 <ion-title class="ion-text-left">Back</ion-title>
             </ion-toolbar>
         </ion-header>
@@ -18,28 +18,10 @@
                         </ion-input>                    
                     </ion-col>
                 </ion-row>
-                <ion-row>
-                    <ion-col>
-                        <ion-input v-model="password" color="primary" fill="outline" placeholder="Password" type="password">
-                            <ion-icon slot="start" :icon="lockClosed"></ion-icon>
-                            <ion-input-password-toggle color="primary" slot="end"></ion-input-password-toggle>
-                        </ion-input>
-                    </ion-col>
-                </ion-row>
                 <p v-if="authStore.loginErrors?.message">{{ authStore.loginErrors.message }}</p>
                 <ion-row>
                     <ion-col>
-                        <ion-button @click="login" color="primary" expand="block">Login</ion-button>
-                    </ion-col>
-                </ion-row>
-                <ion-row>
-                    <ion-col>
-                        <ion-button fill="outline" @click="router.push({path: 'register'})" color="primary" expand="block">Register</ion-button>
-                    </ion-col>
-                </ion-row>
-                <ion-row>
-                    <ion-col>
-                        <ion-button fill="clear" @click="router.push({path: 'forgot-password'})" color="primary" expand="block">Forgot Password?</ion-button>
+                        <ion-button @click="forgetPassword" color="primary" expand="block">Request Update Password</ion-button>
                     </ion-col>
                 </ion-row>
             </ion-grid> 
@@ -59,12 +41,12 @@ import {
     IonRow,
     IonGrid,
     IonIcon,
-    IonInputPasswordToggle
+
 } from '@ionic/vue';
-import { arrowBack, lockClosed, person } from 'ionicons/icons';
+import { arrowBack, person } from 'ionicons/icons';
 import { ref,watch } from 'vue';
 import { useAuthStore } from "@/stores/authStore";
-import router from '@/router';
+import axios from 'axios';
 
 const authStore = useAuthStore();
 
@@ -84,15 +66,16 @@ const data = {
     password: password.value,
 };
 
-const login = async () => {
+const forgetPassword = async (data: { email: string; password: string }) => {
     try {
-        await authStore.login(data);
-        if (authStore.isAuthenticated) {
-            email.value = '';
-            password.value = '';
+        console.log(`${authStore.endpoint}forgot-password`, data);
+        const response = await axios.post(`${authStore.endpoint}forgot-password`, data);
+        if (response.data) {
+            console.log(response)
         }
-    } catch (error:any) {
-        console.log(error)
+    } catch (error: any) {
+        console.error('Error during login:', error);
+
     }
 };
 </script>

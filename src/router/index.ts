@@ -38,6 +38,11 @@ const routes: Array<RouteRecordRaw> = [
         meta: { requiresAuth: true },
     },
     {
+        path: "/forgot-password",
+        name: "forgot-password",
+        component: () => import("@/views/auth/ForgetPassword.vue"),
+    },
+    {
         path: "/connection",
         name: "connection",
         component: () => import("@/views/general/Connection.vue"),
