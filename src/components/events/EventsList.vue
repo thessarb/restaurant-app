@@ -70,7 +70,7 @@
     import { calendar, location } from 'ionicons/icons';
     import { PropType, onMounted, ref } from 'vue';
     import axios from 'axios';
-    import { useDataStore } from "@/stores/dataStroe";
+    import { useDataStore } from "@/stores/dataStore";
 
     // Reactive state for active button
     const activeButton = ref(99);
@@ -101,7 +101,7 @@
         created_at: string;
         updated_at: string;
     }
-    
+
     interface Image {
         id: number;
         url: string;
@@ -159,8 +159,9 @@
 
     onMounted(() => {
         settings();
-        getEvents()
+        getEvents();
         dataStore.storeTable1();
+        dataStore.storeTable2();
     })
 </script>
 

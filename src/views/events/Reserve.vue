@@ -3,22 +3,17 @@
         <ion-header>
             <ion-toolbar class="ionic__toolbar">
                 <ion-icon  @click="$router.go(-1);" slot="start" :icon="arrowBack" size="large"></ion-icon>
-                <ion-title class="ion-text-left">Reserve {{ event?.name}}</ion-title>            
+                <ion-title class="ion-text-left">Buy tickets</ion-title>            
             </ion-toolbar>
         </ion-header>
         <ion-content :fullscreen="true" class="ion-padding">
-            <ion-header collapse="condense">
-                <ion-toolbar class="default-bg">
-                    <ion-title size="large">Reserve {{ event?.name }}</ion-title>
-                </ion-toolbar>
-            </ion-header>
             <ion-card class="default-bg" v-if="type == 'standart'" >
                 <ion-card-content>
                     <ion-list lines="none">
                         <a target="_blank" :href="event.restaurant?.location">
                             <ion-item class="default-bg">
                                 <ion-icon  :icon="mapOutline" slot="start"></ion-icon>
-                                <ion-label>Location:{{ isTicketOpen }} {{ event?.restaurant?.name }}</ion-label>
+                                <ion-label>Location: {{ event?.restaurant?.name }}</ion-label>
                             </ion-item>
                         </a>
                         <ion-item class="default-bg">
@@ -120,6 +115,8 @@ import {
     IonContent,
     IonIcon,
     IonButton,
+    IonButtons,
+    IonModal,
     IonCard,
     IonList,
     IonCardContent,
@@ -319,7 +316,6 @@ const getTicket = async () => {
                 "Authorization": `Bearer ${authStore.token}`,
             }
         });
-        console.log(response.data.ticket);
         return response.data.ticket;
     } catch (error) {
         console.error('Error fetching client secret:', error);

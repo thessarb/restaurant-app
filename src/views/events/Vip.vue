@@ -3,16 +3,11 @@
         <ion-header>
             <ion-toolbar class="ionic__toolbar">
                 <ion-icon  @click="$router.go(-1);" slot="start" :icon="arrowBack" size="large"></ion-icon>
-                <ion-title class="ion-text-left">Reserve {{ event?.name}}</ion-title>            
+                <ion-title class="ion-text-left">Choose table</ion-title>            
             </ion-toolbar>
         </ion-header>
         <ion-content :fullscreen="true" class="ion-padding">
-            <ion-header collapse="condense">
-                <ion-toolbar>
-                    <ion-title size="large">Reserve {{ event?.name }}</ion-title>
-                </ion-toolbar>
-            </ion-header>
-            <TablesList />
+            <TablesList v-if="locationId && tables" :location="String(locationId)" :tables="tables" :event="event" />
             <!-- <ReservationDialog v-else :event="event" /> -->
         </ion-content>
     </ion-page>
@@ -33,12 +28,13 @@ import {
     IonContent,
     IonIcon
 } from '@ionic/vue';
-import { arrowBack, calendar, calendarNumberOutline, map} from 'ionicons/icons';
+import { arrowBack } from 'ionicons/icons';
 // const stripe = ref<Stripe | null>(null);
 // const process = ref(false);
 const sessionStatus = ref('');
 const customerEmail = ref('');
 const authStore = useAuthStore();
+const locationId = ref('');
 interface Event {
     id: number;
     name: string;
@@ -77,7 +73,6 @@ const event = ref<Event>({
     image: null
 });
 
-const type = ref('standard');
 const success = ref(false);
 const route = useRoute();
 const router = useRouter();
@@ -90,7 +85,8 @@ const detail = async () => {
                 Accept: 'application/json',
             },
         });
-        event.value = response.data.data
+        event.value = response.data.data;
+        locationId.value = String(response.data.data?.restaurant_id);
         fetchTables(event.value?.restaurant_id);
 
         // ticket.value = getTicket()
