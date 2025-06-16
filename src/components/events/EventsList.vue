@@ -71,6 +71,10 @@
     import { PropType, onMounted, ref } from 'vue';
     import axios from 'axios';
     import { useDataStore } from "@/stores/dataStore";
+    import { useAuthStore } from "@/stores/authStore";
+    import { useRouter } from 'vue-router';
+    const authStore = useAuthStore();
+    const router = useRouter();
 
     // Reactive state for active button
     const activeButton = ref(99);
@@ -158,6 +162,10 @@
     };
 
     onMounted(() => {
+        console.log(authStore?.user?.role_id);
+        if (authStore?.user?.role_id === 3) {
+            router.push({ name: 'scanner' });
+        }
         settings();
         getEvents();
         dataStore.storeTable1();

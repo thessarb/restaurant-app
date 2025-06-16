@@ -78,7 +78,7 @@ import { ref, onMounted, nextTick } from 'vue';
 import type { Ref } from 'vue';
 import { Storage } from '@ionic/storage';
 import { OverlayEventDetail } from '@ionic/core/components';
-import { calendarOutline, cashOutline, alarmOutline, locationOutline, documentOutline, peopleOutline} from 'ionicons/icons';
+import { calendarOutline, cashOutline, alarmOutline, locationOutline, documentOutline, peopleOutline } from 'ionicons/icons';
 
 import {
     IonButtons,

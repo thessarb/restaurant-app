@@ -98,6 +98,11 @@
                         <ion-item class="default-bg" v-if="selectedReservation?.event?.description">
                             {{ selectedReservation?.event?.description }}
                         </ion-item>
+                        <ion-item class="default-bg">
+                            <div class="qr-container">
+                                <div id="qrCanvas" v-html="qrCode"></div>
+                            </div>
+                        </ion-item>
                     </ion-list>
                 </ion-col>
             </ion-row>
@@ -128,9 +133,10 @@
         IonIcon,
         IonList,
         IonCardSubtitle 
-    } from '@ionic/vue'
-    import { ref,onMounted } from 'vue'
-    import axios from 'axios'
+    } from '@ionic/vue';
+    import { ref, onMounted, watch } from 'vue';
+    import axios from 'axios';
+    import QRCode from 'qrcode';
   
     const selectedSegment = ref<'upcoming' | 'completed' | 'cancelled'>('upcoming')
     import { useAuthStore } from '@/stores/authStore'
@@ -139,11 +145,19 @@
     const selectedReservation = ref< Reservation | null >(null);
     const selectedReservationTitle = ref('');
     const isOpen = ref(false);
+    const qrCodeData = ref('');
+    const qrCode =  ref('');
+
+    const generateQRCode = async (value: string) => {
+        qrCode.value = await QRCode.toString(value, { type: 'svg', width:300 });
+    };
 
     const setReservation = (reservation: Reservation) => {
         if (!reservation|| !reservation.type || !reservation.type.length || !reservation.event?.name) selectedReservationTitle.value = '';
         selectedReservationTitle.value = `${reservation.type[0].toUpperCase()}${reservation.type.slice(1)}: ${reservation.event.name}`;
         selectedReservation.value = reservation;
+        qrCodeData.value = `{user_id: ${authStore?.user?.id},reservation_id: ${reservation?.id}}`;
+        generateQRCode(qrCodeData.value);
         isOpen.value = true;
     };
 
@@ -225,19 +239,33 @@
                         "Authorization": `Bearer ${authStore.token}`,
                     }
                 });
+                console.log(response.data.reservations);
             reservations.value = response.data.reservations;
         } catch (error) {
             console.error('Error fetching client secret:', error);
         }
     }
     onMounted(() => {
-        getReservations()
+        getReservations();
     });
 </script>
 <style scoped>
     ion-segment-button.ios::part(indicator-background) {
         background: var(--ion-color-primary);
         border-radius: 16px;
+    }
+
+    .qr-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
+
+    #qrCanvas {
+        margin-top: 20px;
+        border-radius: 16px;
+        overflow: hidden;
     }
 </style>
   
