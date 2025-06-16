@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia';
 import { Storage } from '@ionic/storage';
+import zone1Svg from '/zone-1.svg?raw';
+import zone2Svg from '/zone-2.svg?raw';
 
 const storage = new Storage();
 storage.create(); // Create storage once globally
@@ -54,10 +56,8 @@ export const useDataStore = defineStore('data', {
         async storeTable1() {
             const existing = await loadChunks('table1');
             if (!existing) {
-                const response = await fetch('/zone-1.svg');
-                const svgText = await response.text();
-                this.table1 = svgText;
-                await saveChunks('table1', svgText);
+                this.table1 = zone1Svg;
+                await saveChunks('table1', zone1Svg);
             } else {
                 this.table1 = existing;
             }
@@ -66,10 +66,8 @@ export const useDataStore = defineStore('data', {
         async storeTable2() {
             const existing = await loadChunks('table2');
             if (!existing) {
-                const response = await fetch('/zone-2.svg');
-                const svgText = await response.text();
-                this.table2 = svgText;
-                await saveChunks('table2', svgText);
+                this.table2 = zone2Svg;
+                await saveChunks('table2', zone2Svg);
             } else {
                 this.table2 = existing;
             }
