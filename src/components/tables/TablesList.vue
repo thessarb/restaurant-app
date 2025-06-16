@@ -104,7 +104,10 @@ const message = ref('This modal example uses triggers to automatically open a mo
 
 const modal = ref();
 const input = ref();
+const modal = ref();
+const input = ref();
 
+const cancel = () => modal.value.$el.dismiss(null, 'cancel');
 const cancel = () => modal.value.$el.dismiss(null, 'cancel');
 
 const confirm = () => {

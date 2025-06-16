@@ -37,6 +37,11 @@
                         <ion-button fill="outline" @click="router.push({path: 'register'})" color="primary" expand="block">Register</ion-button>
                     </ion-col>
                 </ion-row>
+                <ion-row>
+                    <ion-col>
+                        <ion-button fill="clear" @click="router.push({path: 'forgot-password'})" color="primary" expand="block">Forgot Password?</ion-button>
+                    </ion-col>
+                </ion-row>
             </ion-grid> 
         </ion-content>
     </ion-page>
