@@ -71,10 +71,6 @@ export const useDataStore = defineStore('data', {
             } else {
                 this.table2 = existing;
             }
-        },
-
-        async loadTables(table: string): Promise<string> {
-            return await storage.get(table);
         }
     },
 });
