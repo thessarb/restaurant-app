@@ -13,17 +13,32 @@
                 </ion-row>
                 <ion-row>
                     <ion-col>
-                        <ion-input v-model="email" type="email" color="primary" fill="outline" placeholder="Email">
+                        <ion-input v-model="email" :disabled="emailSent" type="email" color="primary" fill="outline" placeholder="Email">
                             <ion-icon slot="start" :icon="person" ></ion-icon>
                         </ion-input>                    
                     </ion-col>
                 </ion-row>
-                <p v-if="authStore.loginErrors?.message">{{ authStore.loginErrors.message }}</p>
-                <ion-row>
+                <ion-row v-if="emailSent">
                     <ion-col>
-                        <ion-button @click="forgetPassword" color="primary" expand="block">Request Update Password</ion-button>
+                        <ion-input v-model="opt_code" type="number" :maxlength="6" color="primary" fill="outline" placeholder="Code">
+                            <ion-icon slot="start" :icon="pin" ></ion-icon>
+                        </ion-input>  
                     </ion-col>
                 </ion-row>
+                <p v-if="error">{{ error }}</p>
+                <ion-row>
+                    <ion-col>
+                        <ion-button v-if="emailSent" @click="checkAndUpdateOpt" color="primary" expand="block">{{ step }}</ion-button>
+                        <ion-button v-else @click="forgetPassword" color="primary" expand="block">{{ step }}</ion-button>
+                    </ion-col>
+                </ion-row>
+                <ion-toast
+                    :is-open="showToast"
+                    :message="toastMessage"
+                    duration="2000"
+                    color="danger"
+                    @didDismiss="showToast = false">
+                    </ion-toast>
             </ion-grid> 
         </ion-content>
     </ion-page>
@@ -41,44 +56,88 @@ import {
     IonRow,
     IonGrid,
     IonIcon,
+    IonToast
 
 } from '@ionic/vue';
-import { arrowBack, person } from 'ionicons/icons';
-import { ref,watch } from 'vue';
-import { useAuthStore } from "@/stores/authStore";
-import axios from 'axios';
 
-const authStore = useAuthStore();
+import { arrowBack, person, pin } from 'ionicons/icons';
+import { ref,watch } from 'vue';
+// import { useAuthStore } from "@/stores/authStore";
+import axios from 'axios';
+import { useRouter } from 'vue-router';
+// const authStore = useAuthStore();
 
 const email = ref('');
-const password = ref('');
-
+const opt_code = ref('');
+const emailSent = ref(false);
+const showToast = ref(false);
+const toastMessage = ref('');
 watch(email, () => updateData());
-watch(password, () => updateData());
+watch(opt_code, () => updateData());
+watch(emailSent, (newVal) => {
+    emailSent.value = newVal;
+});
 
 const updateData = () => {
     data.email = email.value;
-    data.password = password.value;
+    data.opt_code = opt_code.value;
 };
+const router = useRouter();
 
 const data = {
     email: email.value,
-    password: password.value,
+    opt_code: opt_code.value
 };
-
-const forgetPassword = async (data: { email: string; password: string }) => {
+const error = ref('');
+const step = ref('Request Update Password');
+const forgetPassword = async () => {
     try {
-        console.log(`${authStore.endpoint}forgot-password`, data);
-        const response = await axios.post(`${authStore.endpoint}forgot-password`, data);
-        if (response.data) {
-            console.log(response)
-        }
-    } catch (error: any) {
-        console.error('Error during login:', error);
+        const response = await axios.put(import.meta.env.VITE_APP_ENDPOINT + 'opt_code', {
+            email: email.value
+        });
 
+        console.log('OTP sent successfully:', response.data);
+        emailSent.value = true;
+        step.value = 'Verify Code';
+
+    } catch (error: any) {
+        if (error.response) {
+            showToast.value = true;
+            error.value = error.response.data.message
+            toastMessage.value = error.value;
+            console.error('Server responded with error:', error.response.data);
+        } else {
+            console.error('Request error:', error.message);
+        }
     }
 };
+const checkAndUpdateOpt = async () => {
+    try {
+        const response = await axios.put(import.meta.env.VITE_APP_ENDPOINT + 'opt_code/check', {
+            email: email.value,
+            opt_code: opt_code.value,
+        });
+        router.push({ name: 'reset-password' });
+
+        console.log('OTP verified successfully:', response.data);
+
+    } catch (error: any) {
+        if (error.response) {
+            console.error('Server responded with error:', error.response.data);
+            error.value = error.response.data.message
+            showToast.value = true;
+            error.value = error.response.data.message
+            toastMessage.value = error.value;
+        } else {
+            console.error('Request error:', error.message);
+        }
+    }
+};
+
 </script>
 <style lang="css">
-
+.otp-input {
+  display: flex;
+  gap: 10px;
+}
 </style>

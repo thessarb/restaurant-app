@@ -53,7 +53,8 @@ import {
     IonRow,
     IonGrid,
     IonIcon,
-    IonInputPasswordToggle
+    IonInputPasswordToggle,
+    IonToast
 } from '@ionic/vue';
 import { arrowBack, lockClosed } from 'ionicons/icons';
 import { ref } from 'vue';
