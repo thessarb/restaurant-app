@@ -3,46 +3,11 @@
         <ion-header>
             <ion-toolbar class="ionic__toolbar">
                 <ion-icon  @click="$router.go(-1);" slot="start" :icon="arrowBack" size="large"></ion-icon>
-                <ion-title class="ion-text-left">Reserve {{ event?.name}}</ion-title>            
+                <ion-title class="ion-text-left">Choose table</ion-title>            
             </ion-toolbar>
         </ion-header>
         <ion-content :fullscreen="true" class="ion-padding">
-            <ion-header collapse="condense">
-                <ion-toolbar>
-                    <ion-title size="large">Reserve {{ event?.name }}</ion-title>
-                </ion-toolbar>
-            </ion-header>
-            <ion-card v-if="type == 'standart'" >
-                <ion-card-content>
-                    <ion-list lines="none">
-                        <a target="_blank" :href="event.restaurant?.location">
-                            <ion-item>
-                                <ion-icon  :icon="map" slot="start"></ion-icon>
-                                <ion-label>Location: {{ event?.restaurant?.name }}</ion-label>
-                            </ion-item>
-                        </a>
-                        <ion-item>
-                            <ion-icon  :icon="calendar" slot="start"></ion-icon>
-                            <ion-label>Event: {{ event?.name }}</ion-label>
-                        </ion-item>
-                        <ion-item>
-                            <ion-icon  :icon="calendarNumberOutline" slot="start"></ion-icon>
-                            <ion-label>Date: {{ event?.date_start }}</ion-label>
-                        </ion-item>
-                    </ion-list>         
-                </ion-card-content>
-                <!-- <ion-button :disabled="process" color="primary" expand="block" @click="paymentFlow">Reserve</ion-button> -->
-                <ion-card class="ion-padding" id="checkout">
-                </ion-card>
-                <TablesList />
-                <section v-if="success" id="success" class="hidden">
-                    <p>
-                        We appreciate your business! A confirmation email will be sent to <span id="customer-email"></span>.
-                        If you have any questions, please email <a :href="'mailto:'+customerEmail">{{ customerEmail }}</a>.
-                    </p>
-                </section>
-            </ion-card>
-            
+            <TablesList v-if="locationId && tables" :location="String(locationId)" :tables="tables" :event="event" />
             <!-- <ReservationDialog v-else :event="event" /> -->
         </ion-content>
     </ion-page>
@@ -61,19 +26,15 @@ import {
     IonToolbar,
     IonTitle,
     IonContent,
-    IonIcon,
-    IonList,
-    IonCardContent,
-    IonCard,
-    IonLabel,
-    IonItem,
+    IonIcon
 } from '@ionic/vue';
-import { arrowBack, calendar, calendarNumberOutline, map} from 'ionicons/icons';
+import { arrowBack } from 'ionicons/icons';
 // const stripe = ref<Stripe | null>(null);
 // const process = ref(false);
 const sessionStatus = ref('');
 const customerEmail = ref('');
 const authStore = useAuthStore();
+const locationId = ref('');
 interface Event {
     id: number;
     name: string;
@@ -98,21 +59,20 @@ interface Restaurant {
 }
     
 const event = ref<Event>({
-  id: 8,
-  name: "Pizza Night",
-  date_start: "2025-05-13 12:17:50",
-  description: "Indulge in a variety of delicious pizzas made fresh from our oven.",
-  rules: "Take-out options available.",
-  nr_tikets: 0,
-  price_per_ticket: 0,
-  restaurant_id: null,
-  restaurant: null,
-  created_at: "2025-03-29T12:17:50.000000Z",
-  updated_at: "2025-03-29T12:17:50.000000Z",
-  image: null
+    id: 8,
+    name: "Pizza Night",
+    date_start: "2025-05-13 12:17:50",
+    description: "Indulge in a variety of delicious pizzas made fresh from our oven.",
+    rules: "Take-out options available.",
+    nr_tikets: 0,
+    price_per_ticket: 0,
+    restaurant_id: null,
+    restaurant: null,
+    created_at: "2025-03-29T12:17:50.000000Z",
+    updated_at: "2025-03-29T12:17:50.000000Z",
+    image: null
 });
 
-const type = ref('standart');
 const success = ref(false);
 const route = useRoute();
 const router = useRouter();
@@ -125,7 +85,8 @@ const detail = async () => {
                 Accept: 'application/json',
             },
         });
-        event.value = response.data.data
+        event.value = response.data.data;
+        locationId.value = String(response.data.data?.restaurant_id);
         fetchTables(event.value?.restaurant_id);
 
         // ticket.value = getTicket()
@@ -269,6 +230,3 @@ onMounted(() => {
 });  
 
 </script>
-<style scoped>
-
-</style>

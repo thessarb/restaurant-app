@@ -1,5 +1,18 @@
 /* Styles to be applied through the entire app */
 
+ion-row.default-bg,
+ion-col.default-bg,
+ion-grid.default-bg,
+ion-card.default-bg,
+ion-tab-button.default-bg,
+ion-toolbar.default-bg,
+ion-list.default-bg,
+ion-list.list-md,
+ion-item.default-bg,
+ion-tab-bar.default-bg {
+    --background: var(--ion-background-color);
+}
+
 ion-row,
 ion-col,
 ion-grid,
@@ -12,7 +25,6 @@ ion-item,
 ion-tab-bar {
     padding: 0;
     margin: 0;
-    --background: var(--ion-background-color);
 }
 
 ion-tab-bar {

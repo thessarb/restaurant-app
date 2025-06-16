@@ -3,40 +3,35 @@
         <ion-header>
             <ion-toolbar class="ionic__toolbar">
                 <ion-icon  @click="$router.go(-1);" slot="start" :icon="arrowBack" size="large"></ion-icon>
-                <ion-title class="ion-text-left">Reserve {{ event?.name}}</ion-title>            
+                <ion-title class="ion-text-left">Buy tickets</ion-title>            
             </ion-toolbar>
         </ion-header>
         <ion-content :fullscreen="true" class="ion-padding">
-            <ion-header collapse="condense">
-                <ion-toolbar>
-                    <ion-title size="large">Reserve {{ event?.name }}</ion-title>
-                </ion-toolbar>
-            </ion-header>
-            <ion-card v-if="type == 'standart'" >
+            <ion-card class="default-bg" v-if="type == 'standart'" >
                 <ion-card-content>
                     <ion-list lines="none">
                         <a target="_blank" :href="event.restaurant?.location">
-                            <ion-item>
-                                <ion-icon  :icon="map" slot="start"></ion-icon>
+                            <ion-item class="default-bg">
+                                <ion-icon  :icon="mapOutline" slot="start"></ion-icon>
                                 <ion-label>Location: {{ event?.restaurant?.name }}</ion-label>
                             </ion-item>
                         </a>
-                        <ion-item>
-                            <ion-icon  :icon="cash" slot="start"></ion-icon>
+                        <ion-item class="default-bg">
+                            <ion-icon  :icon="cashOutline" slot="start"></ion-icon>
                             <ion-label>Price: {{ event.price_per_ticket }} $</ion-label>
                         </ion-item>
-                        <ion-item>
-                            <ion-icon  :icon="calendar" slot="start"></ion-icon>
+                        <ion-item class="default-bg">
+                            <ion-icon  :icon="calendarOutline" slot="start"></ion-icon>
                             <ion-label>Event: {{ event?.name }}</ion-label>
                         </ion-item>
-                        <ion-item>
+                        <ion-item class="default-bg">
                             <ion-icon  :icon="calendarNumberOutline" slot="start"></ion-icon>
                             <ion-label>Date: {{ event?.date_start }}</ion-label>
                         </ion-item>
                     </ion-list>
                 </ion-card-content>
                 <ion-button v-if="event?.price_per_ticket" :disabled="process" color="primary" expand="block" @click="paymentFlow">Buy Ticket</ion-button>
-                <ion-card class="ion-padding" id="checkout">
+                <ion-card class="default-bg ion-padding" id="checkout">
                 </ion-card>
                 <section v-if="success" id="success" class="hidden">
                     <p>
@@ -46,26 +41,63 @@
                 </section>
             </ion-card>
             <!-- <ReservationDialog v-else :event="event" /> -->
-            <ion-row v-for="item in ticket" :key="item.id" class="ticket">
-                <ion-col>
-                    <ion-card>
-                        <ion-card-title>
-                           Ticket {{ item.status }}
-                        </ion-card-title>
-                        <ion-card-content>
-                            <ion-list>
-                                <ion-item>
-                                    <ion-label>{{item.user.name}}</ion-label>
-                                </ion-item>
-                                <ion-item>
-                                    <ion-label>{{item.price}} $</ion-label>
-                                </ion-item>
-                            </ion-list>
-                        </ion-card-content>
-                    </ion-card>
-                </ion-col>
-            </ion-row>
+            <ion-list class="reservation__items reservation__items--no-padding" lines="none">
+                <ion-item v-for="item in ticket" :key="item.id" class="reservation__item reservation__item-card" @click="setOpen(true)">
+                    <ion-col>
+                        <ion-card class="reservation__item-bg">
+                            <ion-card-title>
+                                Ticket {{ item.status }}
+                            </ion-card-title>
+                            <ion-card-content class="reservation__item-bg">
+                                <ion-list class="reservation__item-bg" lines="none">
+                                    <ion-item class="reservation__item-bg">
+                                        <ion-label>{{item.user.name}}</ion-label>
+                                    </ion-item>
+                                    <ion-item class="reservation__item-bg">
+                                        <ion-label>{{item.price}} $</ion-label>
+                                    </ion-item>
+                                </ion-list>
+                            </ion-card-content>
+                        </ion-card>
+                    </ion-col>
+                </ion-item>
+            </ion-list>
         </ion-content>
+        <ion-modal ref="modal" :initial-breakpoint="0.85" :is-open="isTicketOpen">
+            <ion-header>
+                <ion-toolbar class="default-bg">
+                    <ion-title>{{ event?.name }}</ion-title>
+                    <ion-buttons slot="end">
+                        <ion-button class="modal-button" @click="setOpen(false)">Close</ion-button>
+                    </ion-buttons>
+                </ion-toolbar>
+            </ion-header>
+            <ion-content class="ion-padding">
+                <ion-row>
+                    <ion-col>
+                        <ion-list lines="none">
+                            <a target="_blank" :href="event?.restaurant?.location">
+                                <ion-item class="default-bg">
+                                    <ion-icon aria-hidden="true" :icon="locationOutline" slot="start"></ion-icon>
+                                    <ion-label>{{ event?.restaurant?.name }}</ion-label>
+                                </ion-item>
+                            </a>
+                            <ion-item class="default-bg">
+                                <ion-icon aria-hidden="true" :icon="calendarOutline" slot="start"></ion-icon>
+                                <ion-label>{{ formatDate(event?.date_start) }}</ion-label>
+                            </ion-item>
+                            <ion-item class="default-bg">
+                                <ion-icon aria-hidden="true" :icon="alarmOutline" slot="start"></ion-icon>
+                                <ion-label>Starts at {{ formatTime(event?.date_start) }}</ion-label>
+                            </ion-item>
+                            <ion-item class="default-bg" v-if="event?.description">
+                                {{ event?.description }}
+                            </ion-item>
+                        </ion-list>
+                    </ion-col>
+                </ion-row>
+            </ion-content>
+        </ion-modal>
     </ion-page>
 </template>
 <script setup lang="ts">
@@ -74,7 +106,7 @@ import { loadStripe, Stripe} from '@stripe/stripe-js';
 import axios from 'axios';
 import { useAuthStore } from "@/stores/authStore";
 import { useRoute,useRouter } from 'vue-router'
-import { arrowBack, calendar, calendarNumberOutline, cash, map} from 'ionicons/icons';
+import { arrowBack, calendarOutline, calendarNumberOutline, cashOutline, mapOutline, alarmOutline, locationOutline} from 'ionicons/icons';
 import { 
     IonPage, 
     IonHeader, 
@@ -83,6 +115,8 @@ import {
     IonContent,
     IonIcon,
     IonButton,
+    IonButtons,
+    IonModal,
     IonCard,
     IonList,
     IonCardContent,
@@ -143,6 +177,7 @@ const success = ref(false);
 const route = useRoute();
 const router = useRouter();
 const ticket = ref();
+const isTicketOpen = ref(false);
 const detail = async () => {
     try {
         const response = await axios.get(`${authStore.endpoint}event/${route.params.id}`, {
@@ -157,6 +192,31 @@ const detail = async () => {
         console.error(error);
     }
 };
+
+const formatDate = (dateString: string | undefined) => {
+    // Ensure the dateString is in a valid format
+    if (!dateString) return '01 January - Monday';
+    const dateObj = new Date(dateString);
+
+    const day = dateObj.getDate();
+    const month = new Intl.DateTimeFormat("en", { month: "long" }).format(dateObj);
+    const weekday = new Intl.DateTimeFormat("en", { weekday: "long" }).format(dateObj);
+
+    return `${day} ${month} - ${weekday}`;
+};
+
+const formatTime = (dateString: string | undefined): string => {
+    if (!dateString) return '00:00';
+    
+    const dateObj = new Date(dateString.replace(' ', 'T')); // Convert to ISO format
+
+    const hours = String(dateObj.getHours()).padStart(2, '0');
+    const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+
+    return `${hours}:${minutes}`;
+};
+
+const setOpen = (open: boolean) => (isTicketOpen.value = open);
 
 const initializeStripe = async () => {
     // const clientSecret = await fetchClientSecret();
@@ -275,11 +335,3 @@ onMounted(() => {
 });  
 
 </script>
-<style scoped>
-.ticket {
-    border: 1px solid red;
-    margin-bottom: 10px;
-    padding: 10px;
-    border-radius: 10px;
-}
-</style>
