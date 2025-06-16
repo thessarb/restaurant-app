@@ -24,9 +24,9 @@ const saveChunks = async (baseKey: string, data: string) => {
     }
 }
 
-const loadChunks = async (baseKey: string): Promise<string | null> => {
+const loadChunks = async (baseKey: string): Promise<string> => {
     const chunkCount = await storage.get(`${baseKey}_chunkCount`);
-    if (!chunkCount || typeof chunkCount !== 'number') return null;
+    if (!chunkCount || typeof chunkCount !== 'number') return '';
 
     const chunks = [];
     for (let i = 0; i < chunkCount; i++) {
@@ -34,7 +34,7 @@ const loadChunks = async (baseKey: string): Promise<string | null> => {
         if (typeof part === 'string') {
             chunks.push(part);
         } else {
-            return null;
+            return '';
         }
     }
 
@@ -71,6 +71,10 @@ export const useDataStore = defineStore('data', {
             } else {
                 this.table2 = existing;
             }
+        },
+
+        async loadTables(table: string): Promise<string> {
+            return await storage.get(table);
         }
     },
 });

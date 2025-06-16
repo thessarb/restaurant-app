@@ -26,7 +26,7 @@
         </ion-row>
         <ion-row class="eventlist__list">
             <ion-col class="eventlist__item" v-for="event in eventList" :key="event?.id">
-                <router-link :to="{ name: 'event', params: {id: event?.id}  }" class="eventlist__detail-link">
+                <router-link :to="{ name: 'event', params: {id: event?.id} }" class="eventlist__detail-link">
                     <ion-card class="eventlist__card">
                         <img alt="Silhouette of mountains" class="eventlist__image" :src="event.image ? baseUrl+'storage/'+event?.image?.url : 'https://ionicframework.com/docs/img/demos/card-media.png'" />
                         <ion-card-header class="eventlist__card-header">

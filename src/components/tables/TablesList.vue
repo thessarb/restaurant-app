@@ -1,6 +1,7 @@
 <template>
     <ion-content>
         <ion-row>
+            <div v-if="!text" id="stuff">{{ stuff }}</div>
             <div class="svg-wrapper tablelist" ref="svgContainer" v-html="text"></div>
         </ion-row>
         <ion-modal ref="modal" :initial-breakpoint="0.85" trigger="open-modal" @willDismiss="onWillDismiss">
@@ -23,7 +24,6 @@
                                 <ion-input label="Enter your name" label-placement="stacked" ref="input" type="text"
                                     placeholder="Your name"></ion-input>
                             </ion-item>
-                            {{ console.log(props.tables) }}
                             <a target="_blank" :href="event?.restaurant?.location">
                                 <ion-item class="default-bg">
                                     <ion-icon aria-hidden="true" :icon="locationOutline" slot="start"></ion-icon>
@@ -94,6 +94,7 @@ import {
     IonTitle,
     IonItem,
     IonInput,
+    IonText,
     IonRow
 } from '@ionic/vue';
 
@@ -218,6 +219,7 @@ const decrement = (index: number) => {
     counters.value[index]--;
   }
 };
+const stuff = ref('Loading...');
 
 onMounted(async () => {
     try {
