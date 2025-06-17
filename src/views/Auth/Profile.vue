@@ -29,7 +29,7 @@
                 <ion-row>
                     <ion-col>
                         <ion-item lines="none" class="default-bg ion-text-center">{{ upcomingReservations }}</ion-item>
-                        <ion-item lines="none" class="default-bg">{{ upcommingReservations === 1 ? 'upcoming reservation' : 'upcoming reservations' }}</ion-item>
+                        <ion-item lines="none" class="default-bg">{{ upcomingReservations === 1 ? 'upcoming reservation' : 'upcoming reservations' }}</ion-item>
                     </ion-col>
                     <ion-col>
                         <ion-item lines="none" class="default-bg ion-text-center">{{ totalReservations }}</ion-item>
