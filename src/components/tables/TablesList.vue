@@ -7,7 +7,7 @@
         <ion-modal ref="modal" :initial-breakpoint="0.85" trigger="open-modal" @willDismiss="onWillDismiss">
             <ion-header>
                 <ion-toolbar>
-					<ion-title>Reserve table {{ clickedTable?.table_nr }}</ion-title>
+					<ion-title>{{ modalTitle }}</ion-title>
                     <ion-buttons slot="end">
                         <ion-button @click="cancel()">Cancel</ion-button>
                     </ion-buttons>
@@ -115,6 +115,7 @@ const onWillDismiss = (event: CustomEvent<OverlayEventDetail>) => {
     }
 };
 const reserved = ref(false);
+const modalTitle = ref('Reserve table');
 
 interface Table {
     id: number;
@@ -125,8 +126,14 @@ interface Table {
     event: Event | null;
     table_nr: number;
     details: string | null;
+    zone: Zone | null;
     created_at: string;
     updated_at: string;
+}
+
+interface Zone {
+    id: number;
+    name: string;
 }
 
 interface Event {
@@ -172,6 +179,11 @@ const clickedTable = ref({} as Table);
 const openModal = async (table: any) => {
     await checkReservedTable(event.value, table);
     clickedTable.value = table;
+    if (table.restaurant_id === 1) {
+        modalTitle.value = `Reserve table ${table.table_nr}`;
+    } else {
+        modalTitle.value = `Reserve table on ${table.zone?.name}`;   
+    }
     limit.value = table.nr_people || 0;
     counters.value = [0, 0];
     await modal.value.$el.present();
@@ -186,6 +198,7 @@ const checkReservedTable = async (event: Event | null, table: Table | null) => {
             },
         });
         reserved.value = response.data.available.length > 0;
+        return response.data.available;
     } catch (error) {
         console.error(error);
     }
@@ -315,22 +328,15 @@ const detail = async () => {
 onMounted(async () => {
     try {
         await storage.create();
-
         text.value = await loadChunks('table' + props.location);
-
         await nextTick();
-
-        const clickableElements = Array.from(svgContainer.value!.querySelectorAll('g[id^="table-"]'))
-            .filter((el: any) => {
-                const match = el.id.match(/^table-(\d+)$/);
-                return match && Number(match[1]) >= 1 && Number(match[1]) <= 15;
-            });
+        const clickableElements = Array.from(svgContainer.value!.querySelectorAll('[table]'));
 
         clickableElements.forEach((el: any) => {
             el.addEventListener('click', (e: any) => {
-                const clickedId = e.currentTarget.id;
-                const tableId = clickedId.replace('table-', '');
-                const table =  props.tables?.find((t: any) => t.table_nr == tableId);
+        console.log(props.tables);
+                const tableId = e.currentTarget.getAttribute('table');
+                const table =  props.tables?.find((t: any) => t.id == tableId);
                 openModal(table);
             });
         });

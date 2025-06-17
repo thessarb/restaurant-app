@@ -31,8 +31,6 @@ import {
 import { arrowBack } from 'ionicons/icons';
 // const stripe = ref<Stripe | null>(null);
 // const process = ref(false);
-const sessionStatus = ref('');
-const customerEmail = ref('');
 const authStore = useAuthStore();
 const locationId = ref('');
 interface Event {
@@ -146,8 +144,8 @@ const fetchTables = async (restaurant: number | null | string) => {
                 "Authorization": `Bearer ${authStore.token}`,
             }
         });
-        tables.value = response.data.tables
-
+        tables.value = response.data.tables;
+        console.log('Tables fetched:', tables.value);
     } catch (error) {
         console.error('Error fetching client secret:', error);
     }
