@@ -80,15 +80,21 @@ import {
     IonItem,
     IonLabel,
     IonIcon,
+    onIonViewWillEnter
 } from '@ionic/vue';
 import { informationCircleOutline, lockClosedOutline, logOutOutline, personOutline } from 'ionicons/icons';
 import { useAuthStore } from "@/stores/authStore";
+import {  ref } from 'vue';
 
 const authStore = useAuthStore();
-const user = authStore.user;
+const user = ref(authStore.user);
 const logout = () => {
     authStore.logout();
 }
+
+onIonViewWillEnter(() => {
+    user.value = authStore.user;
+});
 
 </script>
 <style lang="css">
