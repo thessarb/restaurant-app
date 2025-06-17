@@ -86,6 +86,3 @@ const passwordUpdate = async () => {
     }
 };
 </script>
-<style lang="css">
-
-</style>
