@@ -135,71 +135,7 @@ const detail = async () => {
 //         console.error('Error fetching client secret:', error);
 //     }
 // };
-  
-const returnFunc = async () => {
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    const sessionId = urlParams.get('session_id');
 
-    try {
-        const response = await axios.post(import.meta.env.VITE_APP_ENDPOINT + 'stripe/status',
-            { session_id: sessionId },
-            {
-                headers: {
-                    Authorization: `Bearer ${authStore.token}`,
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                }
-            }
-        );
-        success.value = true
-        const session = await response.data;
-        if (session.status === 'open') {
-          router.push({ path: '/checkout' });
-        } else if (session.status === 'complete') {
-            // storeTicket();
-            sessionStatus.value = 'complete';
-            customerEmail.value = session.customer_email;
-        }
-    } catch (error) {
-        console.error('Error fetching session status:', error);
-    }
-};
-const paymentFlow = () => {
-    // initializeStripe();
-}
-// const storeTicket = async () => {
-//     try {
-//         await axios.post(import.meta.env.VITE_APP_ENDPOINT + 'ticket/store',
-//         {
-//             event_id: event?.value?.id,
-//             user_id: authStore.user?.id,
-//             price: 50.00,
-//         },
-//         {
-//             headers: {
-//                 "Accept": "application/json",
-//                 "Authorization": `Bearer ${authStore.token}`,
-//             }
-//         });
-//     } catch (error) {
-//         console.error('Ticket:', error);
-//     }
-// };
-// const getTicket = async () => {
-//     try {
-//        const response =  await axios.get(import.meta.env.VITE_APP_ENDPOINT + `ticket?user_id=${authStore?.user?.id}&event_id=${event.value.id}`,
-//         {
-//             headers: {
-//                 "Accept": "application/json",
-//                 "Authorization": `Bearer ${authStore.token}`,
-//             }
-//         });
-//         return response.data.ticket;
-//     } catch (error) {
-//         console.error('Error fetching client secret:', error);
-//     }
-// }
 
 const fetchTables = async (restaurant: number | null | string) => {
     try {
@@ -210,7 +146,6 @@ const fetchTables = async (restaurant: number | null | string) => {
                 "Authorization": `Bearer ${authStore.token}`,
             }
         });
-
         tables.value = response.data.tables
 
     } catch (error) {
@@ -220,13 +155,6 @@ const fetchTables = async (restaurant: number | null | string) => {
 // Combine both mounted hooks into one to simplify async logic
 onMounted(() => {
     detail();
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    const sessionId = urlParams.get('session_id');
-    if(sessionId){
-        returnFunc();
-    }
-   
 });  
 
 </script>

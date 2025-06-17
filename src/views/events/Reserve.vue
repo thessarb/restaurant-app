@@ -228,12 +228,6 @@ const initializeStripe = async () => {
 
         // Mount Checkout
         ch.mount('#checkout');
-        // const result = await stripe.value.redirectToCheckout({ sessionId: clientSecret });
-        // if (result.error) {
-        //     checkout.value = result.error;
-        // } else {
-        //     checkout.value = null;
-        // }
     }
 };
   
@@ -244,6 +238,7 @@ const fetchClientSecret = async () => {
             price: event.value.price_per_ticket+'00',
             name: 'Ticket for '+event.value.name, 
             app: 'andoid',
+            type: 'ticket',
             event_id: event.value.id
         },
         {
@@ -307,6 +302,7 @@ const storeTicket = async () => {
         console.error('Ticket:', error);
     }
 };
+
 const getTicket = async () => {
     try {
        const response =  await axios.get(import.meta.env.VITE_APP_ENDPOINT + `ticket?user_id=${authStore?.user?.id}&event_id=${event.value.id}`,
@@ -321,6 +317,7 @@ const getTicket = async () => {
         console.error('Error fetching client secret:', error);
     }
 }
+
 // Combine both mounted hooks into one to simplify async logic
 onMounted(() => {
     detail();
