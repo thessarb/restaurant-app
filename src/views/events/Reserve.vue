@@ -34,7 +34,7 @@
                         </ion-item>
                     </ion-list>
                 </ion-card-content>
-                <ion-button v-if="event?.price_per_ticket" :disabled="process" color="primary" expand="block" @click="paymentFlow">Buy Ticket</ion-button>
+                <ion-button v-if="event?.price_per_ticket && tickets > 0" :disabled="process" color="primary" expand="block" @click="paymentFlow">Buy Ticket</ion-button>
                 <ion-card class="default-bg ion-padding" id="checkout">
                 </ion-card>
                 <section v-if="success" id="success" class="hidden">

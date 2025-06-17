@@ -3,15 +3,17 @@
         <ion-row>
             <ion-col size="12">
                 <ion-card class="default-bg">
-                    <img v-if=" props.event?.image" alt="Silhouette of mountains" :src="event.image ? baseUrl+'storage/'+event?.image?.url : 'https://ionicframework.com/docs/img/demos/card-media.png'" />
-                    <img v-else alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png" />
+                    <img v-if="props.event?.image" alt="Silhouette of mountains"
+                        :src="event.image ? baseUrl + 'storage/' + event?.image?.url : 'https://ionicframework.com/docs/img/demos/card-media.png'" />
+                    <img v-else alt="Silhouette of mountains"
+                        src="https://ionicframework.com/docs/img/demos/card-media.png" />
                     <ion-card-header>
                         <ion-card-title>{{ props.event?.name }}</ion-card-title>
                         <ion-card-subtitle></ion-card-subtitle>
                     </ion-card-header>
 
                     <ion-card-content>
-                        {{props.event?.description}}
+                        {{ props.event?.description }}
                     </ion-card-content>
                 </ion-card>
             </ion-col>
@@ -22,24 +24,22 @@
                     <a target="_blank" :href="event.restaurant?.locationOutline">
                         <ion-item class="default-bg">
                             <ion-icon aria-hidden="true" :icon="locationOutline" slot="start"></ion-icon>
-                            <ion-label>{{event.restaurant?.name}}</ion-label>
+                            <ion-label>{{ event.restaurant?.name }}</ion-label>
                         </ion-item>
                     </a>
                     <ion-item class="default-bg">
                         <ion-icon aria-hidden="true" :icon="calendarOutline" slot="start"></ion-icon>
-                        <ion-label>15 March - Saturday</ion-label>
+                        <ion-label>{{ formatDate(event?.date_start) }}</ion-label>
                     </ion-item>
                     <ion-item class="default-bg">
                         <ion-icon aria-hidden="true" :icon="alarmOutline" slot="start"></ion-icon>
-                        <ion-label>Starts at 23:00</ion-label>
+                        <ion-label>Starts at {{ formatTime(event?.date_start) }}</ion-label>
                     </ion-item>
-                    <ion-item class="default-bg">
+                    <ion-item class="default-bg" v-if="event?.rules">
                         <ion-icon aria-hidden="true" :icon="documentOutline" slot="start"></ion-icon>
-                        <ion-label>Rules:</ion-label>
+                        <ion-label>Rules: {{ event?.rules }}</ion-label>
                     </ion-item>
-                    <ion-item class="default-bg">
-                        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quam alias, harum officia, doloribus rem tempora accusantium voluptatibus voluptates quaerat fuga in? Consectetur quaerat molestiae dicta vel. Repellendus deleniti sapiente non.
-                    </ion-item>
+                    <ion-item class="default-bg" v-if="event?.description">{{ event?.description }}</ion-item>
                 </ion-list>
             </ion-col>
         </ion-row>
@@ -52,10 +52,10 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { 
-    IonGrid, 
-    IonRow, 
-    IonCol, 
+import {
+    IonGrid,
+    IonRow,
+    IonCol,
     IonCard,
     IonCardContent,
     IonCardHeader,
@@ -76,13 +76,33 @@ const props = defineProps({
         default: () => ({ id: null })
     }
 });
+
+const formatDate = (dateString: string | undefined) => {
+    // Ensure the dateString is in a valid format
+    if (!dateString) return '01 January - Monday';
+    const dateObj = new Date(dateString);
+
+    const day = dateObj.getDate();
+    const month = new Intl.DateTimeFormat("en", { month: "long" }).format(dateObj);
+    const weekday = new Intl.DateTimeFormat("en", { weekday: "long" }).format(dateObj);
+
+    return `${day} ${month} - ${weekday}`;
+};
+
+const formatTime = (dateString: string | undefined): string => {
+    if (!dateString) return '00:00';
+
+    const dateObj = new Date(dateString.replace(' ', 'T')); // Convert to ISO format
+
+    const hours = String(dateObj.getHours()).padStart(2, '0');
+    const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+
+    return `${hours}:${minutes}`;
+};
 </script>
 
 <style lang="css">
-
 ion-button {
     flex-shrink: 0;
 }
-
 </style>
-  

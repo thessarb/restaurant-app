@@ -92,7 +92,7 @@ const login = async () => {
             password.value = '';
         }
     } catch (error:any) {
-        console.log(error)
+        console.error(error);
     }
 };
 </script>

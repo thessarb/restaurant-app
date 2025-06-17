@@ -96,7 +96,6 @@ const forgetPassword = async () => {
             email: email.value
         });
 
-        console.log('OTP sent successfully:', response.data);
         emailSent.value = true;
         step.value = 'Verify Code';
 
@@ -118,9 +117,6 @@ const checkAndUpdateOpt = async () => {
             opt_code: opt_code.value,
         });
         router.push({ name: 'reset-password' });
-
-        console.log('OTP verified successfully:', response.data);
-
     } catch (error: any) {
         if (error.response) {
             console.error('Server responded with error:', error.response.data);

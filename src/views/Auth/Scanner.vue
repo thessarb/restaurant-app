@@ -162,7 +162,7 @@ const getReservation = async (user: number, reservation: number) => {
                     "Authorization": `Bearer ${authStore.token}`,
                 }
             });
-        console.log(response.data);
+            
         return response.data.reservation;
     } catch (error) {
         console.error('Error fetching client secret:', error);

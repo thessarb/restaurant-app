@@ -185,7 +185,6 @@ const checkReservedTable = async (event: Event | null, table: Table | null) => {
                 "Authorization": `Bearer ${authStore.token}`,
             },
         });
-        console.log(response.data.available);
         reserved.value = response.data.available.length > 0;
     } catch (error) {
         console.error(error);
@@ -332,7 +331,6 @@ onMounted(async () => {
                 const clickedId = e.currentTarget.id;
                 const tableId = clickedId.replace('table-', '');
                 const table =  props.tables?.find((t: any) => t.table_nr == tableId);
-                console.log(`Clicked ID: ${clickedId}`);
                 openModal(table);
             });
         });

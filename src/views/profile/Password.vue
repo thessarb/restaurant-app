@@ -77,7 +77,7 @@ const passwordUpdate = async () => {
                 "Authorization": `Bearer ${authStore.token}`,
             }
         });
-        console.log(response)
+        
         success.value = 'Password updated successfully!'
         password.value = ''
         password_confirmation.value = ''
