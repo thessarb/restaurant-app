@@ -255,6 +255,7 @@
 
     #qrCanvas {
         margin-top: 20px;
+        background: white;
         border-radius: 16px;
         overflow: hidden;
     }

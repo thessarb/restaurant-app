@@ -76,7 +76,7 @@ const profileUpdate = async () => {
                 "Authorization": `Bearer ${authStore.token}`,
             }
         });
-        success.value = 'Data updated successful!'
+        success.value = 'Data updated successfully!'
         authStore.user = {
             ...authStore.user!,
             email: email.value ?? '',
