@@ -20,6 +20,10 @@
                 <ion-icon aria-hidden="true" :icon="peopleOutline" slot="start"></ion-icon>
                 <ion-label>Number of guests: {{ reservation?.people }}</ion-label>
             </ion-item>
+            <ion-item class="default-bg" v-if="reservation?.price">
+                <ion-icon aria-hidden="true" :icon="cashOutline" slot="start"></ion-icon>
+                <ion-label>Paid: ${{ reservation?.price }}</ion-label>
+            </ion-item>
             <ion-item class="default-bg" v-if="result">
                 <ion-icon aria-hidden="true" :icon="checkmarkCircleOutline" slot="start"
                     v-if="result === 'Valid'"></ion-icon>
@@ -46,7 +50,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
-import { cameraOutline, calendarOutline, locationOutline, checkmarkCircleOutline, barcodeOutline, peopleOutline, closeCircleOutline } from 'ionicons/icons';
+import { cameraOutline, calendarOutline, locationOutline, checkmarkCircleOutline, barcodeOutline, peopleOutline, closeCircleOutline, cashOutline } from 'ionicons/icons';
 import {
     IonPage,
     IonHeader,
@@ -100,6 +104,7 @@ interface Reservation {
     restaurant: Restaurant
     date_start: string,
     people: number,
+    price: number,
     reservation_date: string
 }
 
