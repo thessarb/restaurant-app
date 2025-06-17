@@ -80,6 +80,7 @@ import {
     IonItem,
     IonLabel,
     IonIcon,
+    onIonViewWillEnter
 } from '@ionic/vue';
 import { informationCircleOutline, lockClosedOutline, logOutOutline, personOutline } from 'ionicons/icons';
 import { useAuthStore } from "@/stores/authStore";
@@ -87,7 +88,7 @@ import { ref, onMounted } from 'vue';
 import axios from 'axios';
 
 const authStore = useAuthStore();
-const user = authStore.user;
+const user = ref(authStore.user);
 const logout = () => {
     authStore.logout();
 }
@@ -129,6 +130,10 @@ const getReservations = async () => {
 
 onMounted(() => {
     getReservations();
+});
+
+onIonViewWillEnter(() => {
+    user.value = authStore.user;
 });
 
 </script>

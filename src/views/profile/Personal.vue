@@ -77,6 +77,15 @@ const profileUpdate = async () => {
             }
         });
         success.value = 'Data updated successful!'
+        authStore.user = {
+            ...authStore.user!,
+            email: email.value,
+            phone: phone.value,
+        };
+        email.value = authStore.user.email;
+        phone.value = authStore.user.phone;
+        // Update local storage
+        await authStore.storeUser(authStore.user);
     } catch (error: any) {
         errors.value = error.response.data.errors
         console.error('Email or Phone:', error);
