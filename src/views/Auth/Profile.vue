@@ -16,7 +16,7 @@
                     <ion-col>
                         <ion-list lines="none">
                             <ion-item class="default-bg">
-                                <ion-label>{{ user?.name }}</ion-label>
+                                <ion-label>Name: {{ user?.name }}</ion-label>
                             </ion-item>
                             <ion-item class="default-bg">
                                 <ion-label>Phone: {{ user?.phone }}</ion-label>
