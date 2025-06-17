@@ -4,10 +4,7 @@
         <ion-label>Upcoming</ion-label>
       </ion-segment-button>
       <ion-segment-button value="completed">
-        <ion-label>Completed</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="cancelled">
-        <ion-label>Cancelled</ion-label>
+        <ion-label>Past</ion-label>
       </ion-segment-button>
     </ion-segment>
   
@@ -62,11 +59,6 @@
                 </ion-list>
             </ion-card>
         </ion-col>
-    </ion-row>
-    
-    <ion-row v-else-if="selectedSegment === 'cancelled'">
-        <!-- Cancelled View -->
-        <p>Showing cancelled events...</p>
     </ion-row>
     <ion-modal ref="modal" :initial-breakpoint="0.85" :is-open="isOpen">
         <ion-header>
