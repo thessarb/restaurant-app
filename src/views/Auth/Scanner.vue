@@ -6,32 +6,44 @@
             </ion-toolbar>
         </ion-header>
         <ion-content :fullscreen="true" class="ion-padding">
-            <a target="_blank" :href="reservation?.restaurant?.location" v-if="reservation?.restaurant?.location">
-                <ion-item class="default-bg">
-                    <ion-icon aria-hidden="true" :icon="locationOutline" slot="start"></ion-icon>
-                    <ion-label>Location: {{ reservation?.restaurant?.name }}</ion-label>
-                </ion-item>
-            </a>
-            <ion-item class="default-bg" v-if="reservation?.reservation_date">
-                <ion-icon aria-hidden="true" :icon="calendarOutline" slot="start"></ion-icon>
-                <ion-label>Date: {{ reservation?.event?.date_start }}</ion-label>
-            </ion-item>
-            <ion-item class="default-bg" v-if="reservation?.people">
-                <ion-icon aria-hidden="true" :icon="peopleOutline" slot="start"></ion-icon>
-                <ion-label>Number of guests: {{ reservation?.people }}</ion-label>
-            </ion-item>
-            <ion-item class="default-bg" v-if="reservation?.price">
-                <ion-icon aria-hidden="true" :icon="cashOutline" slot="start"></ion-icon>
-                <ion-label>Paid: ${{ reservation?.price }}</ion-label>
-            </ion-item>
-            <ion-item class="default-bg" v-if="result">
-                <ion-icon aria-hidden="true" :icon="checkmarkCircleOutline" slot="start"
-                    v-if="result === 'Valid'"></ion-icon>
-                <ion-icon aria-hidden="true" :icon="closeCircleOutline" slot="start"
-                    v-if="result !== 'Valid'"></ion-icon>
-                <ion-label>Status: {{ result }}</ion-label>
-            </ion-item>
             <ion-grid class="scanner__container">
+                <a class="scanner__result" target="_blank" :href="reservation?.restaurant?.location" v-if="reservation?.restaurant?.location">
+                    <ion-item class="default-bg">
+                        <ion-icon aria-hidden="true" :icon="locationOutline" slot="start"></ion-icon>
+                        <ion-label>Location: {{ reservation?.restaurant?.name }}</ion-label>
+                    </ion-item>
+                </a>
+                <ion-item class="scanner__result default-bg" v-if="reservation?.reservation_date">
+                    <ion-icon aria-hidden="true" :icon="calendarOutline" slot="start"></ion-icon>
+                    <ion-label>Date: {{ reservation?.event?.date_start }}</ion-label>
+                </ion-item>
+                <ion-item class="scanner__result default-bg" v-if="reservation?.people">
+                    <ion-icon aria-hidden="true" :icon="peopleOutline" slot="start"></ion-icon>
+                    <ion-label>Number of guests: {{ reservation?.people }}</ion-label>
+                </ion-item>
+                <ion-item class="scanner__result default-bg" v-if="reservation?.price">
+                    <ion-icon aria-hidden="true" :icon="cashOutline" slot="start"></ion-icon>
+                    <ion-label>Paid: ${{ reservation?.price }}</ion-label>
+                </ion-item>
+                <ion-item class="scanner__result default-bg" v-if="reservation?.type">
+                    <ion-icon aria-hidden="true" :icon="ticketOutline" slot="start"></ion-icon>
+                    <ion-label>Reservation type: {{ reservation?.type }}</ion-label>
+                </ion-item>
+                <ion-item class="scanner__result default-bg" v-if="reservation?.table?.table_nr">
+                    <ion-icon aria-hidden="true" :icon="clipboardOutline" slot="start"></ion-icon>
+                    <ion-label>Table: {{ reservation?.table?.table_nr }}</ion-label>
+                </ion-item>
+                <ion-item class="scanner__result default-bg" v-if="reservation?.table?.zone?.name">
+                    <ion-icon aria-hidden="true" :icon="locateOutline" slot="start"></ion-icon>
+                    <ion-label>VIP zone: {{ reservation?.table?.zone?.name }}</ion-label>
+                </ion-item>
+                <ion-item  class="scanner__result default-bg" v-if="result">
+                    <ion-icon aria-hidden="true" :icon="checkmarkCircleOutline" slot="start"
+                        v-if="result === 'Valid'"></ion-icon>
+                    <ion-icon aria-hidden="true" :icon="closeCircleOutline" slot="start"
+                        v-if="result !== 'Valid'"></ion-icon>
+                    <ion-label>Status: {{ result }}</ion-label>
+                </ion-item>
                 <ion-row>
                     <ion-col>
                         <ion-card class="scanner__button-container" @click="startScan">
@@ -50,7 +62,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
-import { cameraOutline, calendarOutline, locationOutline, checkmarkCircleOutline, barcodeOutline, peopleOutline, closeCircleOutline, cashOutline } from 'ionicons/icons';
+import { cameraOutline, calendarOutline, locationOutline, checkmarkCircleOutline, peopleOutline, closeCircleOutline, cashOutline, clipboardOutline, locateOutline, ticketOutline } from 'ionicons/icons';
 import {
     IonPage,
     IonHeader,
@@ -79,7 +91,6 @@ interface Event {
     rules: string;
     restaurant_id: string | null;
     restaurant: Restaurant | null
-    image: Image | null
     created_at: string;
     updated_at: string;
 }
@@ -92,9 +103,15 @@ interface Restaurant {
     updated_at: string;
 }
 
-interface Image {
+interface Table {
     id: number;
-    url: string;
+    zone: Zone | null;
+    table_nr: number;
+}
+
+interface Zone {
+    id: number;
+    name: string;
 }
 
 interface Reservation {
@@ -105,6 +122,7 @@ interface Reservation {
     date_start: string,
     people: number,
     price: number,
+    table: Table | null,
     reservation_date: string
 }
 
