@@ -7,12 +7,9 @@
         <ion-modal ref="modal" :initial-breakpoint="0.85" trigger="open-modal" @willDismiss="onWillDismiss">
             <ion-header>
                 <ion-toolbar>
-                    <ion-buttons slot="start">
-                        <ion-button @click="cancel()">Cancel</ion-button>
-                    </ion-buttons>
-                    <ion-title>Reserve table {{ clickedTable?.table_nr }}</ion-title>
+					<ion-title>Reserve table {{ clickedTable?.table_nr }}</ion-title>
                     <ion-buttons slot="end">
-                        <ion-button :strong="true" @click="confirm()">Confirm</ion-button>
+                        <ion-button @click="cancel()">Cancel</ion-button>
                     </ion-buttons>
                 </ion-toolbar>
             </ion-header>
@@ -20,10 +17,6 @@
                 <ion-row>
                     <ion-col>
                         <ion-list lines="none">
-                            <ion-item>
-                                <ion-input label="Enter your name" label-placement="stacked" ref="input" type="text"
-                                    placeholder="Your name"></ion-input>
-                            </ion-item>
                             <a target="_blank" :href="event?.restaurant?.location">
                                 <ion-item class="default-bg">
                                     <ion-icon aria-hidden="true" :icon="locationOutline" slot="start"></ion-icon>
@@ -62,6 +55,8 @@
                                 <ion-button class="modifier" @click="increment(index)" :disabled="getTotal() >= limit">+</ion-button>
                             </ion-item>
                         </ion-list>
+						<ion-card class="default-bg ion-padding" id="checkout"></ion-card>
+						<ion-button :disabled="process" color="primary" expand="block" @click="paymentFlow">Reserve</ion-button>
                     </ion-col>
                 </ion-row>
             </ion-content>
@@ -72,14 +67,17 @@
 const props = defineProps({
     location: String,
     tables: Array,
-    event: Object
+    // event: Object
 });
 import { ref, onMounted, nextTick } from 'vue';
 import type { Ref } from 'vue';
 import { Storage } from '@ionic/storage';
 import { OverlayEventDetail } from '@ionic/core/components';
 import { calendarOutline, cashOutline, alarmOutline, locationOutline, documentOutline, peopleOutline } from 'ionicons/icons';
-
+import { useRoute, useRouter } from 'vue-router'
+import axios from 'axios';
+import { useAuthStore } from "@/stores/authStore";
+import { loadStripe, Stripe} from '@stripe/stripe-js';
 import {
     IonButtons,
     IonButton,
@@ -93,26 +91,17 @@ import {
     IonToolbar,
     IonTitle,
     IonItem,
-    IonInput,
     IonText,
-    IonRow
+    IonRow,
+	IonCard
 } from '@ionic/vue';
 
 const storage = new Storage();
 const svgContainer: Ref<HTMLElement | null> = ref(null);
 const text = ref('');
 const message = ref('This modal example uses triggers to automatically open a modal when the button is clicked.');
-
 const modal = ref();
-const input = ref();
-
 const cancel = () => modal.value.$el.dismiss(null, 'cancel');
-
-const confirm = () => {
-    const name = input.value.$el.value;
-    modal.value.$el.dismiss(name, 'confirm');
-};
-
 const onWillDismiss = (event: CustomEvent<OverlayEventDetail>) => {
     if (event.detail.role === 'confirm') {
         message.value = `Hello, ${event.detail.data}!`;
@@ -154,6 +143,20 @@ interface Restaurant {
     created_at: string;
     updated_at: string;
 }
+const event = ref<Event>({
+  id: 8,
+  name: "Pizza Night",
+  date_start: "2025-05-13 12:17:50",
+  description: "Indulge in a variety of delicious pizzas made fresh from our oven.",
+  rules: "Take-out options available.",
+  nr_tikets: 0,
+  price_per_ticket: 0,
+  restaurant_id: null,
+  restaurant: null,
+  created_at: "2025-03-29T12:17:50.000000Z",
+  updated_at: "2025-03-29T12:17:50.000000Z",
+  image: null
+});
 
 // const clickedTableId = ref('');
 const clickedTable = ref({} as Table);
@@ -207,6 +210,7 @@ const formatTime = (dateString: string | undefined): string => {
 const counters = ref([0, 0]);
 const limit = ref(0);
 const getTotal = () => counters.value[0] + counters.value[1];
+const authStore = useAuthStore();
 
 const increment = (index: number) => {
   if (getTotal() < limit.value) {
@@ -219,7 +223,118 @@ const decrement = (index: number) => {
     counters.value[index]--;
   }
 };
+
 const stuff = ref('Loading...');
+const stripe = ref<Stripe | null>(null);
+const process = ref(false);
+const sessionStatus = ref('');
+const customerEmail = ref('');
+const success = ref(false);
+const router = useRouter();
+const initializeStripe = async (tableObj: any) => {
+    // const clientSecret = await fetchClientSecret();
+    stripe.value = await loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
+    if (stripe.value) {
+        const ch = await stripe.value.initEmbeddedCheckout({
+			fetchClientSecret: () => fetchClientSecret(tableObj),        
+		});
+
+        // Mount Checkout
+        ch.mount('#checkout');
+    }
+};
+
+const storeReservation = async () => {
+	try {
+		alert('before store');
+        await axios.post(import.meta.env.VITE_APP_ENDPOINT + 'reservation/store',
+        {
+            event_id: event?.value?.id,
+            user_id: authStore.user?.id,
+            price: clickedTable?.value?.deposit || 0,
+        },
+        {
+            headers: {
+                "Accept": "application/json",
+                "Authorization": `Bearer ${authStore.token}`,
+            }
+        });
+		alert('Reservation successful! You will receive a confirmation email shortly.');
+    } catch (error) {
+        console.error('Ticket:', error);
+    }
+}
+
+const returnFunc = async (sessionId: string) => {
+	try {
+		const response = await axios.post(import.meta.env.VITE_APP_ENDPOINT + 'stripe/status',
+			{ session_id: sessionId },
+			{
+				headers: {
+					Authorization: `Bearer ${authStore.token}`,
+					Accept: "application/json",
+					"Content-Type": "application/json",
+				}
+			}
+		);
+		success.value = true
+		const session = await response.data;
+		if (session.status === 'open') {
+		router.push({ path: '/checkout' });
+		} else if (session.status === 'complete') {
+			storeReservation();
+			sessionStatus.value = 'complete';
+			customerEmail.value = session.customer_email;
+		}
+	} catch (error) {
+		console.error('Error fetching session status:', error);
+	}
+};
+
+const paymentFlow = () => {
+    initializeStripe(clickedTable.value);
+}
+
+const fetchClientSecret = async (tableObj :any) => {
+    try {
+        const response = await axios.post(import.meta.env.VITE_APP_ENDPOINT + 'stripe/checkout',
+        {
+            price: tableObj?.deposit+'00',
+            name: 'Table reservation for '+event.value.name, 
+            app: 'andoid',
+            type: 'reservation',
+            restaurant_id: event.value.restaurant_id,
+            event_id: event.value.id
+        },
+        {
+            headers: {
+                "Accept": "application/json",
+                "Authorization": `Bearer ${authStore.token}`,
+            }
+        });
+        const { clientSecret } = response.data;
+        process.value = true;
+        return clientSecret;
+    } catch (error) {
+        console.error('Error fetching client secret:', error);
+    }
+};
+
+const route = useRoute();
+
+const detail = async () => {
+    try {
+        const response = await axios.get(`${authStore.endpoint}event/${route.params.id}`, {
+            headers: {
+                Accept: 'application/json',
+            },
+        });
+        event.value = response.data.data
+
+    } catch (error) {
+        console.error(error);
+    }
+};
 
 onMounted(async () => {
     try {
@@ -247,6 +362,17 @@ onMounted(async () => {
     } catch (error) {
         console.error('Error loading SVG:', error);
     }
+
+	detail();
+
+	const route = useRoute();
+    const rawSessionId = route.query.session_id;
+    const sessionId = Array.isArray(rawSessionId) ? rawSessionId[0] : rawSessionId;
+alert('Session ID: ' + sessionId);
+    if(sessionId){
+        returnFunc(sessionId);
+    }
+
 });
 </script>
 <style scoped>

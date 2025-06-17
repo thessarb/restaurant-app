@@ -147,20 +147,48 @@ router.beforeEach(async (to, from, next) => {
     }
 });
 
+// App.addListener('appUrlOpen', async (event: URLOpenListenerEvent) => {
+//     const url = event.url;
+    
+//     const slug = url.split('usarestaurant.tech').pop();
+//     const eventIdMatch = slug?.match(/tabs\/reserve\/([^?]+)/);
+//     const sessionIdMatch = slug?.match(/session_id=([^&]+)/); 
+    
+//     if (eventIdMatch && sessionIdMatch) {
+//         const eventId = eventIdMatch[1];
+//         const sessionId = sessionIdMatch[1];
+
+//         router.push({
+//             name: 'reserve', 
+//             params: { id: eventId },
+//             query: { session_id: sessionId }
+//         });
+//     }
+// });
 App.addListener('appUrlOpen', async (event: URLOpenListenerEvent) => {
     const url = event.url;
-    
+
     const slug = url.split('usarestaurant.tech').pop();
-    const eventIdMatch = slug?.match(/tabs\/reserve\/([^?]+)/);
-    const sessionIdMatch = slug?.match(/session_id=([^&]+)/); 
-    
-    if (eventIdMatch && sessionIdMatch) {
-        const eventId = eventIdMatch[1];
+    const reserveMatch = slug?.match(/tabs\/reserve\/([^?]+)/);
+    const reserveVipMatch = slug?.match(/tabs\/reservetype\/([^/]+)\/vip/);
+    const sessionIdMatch = slug?.match(/session_id=([^&]+)/);
+
+    if (reserveMatch && sessionIdMatch) {
+        const eventId = reserveMatch[1];
         const sessionId = sessionIdMatch[1];
 
         router.push({
-            name: 'reserve', 
+            name: 'reserve',
             params: { id: eventId },
+            query: { session_id: sessionId }
+        });
+    } else if (reserveVipMatch && sessionIdMatch) {
+        const restaurantId = reserveVipMatch[1];
+        const sessionId = sessionIdMatch[1];
+
+        router.push({
+            name: 'reservevip',
+            params: { id: restaurantId },
             query: { session_id: sessionId }
         });
     }
