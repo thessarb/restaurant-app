@@ -250,14 +250,13 @@ const fetchClientSecret = async (tableObj :any) => {
     try {
         const response = await axios.post(import.meta.env.VITE_APP_ENDPOINT + 'stripe/checkout',
         {
-            price: tableObj?.deposit+'00',
+            price: tableObj?.deposit,
             name: 'Table reservation for '+event.value.name, 
             type: 'reservation',
             restaurant_id: event.value.restaurant_id,
             user_id: authStore.user?.id,
             event_id: event.value.id,
-            zone_id: '',
-            table_id: '',
+            table_id: clickedTable.value.id,
         },
         {
             headers: {
