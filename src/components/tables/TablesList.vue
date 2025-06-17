@@ -227,10 +227,7 @@ const decrement = (index: number) => {
 const stuff = ref('Loading...');
 const stripe = ref<Stripe | null>(null);
 const process = ref(false);
-const sessionStatus = ref('');
-const customerEmail = ref('');
-const success = ref(false);
-const router = useRouter();
+
 const initializeStripe = async (tableObj: any) => {
     // const clientSecret = await fetchClientSecret();
     stripe.value = await loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
@@ -244,52 +241,6 @@ const initializeStripe = async (tableObj: any) => {
     }
 };
 
-const storeReservation = async () => {
-	try {
-		alert('before store');
-        await axios.post(import.meta.env.VITE_APP_ENDPOINT + 'reservation/store',
-        {
-            event_id: event?.value?.id,
-            user_id: authStore.user?.id,
-            price: clickedTable?.value?.deposit || 0,
-        },
-        {
-            headers: {
-                "Accept": "application/json",
-                "Authorization": `Bearer ${authStore.token}`,
-            }
-        });
-		alert('Reservation successful! You will receive a confirmation email shortly.');
-    } catch (error) {
-        console.error('Ticket:', error);
-    }
-}
-
-const returnFunc = async (sessionId: string) => {
-	try {
-		const response = await axios.post(import.meta.env.VITE_APP_ENDPOINT + 'stripe/status',
-			{ session_id: sessionId },
-			{
-				headers: {
-					Authorization: `Bearer ${authStore.token}`,
-					Accept: "application/json",
-					"Content-Type": "application/json",
-				}
-			}
-		);
-		success.value = true
-		const session = await response.data;
-		if (session.status === 'open') {
-		router.push({ path: '/checkout' });
-		} else if (session.status === 'complete') {
-			storeReservation();
-			sessionStatus.value = 'complete';
-			customerEmail.value = session.customer_email;
-		}
-	} catch (error) {
-		console.error('Error fetching session status:', error);
-	}
-};
 
 const paymentFlow = () => {
     initializeStripe(clickedTable.value);
@@ -301,10 +252,12 @@ const fetchClientSecret = async (tableObj :any) => {
         {
             price: tableObj?.deposit+'00',
             name: 'Table reservation for '+event.value.name, 
-            app: 'andoid',
             type: 'reservation',
             restaurant_id: event.value.restaurant_id,
-            event_id: event.value.id
+            user_id: authStore.user?.id,
+            event_id: event.value.id,
+            zone_id: '',
+            table_id: '',
         },
         {
             headers: {
@@ -364,15 +317,6 @@ onMounted(async () => {
     }
 
 	detail();
-
-	const route = useRoute();
-    const rawSessionId = route.query.session_id;
-    const sessionId = Array.isArray(rawSessionId) ? rawSessionId[0] : rawSessionId;
-alert('Session ID: ' + sessionId);
-    if(sessionId){
-        returnFunc(sessionId);
-    }
-
 });
 </script>
 <style scoped>

@@ -106,7 +106,7 @@ import { loadStripe, Stripe} from '@stripe/stripe-js';
 import axios from 'axios';
 import { useAuthStore } from "@/stores/authStore";
 import { useRoute,useRouter } from 'vue-router'
-import { arrowBack, calendarOutline, calendarNumberOutline, cashOutline, mapOutline, alarmOutline, locationOutline} from 'ionicons/icons';
+import { arrowBack, calendarOutline, calendarNumberOutline, cashOutline, mapOutline, alarmOutline, locationOutline, restaurant} from 'ionicons/icons';
 import { 
     IonPage, 
     IonHeader, 
@@ -175,7 +175,6 @@ const event = ref<Event>({
 const type = ref('standart');
 const success = ref(false);
 const route = useRoute();
-const router = useRouter();
 const ticket = ref();
 const isTicketOpen = ref(false);
 const detail = async () => {
@@ -237,9 +236,9 @@ const fetchClientSecret = async () => {
         {
             price: event.value.price_per_ticket+'00',
             name: 'Ticket for '+event.value.name, 
-            app: 'andoid',
-            type: 'ticket',
-            event_id: event.value.id
+            event_id: event.value.id,
+            restaurant_id: event.value.restaurant_id,
+            user_id: authStore.user?.id,
         },
         {
             headers: {
@@ -255,53 +254,10 @@ const fetchClientSecret = async () => {
     }
 };
   
-const returnFunc = async (sessionId: string) => {
 
-    try {
-        const response = await axios.post(import.meta.env.VITE_APP_ENDPOINT + 'stripe/status',
-            { session_id: sessionId },
-            {
-                headers: {
-                    Authorization: `Bearer ${authStore.token}`,
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                }
-            }
-        );
-        success.value = true
-        const session = await response.data;
-        if (session.status === 'open') {
-          router.push({ path: '/checkout' });
-        } else if (session.status === 'complete') {
-            storeTicket();
-            sessionStatus.value = 'complete';
-            customerEmail.value = session.customer_email;
-        }
-    } catch (error) {
-        console.error('Error fetching session status:', error);
-    }
-};
 const paymentFlow = () => {
     initializeStripe();
 }
-const storeTicket = async () => {
-    try {
-        await axios.post(import.meta.env.VITE_APP_ENDPOINT + 'ticket/store',
-        {
-            event_id: event?.value?.id,
-            user_id: authStore.user?.id,
-            price: 50.00,
-        },
-        {
-            headers: {
-                "Accept": "application/json",
-                "Authorization": `Bearer ${authStore.token}`,
-            }
-        });
-    } catch (error) {
-        console.error('Ticket:', error);
-    }
-};
 
 const getTicket = async () => {
     try {
@@ -318,17 +274,8 @@ const getTicket = async () => {
     }
 }
 
-// Combine both mounted hooks into one to simplify async logic
 onMounted(() => {
     detail();
-    const route = useRoute();
-    const rawSessionId = route.query.session_id;
-    const sessionId = Array.isArray(rawSessionId) ? rawSessionId[0] : rawSessionId;
-
-    if(sessionId){
-        returnFunc(sessionId);
-        getTicket();
-    }
 });  
 
 </script>
