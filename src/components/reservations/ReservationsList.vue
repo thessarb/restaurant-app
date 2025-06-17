@@ -134,7 +134,7 @@
         IonList,
         IonCardSubtitle 
     } from '@ionic/vue';
-    import { ref, onMounted, watch } from 'vue';
+    import { ref, onMounted } from 'vue';
     import axios from 'axios';
     import QRCode from 'qrcode';
   
@@ -233,13 +233,12 @@
     const getReservations = async () => {
         try {
             const response =  await axios.get(import.meta.env.VITE_APP_ENDPOINT + `reservation/reservations?user_id=${authStore?.user?.id}`,
-                {
-                    headers: {
-                        "Accept": "application/json",
-                        "Authorization": `Bearer ${authStore.token}`,
-                    }
-                });
-                console.log(response.data.reservations);
+            {
+                headers: {
+                    "Accept": "application/json",
+                    "Authorization": `Bearer ${authStore.token}`,
+                }
+            });
             reservations.value = response.data.reservations;
         } catch (error) {
             console.error('Error fetching client secret:', error);

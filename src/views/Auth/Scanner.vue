@@ -14,7 +14,7 @@
             </a>
             <ion-item class="default-bg" v-if="reservation?.reservation_date">
                 <ion-icon aria-hidden="true" :icon="calendarOutline" slot="start"></ion-icon>
-                <ion-label>Date: {{ reservation?.reservation_date }}</ion-label>
+                <ion-label>Date: {{ reservation?.event?.date_start }}</ion-label>
             </ion-item>
             <ion-item class="default-bg" v-if="reservation?.people">
                 <ion-icon aria-hidden="true" :icon="peopleOutline" slot="start"></ion-icon>
@@ -104,7 +104,6 @@ interface Reservation {
 }
 
 const result = ref('');
-const scanCount = ref(0);
 const reservation = ref<Reservation | null>(null);
 
 const startScan = async () => {
