@@ -4,15 +4,12 @@
         <ion-label>Upcoming</ion-label>
       </ion-segment-button>
       <ion-segment-button value="completed">
-        <ion-label>Completed</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="cancelled">
-        <ion-label>Cancelled</ion-label>
+        <ion-label>Past</ion-label>
       </ion-segment-button>
     </ion-segment>
   
     <ion-row class="reservation__items" v-if="selectedSegment === 'upcoming'">
-        <ion-col size="12" v-for="reservation in reservations?.upcoming" :key="reservation.id">
+        <ion-col class="reservation__item" size="12" v-for="reservation in reservations?.upcoming" :key="reservation.id">
             <ion-card @click="setReservation(reservation)">
                 <ion-list lines="none">
                     <ion-item class="reservation__item-bg">
@@ -63,11 +60,6 @@
             </ion-card>
         </ion-col>
     </ion-row>
-    
-    <ion-row v-else-if="selectedSegment === 'cancelled'">
-        <!-- Cancelled View -->
-        <p>Showing cancelled events...</p>
-    </ion-row>
     <ion-modal ref="modal" :initial-breakpoint="0.85" :is-open="isOpen">
         <ion-header>
             <ion-toolbar class="default-bg">
@@ -97,6 +89,11 @@
                         </ion-item>
                         <ion-item class="default-bg" v-if="selectedReservation?.event?.description">
                             {{ selectedReservation?.event?.description }}
+                        </ion-item>
+                        <ion-item class="default-bg">
+                            <div class="qr-container">
+                                <div id="qrCanvas" v-html="qrCode"></div>
+                            </div>
                         </ion-item>
                     </ion-list>
                 </ion-col>
@@ -128,9 +125,10 @@
         IonIcon,
         IonList,
         IonCardSubtitle 
-    } from '@ionic/vue'
-    import { ref,onMounted } from 'vue'
-    import axios from 'axios'
+    } from '@ionic/vue';
+    import { ref, onMounted } from 'vue';
+    import axios from 'axios';
+    import QRCode from 'qrcode';
   
     const selectedSegment = ref<'upcoming' | 'completed' | 'cancelled'>('upcoming')
     import { useAuthStore } from '@/stores/authStore'
@@ -139,11 +137,19 @@
     const selectedReservation = ref< Reservation | null >(null);
     const selectedReservationTitle = ref('');
     const isOpen = ref(false);
+    const qrCodeData = ref('');
+    const qrCode =  ref('');
+
+    const generateQRCode = async (value: string) => {
+        qrCode.value = await QRCode.toString(value, { type: 'svg', width:300 });
+    };
 
     const setReservation = (reservation: Reservation) => {
         if (!reservation|| !reservation.type || !reservation.type.length || !reservation.event?.name) selectedReservationTitle.value = '';
         selectedReservationTitle.value = `${reservation.type[0].toUpperCase()}${reservation.type.slice(1)}: ${reservation.event.name}`;
         selectedReservation.value = reservation;
+        qrCodeData.value = `{user_id: ${authStore?.user?.id},reservation_id: ${reservation?.id}}`;
+        generateQRCode(qrCodeData.value);
         isOpen.value = true;
     };
 
@@ -219,25 +225,39 @@
     const getReservations = async () => {
         try {
             const response =  await axios.get(import.meta.env.VITE_APP_ENDPOINT + `reservation/reservations?user_id=${authStore?.user?.id}`,
-                {
-                    headers: {
-                        "Accept": "application/json",
-                        "Authorization": `Bearer ${authStore.token}`,
-                    }
-                });
+            {
+                headers: {
+                    "Accept": "application/json",
+                    "Authorization": `Bearer ${authStore.token}`,
+                }
+            });
             reservations.value = response.data.reservations;
         } catch (error) {
             console.error('Error fetching client secret:', error);
         }
     }
     onMounted(() => {
-        getReservations()
+        getReservations();
     });
 </script>
 <style scoped>
     ion-segment-button.ios::part(indicator-background) {
         background: var(--ion-color-primary);
         border-radius: 16px;
+    }
+
+    .qr-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
+
+    #qrCanvas {
+        margin-top: 20px;
+        background: white;
+        border-radius: 16px;
+        overflow: hidden;
     }
 </style>
   

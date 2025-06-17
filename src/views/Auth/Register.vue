@@ -106,6 +106,9 @@ const continueRegister = () => {
 }
 
 </script>
-<style lang="css">
-
+<style scoped lang="css">
+    ion-segment-button.ios::part(indicator-background) {
+        background: var(--ion-color-primary);
+        border-radius: 16px;
+    }
 </style>

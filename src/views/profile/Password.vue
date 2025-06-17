@@ -77,8 +77,8 @@ const passwordUpdate = async () => {
                 "Authorization": `Bearer ${authStore.token}`,
             }
         });
-        console.log(response)
-        success.value = 'Password updated successful!'
+        
+        success.value = 'Password updated successfully!'
         password.value = ''
         password_confirmation.value = ''
     } catch (error: any) {
@@ -86,6 +86,3 @@ const passwordUpdate = async () => {
     }
 };
 </script>
-<style lang="css">
-
-</style>
