@@ -54,23 +54,25 @@ export const useDataStore = defineStore('data', {
 
     actions: {
         async storeTable1() {
-            const existing = await loadChunks('table1');
+            const existing = await storage.get('table1_chunkCount');
             if (!existing) {
                 this.table1 = zone1Svg;
                 await saveChunks('table1', zone1Svg);
             } else {
                 this.table1 = existing;
             }
+            return;
         },
 
         async storeTable2() {
-            const existing = await loadChunks('table2');
+            const existing = await storage.get('table2_chunkCount');
             if (!existing) {
                 this.table2 = zone2Svg;
                 await saveChunks('table2', zone2Svg);
             } else {
                 this.table2 = existing;
             }
+            return;
         }
     },
 });

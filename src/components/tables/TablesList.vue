@@ -38,6 +38,10 @@
                                 <ion-icon aria-hidden="true" :icon="alarmOutline" slot="start"></ion-icon>
                                 <ion-label>Starts at {{ formatTime(event?.date_start) }}</ion-label>
                             </ion-item>
+                            <ion-item class="default-bg" v-if="clickedTable?.restaurant_id === 2">
+                                <ion-icon aria-hidden="true" :icon="alarmOutline" slot="start"></ion-icon>
+                                <ion-label>Table number: {{ clickedTable?.table_nr }}</ion-label>
+                            </ion-item>
                             <ion-item class="default-bg" v-if="clickedTable?.nr_people">
                                 <ion-icon aria-hidden="true" :icon="peopleOutline" slot="start"></ion-icon>
                                 <ion-label>Max. number of people for this table: {{ clickedTable?.nr_people }}</ion-label>

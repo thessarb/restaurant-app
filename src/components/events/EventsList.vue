@@ -68,14 +68,21 @@ import {
 import { calendar, location } from 'ionicons/icons';
 import { PropType, onMounted, ref } from 'vue';
 import axios from 'axios';
-import { useDataStore } from "@/stores/dataStore";
 import { useAuthStore } from "@/stores/authStore";
 import { useRouter } from 'vue-router';
 const authStore = useAuthStore();
 const router = useRouter();
-
-// Reactive state for active button
+const baseUrl = ref(import.meta.env.VITE_APP_BASE);
+const restaurants = ref<Restaurant[]>([]);
+const eventList = ref<Event[]>([]);
 const activeButton = ref(99);
+
+defineProps({
+    events: {
+        type: Array as PropType<Event[]>,
+        required: true
+    }
+});
 
 // Method to change active button
 const setActive = (zone: number) => {
@@ -109,16 +116,6 @@ interface Image {
     url: string;
 }
 
-defineProps({
-    events: {
-        type: Array as PropType<Event[]>,
-        required: true
-    }
-});
-const dataStore = useDataStore();
-const baseUrl = ref(import.meta.env.VITE_APP_BASE);
-const restaurants = ref<Restaurant[]>([]);
-const eventList = ref<Event[]>([]);
 const formatDate = (dateString: string) => {
     const dateObj = new Date(dateString);
 
@@ -165,8 +162,6 @@ onMounted(() => {
     }
     settings();
     getEvents();
-    dataStore.storeTable1();
-    dataStore.storeTable2();
 })
 </script>
 
