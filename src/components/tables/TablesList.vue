@@ -39,7 +39,7 @@
                                 <ion-label>Starts at {{ formatTime(event?.date_start) }}</ion-label>
                             </ion-item>
                             <ion-item class="default-bg" v-if="clickedTable?.restaurant_id === 2">
-                                <ion-icon aria-hidden="true" :icon="alarmOutline" slot="start"></ion-icon>
+                                <ion-icon aria-hidden="true" :icon="clipboardOutline" slot="start"></ion-icon>
                                 <ion-label>Table number: {{ clickedTable?.table_nr }}</ion-label>
                             </ion-item>
                             <ion-item class="default-bg" v-if="clickedTable?.nr_people">
@@ -84,7 +84,7 @@ import { ref, onMounted, nextTick } from 'vue';
 import type { Ref } from 'vue';
 import { Storage } from '@ionic/storage';
 import { OverlayEventDetail } from '@ionic/core/components';
-import { calendarOutline, cashOutline, alarmOutline, locationOutline, documentOutline, peopleOutline } from 'ionicons/icons';
+import { calendarOutline, cashOutline, alarmOutline, locationOutline, documentOutline, peopleOutline, clipboardOutline } from 'ionicons/icons';
 import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios';
 import { useAuthStore } from "@/stores/authStore";
