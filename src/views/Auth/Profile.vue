@@ -25,7 +25,7 @@
                     </ion-col>
                 </ion-row>
             </ion-grid>
-            <ion-grid class="profile__history">
+            <ion-grid class="profile__history" v-if="authStore?.user?.role_id !== 3">
                 <ion-row>
                     <ion-col>
                         <ion-item lines="none" class="default-bg ion-text-center">{{ upcomingReservations }}</ion-item>
