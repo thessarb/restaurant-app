@@ -9,7 +9,7 @@
     </ion-segment>
   
     <ion-row class="reservation__items" v-if="selectedSegment === 'upcoming'">
-        <ion-col size="12" v-for="reservation in reservations?.upcoming" :key="reservation.id">
+        <ion-col class="reservation__item" size="12" v-for="reservation in reservations?.upcoming" :key="reservation.id">
             <ion-card @click="setReservation(reservation)">
                 <ion-list lines="none">
                     <ion-item class="reservation__item-bg">
