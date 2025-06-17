@@ -61,7 +61,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
+import { CapacitorBarcodeScanner, CapacitorBarcodeScannerTypeHint } from '@capacitor/barcode-scanner';
 import { cameraOutline, calendarOutline, locationOutline, checkmarkCircleOutline, peopleOutline, closeCircleOutline, cashOutline, clipboardOutline, locateOutline, ticketOutline } from 'ionicons/icons';
 import {
     IonPage,
@@ -133,10 +133,10 @@ const startScan = async () => {
     try {
         reservation.value = null;
         result.value = '';
-        const { barcodes } = await BarcodeScanner.scan();
-        if (barcodes.length > 0) {
-            const scannedData = barcodes[0].rawValue;
-            const parsedData = parseSimpleObject(scannedData);
+        const scan = await CapacitorBarcodeScanner.scanBarcode({ hint: CapacitorBarcodeScannerTypeHint.ALL });
+        const data = scan.ScanResult;
+        if (data.length > 0) {
+            const parsedData = parseSimpleObject(data);
             const request = await getReservation(parsedData.user_id, parsedData.reservation_id);
             if (request && !isEarlierThanNow(request.event.date_start)) {
                 reservation.value = request;

@@ -14,12 +14,12 @@
     "ios": "npm run build && npx cap sync ios && npx cap run ios"
   },
   "dependencies": {
-    "@capacitor-mlkit/barcode-scanning": "^7.2.1",
-    "@capacitor/android": "7.0.1",
-    "@capacitor/app": "7.0.0",
+    "@capacitor/android": "7",
+    "@capacitor/app": "7",
     "@capacitor/assets": "^3.0.5",
+    "@capacitor/barcode-scanner": "^2.0.3",
     "@capacitor/camera": "^7.0.1",
-    "@capacitor/core": "^7.0.1",
+    "@capacitor/core": "^7",
     "@capacitor/haptics": "7.0.0",
     "@capacitor/ios": "^7.1.0",
     "@capacitor/keyboard": "7.0.0",

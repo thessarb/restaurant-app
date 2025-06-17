@@ -14,7 +14,14 @@
                 </ion-toolbar>
             </ion-header>
             <ion-content class="ion-padding">
-                <ion-row>
+                <ion-row v-if="reserved">
+                    <ion-col>
+                        <ion-text class="ion-text-center">
+                            <h2>This table is already reserved for this event. Please choose another table.</h2>
+                        </ion-text>
+                    </ion-col>
+                </ion-row>
+                <ion-row v-if="!reserved">
                     <ion-col>
                         <ion-list lines="none">
                             <a target="_blank" :href="event?.restaurant?.location">
@@ -107,6 +114,7 @@ const onWillDismiss = (event: CustomEvent<OverlayEventDetail>) => {
         message.value = `Hello, ${event.detail.data}!`;
     }
 };
+const reserved = ref(false);
 
 interface Table {
     id: number;
@@ -143,6 +151,7 @@ interface Restaurant {
     created_at: string;
     updated_at: string;
 }
+
 const event = ref<Event>({
   id: 8,
   name: "Pizza Night",
@@ -161,10 +170,26 @@ const event = ref<Event>({
 // const clickedTableId = ref('');
 const clickedTable = ref({} as Table);
 const openModal = async (table: any) => {
+    await checkReservedTable(event.value, table);
     clickedTable.value = table;
     limit.value = table.nr_people || 0;
     counters.value = [0, 0];
     await modal.value.$el.present();
+};
+
+const checkReservedTable = async (event: Event | null, table: Table | null) => {
+    try {
+        const response = await axios.get(`${authStore.endpoint}reservation/check/availability/tables?event_id=${event?.id}&table_id=${table?.id}`, {
+            headers: {
+                Accept: 'application/json',
+                "Authorization": `Bearer ${authStore.token}`,
+            },
+        });
+        console.log(response.data.available);
+        reserved.value = response.data.available.length > 0;
+    } catch (error) {
+        console.error(error);
+    }
 };
 
 const loadChunks = async (baseKey: string): Promise<string> => {

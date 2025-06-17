@@ -28,6 +28,10 @@
                             <ion-icon  :icon="calendarNumberOutline" slot="start"></ion-icon>
                             <ion-label>Date: {{ event?.date_start }}</ion-label>
                         </ion-item>
+                        <ion-item class="default-bg">
+                            <ion-icon  :icon="ticketOutline" slot="start"></ion-icon>
+                            <ion-label>Available tickets: {{ tickets }}</ion-label>
+                        </ion-item>
                     </ion-list>
                 </ion-card-content>
                 <ion-button v-if="event?.price_per_ticket" :disabled="process" color="primary" expand="block" @click="paymentFlow">Buy Ticket</ion-button>
@@ -48,8 +52,8 @@ import { ref, onMounted } from 'vue';
 import { loadStripe, Stripe} from '@stripe/stripe-js';
 import axios from 'axios';
 import { useAuthStore } from "@/stores/authStore";
-import { useRoute,useRouter } from 'vue-router'
-import { arrowBack, calendarOutline, calendarNumberOutline, cashOutline, mapOutline, alarmOutline, locationOutline, restaurant} from 'ionicons/icons';
+import { useRoute } from 'vue-router'
+import { arrowBack, calendarOutline, calendarNumberOutline, cashOutline, mapOutline, ticketOutline} from 'ionicons/icons';
 import { 
     IonPage, 
     IonHeader, 
@@ -66,19 +70,22 @@ import {
 } from '@ionic/vue';
 // import ReservationDialog from '@/components/events/ReservationDialog.vue';
 
-
 const stripe = ref<Stripe | null>(null);
 const process = ref(false);
-const sessionStatus = ref('');
 const customerEmail = ref('');
 const authStore = useAuthStore();
+const type = ref('standart');
+const success = ref(false);
+const route = useRoute();
+const tickets = ref(0);
+
 interface Event {
   id: number;
   name: string;
   date_start: string;
   description: string;
   rules: string;
-  nr_tikets: number;
+  nr_tickets: number;
   price_per_ticket: number;
   restaurant_id: number | null;
   restaurant: Restaurant | null;
@@ -101,7 +108,7 @@ const event = ref<Event>({
   date_start: "2025-05-13 12:17:50",
   description: "Indulge in a variety of delicious pizzas made fresh from our oven.",
   rules: "Take-out options available.",
-  nr_tikets: 0,
+  nr_tickets: 0,
   price_per_ticket: 0,
   restaurant_id: null,
   restaurant: null,
@@ -110,10 +117,6 @@ const event = ref<Event>({
   image: null
 });
 
-const type = ref('standart');
-const success = ref(false);
-const route = useRoute();
-const router = useRouter();
 const detail = async () => {
     try {
         const response = await axios.get(`${authStore.endpoint}event/${route.params.id}`, {
@@ -122,6 +125,21 @@ const detail = async () => {
             },
         });
         event.value = response.data.data;
+        checkReservedTickets();
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+const checkReservedTickets = async () => {
+    try {
+        const response = await axios.get(`${authStore.endpoint}reservation/check/availability/tickets?event_id=${event.value.id}`, {
+            headers: {
+                Accept: 'application/json',
+                "Authorization": `Bearer ${authStore.token}`,
+            },
+        });
+        tickets.value = event.value?.nr_tickets - parseInt(response.data.available.length);
 
     } catch (error) {
         console.error(error);
@@ -164,25 +182,9 @@ const fetchClientSecret = async () => {
         console.error('Error fetching client secret:', error);
     }
 };
-  
 
 const paymentFlow = () => {
     initializeStripe();
-}
-
-const getTicket = async () => {
-    try {
-       const response =  await axios.get(import.meta.env.VITE_APP_ENDPOINT + `ticket?user_id=${authStore?.user?.id}&event_id=${event.value.id}`,
-        {
-            headers: {
-                "Accept": "application/json",
-                "Authorization": `Bearer ${authStore.token}`,
-            }
-        });
-        return response.data.ticket;
-    } catch (error) {
-        console.error('Error fetching client secret:', error);
-    }
 }
 
 onMounted(() => {
