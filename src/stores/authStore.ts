@@ -127,10 +127,6 @@ export const useAuthStore = defineStore('auth', {
                         password: this.registerData.password,
                         password_confirmation: this.registerData.password_confirmation,
                     });
-                    this.login({
-                        email: this.registerData.email,
-                        password: this.registerData.password,
-                    });
                 } catch (error) {
                     console.error('Registration failed:', error);
                 }

@@ -59,7 +59,10 @@ import {
 import { arrowBack, lockClosed } from 'ionicons/icons';
 import { ref } from 'vue';
 import { useAuthStore } from "@/stores/authStore";
-const authSore = useAuthStore();
+import axios from 'axios';
+import { useRouter } from 'vue-router';
+const router = useRouter();
+const authStore = useAuthStore();
 const password = ref()
 const password_confirmation = ref()
 const showToast = ref(false);
@@ -78,19 +81,70 @@ const validateForm = () => {
         run.value = true
     }
 }
-const continueRegister = () => {
-    validateForm()
-    authSore.registerData = {
-        name:  authSore.registerData?.name,
-        surname: authSore.registerData?.surname,
-        gender: authSore.registerData?.gender,
-        email: authSore.registerData?.email,
-        phone: authSore.registerData?.phone,
-        password: password.value,
-        password_confirmation: password_confirmation.value
-    };
-   if(run.value) authSore.register()
-}
+const continueRegister = async () => {
+    try {
+        validateForm();
+
+        authStore.registerData = {
+            name: authStore.registerData?.name,
+            surname: authStore.registerData?.surname,
+            gender: authStore.registerData?.gender,
+            email: authStore.registerData?.email,
+            phone: authStore.registerData?.phone,
+            password: password.value,
+            password_confirmation: password_confirmation.value
+        };
+        if (run.value) {
+            try {
+                console.log('imnit')
+
+                const response = await axios.post(authStore.endpoint + 'register', {
+                    name: authStore.registerData.name,
+                    surname: authStore.registerData.surname,
+                    email: authStore.registerData.email,
+                    phone: authStore.registerData.phone,
+                    gender: authStore.registerData.gender,
+                    password: authStore.registerData.password,
+                    password_confirmation: authStore.registerData.password_confirmation
+                });
+
+                if (response.status === 200 || response.status === 201) {
+                    showToast.value = true;
+                    toastMessage.value = response.data?.message || 'Registration successful. Please verify your email.';
+                    authStore.registerData = {
+                        name: '',
+                        surname: '',
+                        gender: '',
+                        email: '',
+                        phone: '',
+                        password: '',
+                        password_confirmation: ''
+                    };
+                    setTimeout(() => {
+                        router.push('/login');                    
+                    }, 2000);
+                } else {
+                    showToast.value = true;
+                    toastMessage.value = 'Unexpected response from server.';
+                }
+
+            } catch (error) {
+                console.error('Registration failed:', error);
+                showToast.value = true;
+                if (error.response) {
+                    toastMessage.value = error.response.data?.message || 'Registration failed. Please check your input.';
+                } else {
+                    toastMessage.value = 'Registration failed. Please try again later.';
+                }
+            }
+        }
+    } catch (error) {
+        showToast.value = true;
+        toastMessage.value = 'Registration failed. Please try again.';
+    }
+};
+
+
 </script>
 <style lang="css">
 
