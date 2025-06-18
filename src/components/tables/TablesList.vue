@@ -67,7 +67,7 @@
                             </ion-item>
                         </ion-list>
 						<ion-card class="default-bg ion-padding" id="checkout"></ion-card>
-						<ion-button :disabled="process" color="primary" expand="block" @click="paymentFlow">Reserve</ion-button>
+						<ion-button :disabled="process" color="primary" expand="block" @click="paymentFlow" v-if="hasPositiveSum">Reserve</ion-button>
                     </ion-col>
                 </ion-row>
             </ion-content>
@@ -80,7 +80,7 @@ const props = defineProps({
     tables: Array,
     // event: Object
 });
-import { ref, onMounted, nextTick } from 'vue';
+import { ref, computed, onMounted, nextTick } from 'vue';
 import type { Ref } from 'vue';
 import { Storage } from '@ionic/storage';
 import { OverlayEventDetail } from '@ionic/core/components';
@@ -120,6 +120,13 @@ const onWillDismiss = (event: CustomEvent<OverlayEventDetail>) => {
 };
 const reserved = ref(false);
 const modalTitle = ref('Reserve table');
+const counters = ref([0, 0]);
+const limit = ref(0);
+const getTotal = () => counters.value[0] + counters.value[1];
+const authStore = useAuthStore();
+const hasPositiveSum = computed(() => {
+    return counters.value.reduce((a, b) => a + b, 0) > 0;
+});
 
 interface Table {
     id: number;
@@ -248,11 +255,6 @@ const formatTime = (dateString: string | undefined): string => {
     return `${hours}:${minutes}`;
 };
 
-const counters = ref([0, 0]);
-const limit = ref(0);
-const getTotal = () => counters.value[0] + counters.value[1];
-const authStore = useAuthStore();
-
 const increment = (index: number) => {
   if (getTotal() < limit.value) {
     counters.value[index]++;
@@ -332,7 +334,8 @@ const detail = async () => {
 onMounted(async () => {
     try {
         await storage.create();
-        text.value = await loadChunks('table' + props.location);
+        // text.value = await loadChunks('table' + props.location);
+        text.value = await storage.get('table' + props.location);
         await nextTick();
         const clickableElements = Array.from(svgContainer.value!.querySelectorAll('[table]'));
 
