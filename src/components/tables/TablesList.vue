@@ -7,7 +7,7 @@
         <ion-modal ref="modal" :initial-breakpoint="0.85" trigger="open-modal" @willDismiss="onWillDismiss">
             <ion-header>
                 <ion-toolbar>
-					<ion-title>Reserve table {{ clickedTable?.table_nr }}</ion-title>
+					<ion-title>{{ modalTitle }}</ion-title>
                     <ion-buttons slot="end">
                         <ion-button @click="cancel()">Cancel</ion-button>
                     </ion-buttons>
@@ -38,6 +38,10 @@
                                 <ion-icon aria-hidden="true" :icon="alarmOutline" slot="start"></ion-icon>
                                 <ion-label>Starts at {{ formatTime(event?.date_start) }}</ion-label>
                             </ion-item>
+                            <ion-item class="default-bg" v-if="clickedTable?.restaurant_id === 2">
+                                <ion-icon aria-hidden="true" :icon="clipboardOutline" slot="start"></ion-icon>
+                                <ion-label>Table number: {{ clickedTable?.table_nr }}</ion-label>
+                            </ion-item>
                             <ion-item class="default-bg" v-if="clickedTable?.nr_people">
                                 <ion-icon aria-hidden="true" :icon="peopleOutline" slot="start"></ion-icon>
                                 <ion-label>Max. number of people for this table: {{ clickedTable?.nr_people }}</ion-label>
@@ -63,7 +67,7 @@
                             </ion-item>
                         </ion-list>
 						<ion-card class="default-bg ion-padding" id="checkout"></ion-card>
-						<ion-button :disabled="process" color="primary" expand="block" @click="paymentFlow">Reserve</ion-button>
+						<ion-button :disabled="process" color="primary" expand="block" @click="paymentFlow" v-if="hasPositiveSum">Reserve</ion-button>
                     </ion-col>
                 </ion-row>
             </ion-content>
@@ -76,11 +80,11 @@ const props = defineProps({
     tables: Array,
     // event: Object
 });
-import { ref, onMounted, nextTick } from 'vue';
+import { ref, computed, onMounted, nextTick } from 'vue';
 import type { Ref } from 'vue';
 import { Storage } from '@ionic/storage';
 import { OverlayEventDetail } from '@ionic/core/components';
-import { calendarOutline, cashOutline, alarmOutline, locationOutline, documentOutline, peopleOutline } from 'ionicons/icons';
+import { calendarOutline, cashOutline, alarmOutline, locationOutline, documentOutline, peopleOutline, clipboardOutline } from 'ionicons/icons';
 import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios';
 import { useAuthStore } from "@/stores/authStore";
@@ -115,6 +119,14 @@ const onWillDismiss = (event: CustomEvent<OverlayEventDetail>) => {
     }
 };
 const reserved = ref(false);
+const modalTitle = ref('Reserve table');
+const counters = ref([0, 0]);
+const limit = ref(0);
+const getTotal = () => counters.value[0] + counters.value[1];
+const authStore = useAuthStore();
+const hasPositiveSum = computed(() => {
+    return counters.value.reduce((a, b) => a + b, 0) > 0;
+});
 
 interface Table {
     id: number;
@@ -125,8 +137,14 @@ interface Table {
     event: Event | null;
     table_nr: number;
     details: string | null;
+    zone: Zone | null;
     created_at: string;
     updated_at: string;
+}
+
+interface Zone {
+    id: number;
+    name: string;
 }
 
 interface Event {
@@ -172,6 +190,11 @@ const clickedTable = ref({} as Table);
 const openModal = async (table: any) => {
     await checkReservedTable(event.value, table);
     clickedTable.value = table;
+    if (table.restaurant_id === 1) {
+        modalTitle.value = `Reserve table ${table.table_nr}`;
+    } else {
+        modalTitle.value = `Reserve table on ${table.zone?.name}`;   
+    }
     limit.value = table.nr_people || 0;
     counters.value = [0, 0];
     await modal.value.$el.present();
@@ -186,6 +209,7 @@ const checkReservedTable = async (event: Event | null, table: Table | null) => {
             },
         });
         reserved.value = response.data.available.length > 0;
+        return response.data.available;
     } catch (error) {
         console.error(error);
     }
@@ -230,11 +254,6 @@ const formatTime = (dateString: string | undefined): string => {
 
     return `${hours}:${minutes}`;
 };
-
-const counters = ref([0, 0]);
-const limit = ref(0);
-const getTotal = () => counters.value[0] + counters.value[1];
-const authStore = useAuthStore();
 
 const increment = (index: number) => {
   if (getTotal() < limit.value) {
@@ -315,22 +334,16 @@ const detail = async () => {
 onMounted(async () => {
     try {
         await storage.create();
-
-        text.value = await loadChunks('table' + props.location);
-
+        // text.value = await loadChunks('table' + props.location);
+        text.value = await storage.get('table' + props.location);
         await nextTick();
-
-        const clickableElements = Array.from(svgContainer.value!.querySelectorAll('g[id^="table-"]'))
-            .filter((el: any) => {
-                const match = el.id.match(/^table-(\d+)$/);
-                return match && Number(match[1]) >= 1 && Number(match[1]) <= 15;
-            });
+        const clickableElements = Array.from(svgContainer.value!.querySelectorAll('[table]'));
 
         clickableElements.forEach((el: any) => {
             el.addEventListener('click', (e: any) => {
-                const clickedId = e.currentTarget.id;
-                const tableId = clickedId.replace('table-', '');
-                const table =  props.tables?.find((t: any) => t.table_nr == tableId);
+        console.log(props.tables);
+                const tableId = e.currentTarget.getAttribute('table');
+                const table =  props.tables?.find((t: any) => t.id == tableId);
                 openModal(table);
             });
         });

@@ -28,9 +28,13 @@
 </template>
 
 <script setup lang="ts">
-import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonRouterOutlet } from '@ionic/vue';
+import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonRouterOutlet, onIonViewWillEnter } from '@ionic/vue';
 import { personOutline, ticketOutline, calendarNumberOutline, barcodeOutline } from 'ionicons/icons';
 import { useAuthStore } from '@/stores/authStore';
+import { ref } from 'vue';
 const authStore = useAuthStore();
-let isNormalUser = authStore?.user?.role_id !== 3;
+const isNormalUser = ref(authStore?.user?.role_id !== 3);
+onIonViewWillEnter(() => {
+    isNormalUser.value = authStore?.user?.role_id !== 3;
+});
 </script>

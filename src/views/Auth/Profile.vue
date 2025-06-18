@@ -134,6 +134,7 @@ onMounted(() => {
 
 onIonViewWillEnter(() => {
     user.value = authStore.user;
+    getReservations();
 });
 
 </script>

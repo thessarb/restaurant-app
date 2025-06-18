@@ -34,9 +34,18 @@ import "@ionic/vue/css/palettes/dark.system.css";
 
 /* Theme styles */
 import "./theme/main.scss";
+import { useDataStore } from '@/stores/dataStore';
 const pinia = createPinia();
-const app = createApp(App).use(IonicVue).use(router).use(pinia);
-
+const app = createApp(App)
+    .use(IonicVue, {
+        animated: true,
+        mode: 'ios',
+    })
+    .use(router)
+    .use(pinia);
 router.isReady().then(() => {
     app.mount("#app");
+    const dataStore = useDataStore();
+    dataStore.storeTable1();
+    dataStore.storeTable2();
 });

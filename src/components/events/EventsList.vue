@@ -28,21 +28,19 @@
                             <ion-card-title class="eventlist__card-title">{{ event?.name }}</ion-card-title>
                         </ion-card-header>
 
-                        <ion-card-content class="eventlist__card-content">
-                            <ion-list lines="none">
-                                <ion-item>
-                                    <ion-icon class="eventlist__card-icon" aria-hidden="true" :icon="location"
-                                        slot="start"></ion-icon>
-                                    <ion-label class="eventlist__card-label">{{ event?.restaurant?.name }}</ion-label>
-                                </ion-item>
-                                <ion-item>
-                                    <ion-icon class="eventlist__card-icon" aria-hidden="true" :icon="calendar"
-                                        slot="start"></ion-icon>
-                                    <ion-label class="eventlist__card-label">{{ formatDate(event?.date_start)
-                                        }}</ion-label>
-                                </ion-item>
-                            </ion-list>
-                        </ion-card-content>
+                        <ion-list lines="none">
+                            <ion-item class="eventlist__card-item" v-if="event?.restaurant">
+                                <ion-icon class="eventlist__card-icon" aria-hidden="true" :icon="location"
+                                    slot="start"></ion-icon>
+                                <ion-label class="eventlist__card-label">{{ event?.restaurant?.name }}</ion-label>
+                            </ion-item>
+                            <ion-item class="eventlist__card-item" v-if="event?.date_start">
+                                <ion-icon class="eventlist__card-icon" aria-hidden="true" :icon="calendar"
+                                    slot="start"></ion-icon>
+                                <ion-label class="eventlist__card-label">{{ formatDate(event?.date_start)
+                                    }}</ion-label>
+                            </ion-item>
+                        </ion-list>
                     </ion-card>
                 </router-link>
             </ion-col>
@@ -68,14 +66,21 @@ import {
 import { calendar, location } from 'ionicons/icons';
 import { PropType, onMounted, ref } from 'vue';
 import axios from 'axios';
-import { useDataStore } from "@/stores/dataStore";
 import { useAuthStore } from "@/stores/authStore";
 import { useRouter } from 'vue-router';
 const authStore = useAuthStore();
 const router = useRouter();
-
-// Reactive state for active button
+const baseUrl = ref(import.meta.env.VITE_APP_BASE);
+const restaurants = ref<Restaurant[]>([]);
+const eventList = ref<Event[]>([]);
 const activeButton = ref(99);
+
+defineProps({
+    events: {
+        type: Array as PropType<Event[]>,
+        required: true
+    }
+});
 
 // Method to change active button
 const setActive = (zone: number) => {
@@ -109,16 +114,6 @@ interface Image {
     url: string;
 }
 
-defineProps({
-    events: {
-        type: Array as PropType<Event[]>,
-        required: true
-    }
-});
-const dataStore = useDataStore();
-const baseUrl = ref(import.meta.env.VITE_APP_BASE);
-const restaurants = ref<Restaurant[]>([]);
-const eventList = ref<Event[]>([]);
 const formatDate = (dateString: string) => {
     const dateObj = new Date(dateString);
 
@@ -165,8 +160,6 @@ onMounted(() => {
     }
     settings();
     getEvents();
-    dataStore.storeTable1();
-    dataStore.storeTable2();
 })
 </script>
 

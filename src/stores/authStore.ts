@@ -106,6 +106,12 @@ export const useAuthStore = defineStore('auth', {
                     this.router.push({ name: 'login' });
                 }
             } catch (error: any) {
+                this.isAuthenticated = false;
+                this.user = null;
+                this.token = null;
+                this.isNormalUser = true;
+                this.deleteUserStore();
+                this.router.push({ name: 'login' });
                 console.error('Logout failed:', error);
             }
         },

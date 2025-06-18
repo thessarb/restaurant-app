@@ -128,7 +128,7 @@ const continueRegister = async () => {
                     toastMessage.value = 'Unexpected response from server.';
                 }
 
-            } catch (error) {
+            } catch (error: any) {
                 console.error('Registration failed:', error);
                 showToast.value = true;
                 if (error.response) {

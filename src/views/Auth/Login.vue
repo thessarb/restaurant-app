@@ -91,7 +91,7 @@ const login = async () => {
             email.value = '';
             password.value = '';
         }
-    } catch (error:any) {
+    } catch (error: any) {
         console.error(error);
     }
 };
