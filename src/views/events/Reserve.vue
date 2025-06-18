@@ -2,7 +2,7 @@
     <ion-page aria-label="page" aria-hidden="false">
         <ion-header>
             <ion-toolbar class="ionic__toolbar">
-                <ion-icon  @click="$router.go(-1);" slot="start" :icon="arrowBack" size="large"></ion-icon>
+                <ion-icon  @click="arrowBackAction" slot="start" :icon="arrowBack" size="large"></ion-icon>
                 <ion-title class="ion-text-left">Buy tickets</ion-title>            
             </ion-toolbar>
         </ion-header>
@@ -49,10 +49,10 @@
 </template>
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { loadStripe, Stripe} from '@stripe/stripe-js';
+import { loadStripe, Stripe, StripeEmbeddedCheckout} from '@stripe/stripe-js';
 import axios from 'axios';
 import { useAuthStore } from "@/stores/authStore";
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { arrowBack, calendarOutline, calendarNumberOutline, cashOutline, mapOutline, ticketOutline} from 'ionicons/icons';
 import { 
     IonPage, 
@@ -145,7 +145,7 @@ const checkReservedTickets = async () => {
         console.error(error);
     }
 };
-
+const embedStripe = ref<StripeEmbeddedCheckout | null>(null);
 const initializeStripe = async () => {
     // const clientSecret = await fetchClientSecret();
     stripe.value = await loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
@@ -156,6 +156,7 @@ const initializeStripe = async () => {
 
         // Mount Checkout
         ch.mount('#checkout');
+        embedStripe.value = ch;
     }
 };
   
@@ -186,6 +187,11 @@ const fetchClientSecret = async () => {
 const paymentFlow = () => {
     initializeStripe();
 }
+const router = useRouter();
+const arrowBackAction = () => {
+    router.go(-2);
+    embedStripe.value?.destroy();
+};
 
 onMounted(() => {
     detail();
