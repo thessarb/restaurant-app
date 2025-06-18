@@ -145,7 +145,6 @@ const fetchTables = async (restaurant: number | null | string) => {
             }
         });
         tables.value = response.data.tables;
-        console.log('Tables fetched:', tables.value);
     } catch (error) {
         console.error('Error fetching client secret:', error);
     }

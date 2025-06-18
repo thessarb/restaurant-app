@@ -78,6 +78,7 @@ const type = ref('standart');
 const success = ref(false);
 const route = useRoute();
 const tickets = ref(0);
+const ticket = ref<Object | null>();
 
 interface Event {
   id: number;
@@ -161,14 +162,29 @@ const initializeStripe = async () => {
   
 const fetchClientSecret = async () => {
     try {
+        if (authStore?.user?.gender === 'male' || authStore?.user?.gender === null) {
+            ticket.value = {
+                price: event.value.price_per_ticket + '00',
+                name: 'Ticket for ' + event.value.name, 
+                event_id: event.value.id,
+                male: 1,
+                female: 0,
+                restaurant_id: event.value.restaurant_id,
+                user_id: authStore.user?.id,
+            };
+        } else if (authStore?.user?.gender === 'female') {
+            ticket.value = {
+                price: event.value.price_per_ticket + '00',
+                name: 'Ticket for ' + event.value.name,
+                male: 0,
+                female: 1,
+                event_id: event.value.id,
+                restaurant_id: event.value.restaurant_id,
+                user_id: authStore.user?.id,
+            };
+        }
         const response = await axios.post(import.meta.env.VITE_APP_ENDPOINT + 'stripe/checkout',
-        {
-            price: event.value.price_per_ticket+'00',
-            name: 'Ticket for '+event.value.name, 
-            event_id: event.value.id,
-            restaurant_id: event.value.restaurant_id,
-            user_id: authStore.user?.id,
-        },
+        ticket.value,
         {
             headers: {
                 "Accept": "application/json",

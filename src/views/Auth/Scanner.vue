@@ -17,9 +17,9 @@
                     <ion-icon aria-hidden="true" :icon="calendarOutline" slot="start"></ion-icon>
                     <ion-label>Date: {{ reservation?.event?.date_start }}</ion-label>
                 </ion-item>
-                <ion-item class="scanner__result default-bg" v-if="reservation?.people">
+                <ion-item class="scanner__result default-bg" v-if="reservation?.male || reservation?.female">
                     <ion-icon aria-hidden="true" :icon="peopleOutline" slot="start"></ion-icon>
-                    <ion-label>Number of guests: {{ reservation?.people }}</ion-label>
+                    <ion-label>Number of guests: {{ reservation?.male + 'male'}}  {{ reservation?.female + 'female'}}</ion-label>
                 </ion-item>
                 <ion-item class="scanner__result default-bg" v-if="reservation?.price">
                     <ion-icon aria-hidden="true" :icon="cashOutline" slot="start"></ion-icon>
@@ -120,7 +120,8 @@ interface Reservation {
     event: Event
     restaurant: Restaurant
     date_start: string,
-    people: number,
+    male: number,
+    female: number,
     price: number,
     table: Table | null,
     reservation_date: string

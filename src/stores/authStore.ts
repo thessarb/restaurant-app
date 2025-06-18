@@ -20,6 +20,7 @@ interface User {
     phone: string;
     role: UserRole | null;
     role_id: number;
+    gender: string | null;
     email_verified_at: string;
     created_at: string;
     updated_at: string;
