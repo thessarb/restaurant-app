@@ -138,6 +138,7 @@ const settings = async () => {
         }
     } catch (error) {
         console.error('Error fetching settings:', error);
+        authStore.logout();
     }
 };
 const getEvents = async (restaurant = 99) => {
@@ -151,6 +152,7 @@ const getEvents = async (restaurant = 99) => {
         restaurants.value = response.data.restaurants;
     } catch (error) {
         console.error('Error fetching events:', error);
+        authStore.logout();
     }
 };
 

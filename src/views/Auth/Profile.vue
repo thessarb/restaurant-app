@@ -125,6 +125,7 @@ const getReservations = async () => {
         totalReservations.value = reservations.value.upcoming.length + reservations.value.completed.length;
     } catch (error) {
         console.error('Error fetching client secret:', error);
+        authStore.logout();
     }
 }
 

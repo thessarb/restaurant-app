@@ -7,7 +7,7 @@
         <ion-modal ref="modal" :initial-breakpoint="0.85" trigger="open-modal" @willDismiss="onWillDismiss">
             <ion-header>
                 <ion-toolbar>
-					<ion-title>{{ modalTitle }}</ion-title>
+                    <ion-title>{{ modalTitle }}</ion-title>
                     <ion-buttons slot="end">
                         <ion-button @click="cancel()">Cancel</ion-button>
                     </ion-buttons>
@@ -44,7 +44,8 @@
                             </ion-item>
                             <ion-item class="default-bg" v-if="clickedTable?.nr_people">
                                 <ion-icon aria-hidden="true" :icon="peopleOutline" slot="start"></ion-icon>
-                                <ion-label>Max. number of people for this table: {{ clickedTable?.nr_people }}</ion-label>
+                                <ion-label>Max. number of people for this table: {{ clickedTable?.nr_people
+                                    }}</ion-label>
                             </ion-item>
                             <ion-item class="default-bg" v-if="clickedTable?.min_spending">
                                 <ion-icon aria-hidden="true" :icon="cashOutline" slot="start"></ion-icon>
@@ -61,13 +62,16 @@
                             <ion-item class="default-bg" v-for="(value, index) in counters" :key="index">
                                 <ion-icon aria-hidden="true" :icon="peopleOutline" slot="start"></ion-icon>
                                 <ion-label>{{ index === 0 ? 'Number of men' : 'Number of women' }}</ion-label>
-                                <ion-button class="modifier" @click="decrement(index)" :disabled="counters[index] === 0">-</ion-button>
+                                <ion-button class="modifier" @click="decrement(index)"
+                                    :disabled="counters[index] === 0">-</ion-button>
                                 <ion-text class="counter-value">{{ value }}</ion-text>
-                                <ion-button class="modifier" @click="increment(index)" :disabled="getTotal() >= limit">+</ion-button>
+                                <ion-button class="modifier" @click="increment(index)"
+                                    :disabled="getTotal() >= limit">+</ion-button>
                             </ion-item>
                         </ion-list>
-						<ion-card class="default-bg ion-padding" id="checkout"></ion-card>
-						<ion-button :disabled="process" color="primary" expand="block" @click="paymentFlow" v-if="hasPositiveSum">Reserve</ion-button>
+                        <ion-card class="default-bg ion-padding" id="checkout"></ion-card>
+                        <ion-button :disabled="process" color="primary" expand="block" @click="paymentFlow"
+                            v-if="hasPositiveSum">Reserve</ion-button>
                     </ion-col>
                 </ion-row>
             </ion-content>
@@ -88,7 +92,7 @@ import { calendarOutline, cashOutline, alarmOutline, locationOutline, documentOu
 import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios';
 import { useAuthStore } from "@/stores/authStore";
-import { loadStripe, Stripe} from '@stripe/stripe-js';
+import { loadStripe, Stripe, StripeEmbeddedCheckout } from '@stripe/stripe-js';
 import {
     IonButtons,
     IonButton,
@@ -104,7 +108,7 @@ import {
     IonItem,
     IonText,
     IonRow,
-	IonCard
+    IonCard
 } from '@ionic/vue';
 
 const storage = new Storage();
@@ -112,7 +116,10 @@ const svgContainer: Ref<HTMLElement | null> = ref(null);
 const text = ref('');
 const message = ref('This modal example uses triggers to automatically open a modal when the button is clicked.');
 const modal = ref();
-const cancel = () => modal.value.$el.dismiss(null, 'cancel');
+const cancel = () => {
+    modal.value.$el.dismiss(null, 'cancel');
+    process.value = false;
+};
 const onWillDismiss = (event: CustomEvent<OverlayEventDetail>) => {
     if (event.detail.role === 'confirm') {
         message.value = `Hello, ${event.detail.data}!`;
@@ -127,6 +134,7 @@ const authStore = useAuthStore();
 const hasPositiveSum = computed(() => {
     return counters.value.reduce((a, b) => a + b, 0) > 0;
 });
+const ch = ref<StripeEmbeddedCheckout | null>(null);
 
 interface Table {
     id: number;
@@ -148,18 +156,18 @@ interface Zone {
 }
 
 interface Event {
-  id: number;
-  name: string;
-  date_start: string;
-  description: string;
-  rules: string;
-  nr_tikets: number;
-  price_per_ticket: number;
-  restaurant_id: number | null;
-  restaurant: Restaurant | null;
-  created_at: string;
-  updated_at: string;
-  image: string | null;
+    id: number;
+    name: string;
+    date_start: string;
+    description: string;
+    rules: string;
+    nr_tikets: number;
+    price_per_ticket: number;
+    restaurant_id: number | null;
+    restaurant: Restaurant | null;
+    created_at: string;
+    updated_at: string;
+    image: string | null;
 }
 
 interface Restaurant {
@@ -171,18 +179,18 @@ interface Restaurant {
 }
 
 const event = ref<Event>({
-  id: 8,
-  name: "Pizza Night",
-  date_start: "2025-05-13 12:17:50",
-  description: "Indulge in a variety of delicious pizzas made fresh from our oven.",
-  rules: "Take-out options available.",
-  nr_tikets: 0,
-  price_per_ticket: 0,
-  restaurant_id: null,
-  restaurant: null,
-  created_at: "2025-03-29T12:17:50.000000Z",
-  updated_at: "2025-03-29T12:17:50.000000Z",
-  image: null
+    id: 8,
+    name: "Pizza Night",
+    date_start: "2025-05-13 12:17:50",
+    description: "Indulge in a variety of delicious pizzas made fresh from our oven.",
+    rules: "Take-out options available.",
+    nr_tikets: 0,
+    price_per_ticket: 0,
+    restaurant_id: null,
+    restaurant: null,
+    created_at: "2025-03-29T12:17:50.000000Z",
+    updated_at: "2025-03-29T12:17:50.000000Z",
+    image: null
 });
 
 // const clickedTableId = ref('');
@@ -193,7 +201,7 @@ const openModal = async (table: any) => {
     if (table.restaurant_id === 1) {
         modalTitle.value = `Reserve table ${table.table_nr}`;
     } else {
-        modalTitle.value = `Reserve table on ${table.zone?.name}`;   
+        modalTitle.value = `Reserve table on ${table.zone?.name}`;
     }
     limit.value = table.nr_people || 0;
     counters.value = [0, 0];
@@ -212,25 +220,9 @@ const checkReservedTable = async (event: Event | null, table: Table | null) => {
         return response.data.available;
     } catch (error) {
         console.error(error);
+        authStore.logout();
     }
 };
-
-const loadChunks = async (baseKey: string): Promise<string> => {
-    const chunkCount = await storage.get(`${baseKey}_chunkCount`);
-    if (!chunkCount || typeof chunkCount !== 'number') return '';
-
-    const chunks = [];
-    for (let i = 0; i < chunkCount; i++) {
-        const part = await storage.get(`${baseKey}_chunk_${i}`);
-        if (typeof part === 'string') {
-            chunks.push(part);
-        } else {
-            return '';
-        }
-    }
-
-    return chunks.join('');
-}
 
 const formatDate = (dateString: string | undefined) => {
     // Ensure the dateString is in a valid format
@@ -246,7 +238,7 @@ const formatDate = (dateString: string | undefined) => {
 
 const formatTime = (dateString: string | undefined): string => {
     if (!dateString) return '00:00';
-    
+
     const dateObj = new Date(dateString.replace(' ', 'T')); // Convert to ISO format
 
     const hours = String(dateObj.getHours()).padStart(2, '0');
@@ -256,15 +248,15 @@ const formatTime = (dateString: string | undefined): string => {
 };
 
 const increment = (index: number) => {
-  if (getTotal() < limit.value) {
-    counters.value[index]++;
-  }
+    if (getTotal() < limit.value) {
+        counters.value[index]++;
+    }
 };
 
 const decrement = (index: number) => {
-  if (counters.value[index] > 0) {
-    counters.value[index]--;
-  }
+    if (counters.value[index] > 0) {
+        counters.value[index]--;
+    }
 };
 
 const stuff = ref('Loading...');
@@ -272,15 +264,16 @@ const stripe = ref<Stripe | null>(null);
 const process = ref(false);
 
 const initializeStripe = async (tableObj: any) => {
-    // const clientSecret = await fetchClientSecret();
+    ch.value?.destroy();
+    ch.value = null;
     stripe.value = await loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
     if (stripe.value) {
-        const ch = await stripe.value.initEmbeddedCheckout({
-			fetchClientSecret: () => fetchClientSecret(tableObj),        
-		});
+        ch.value = await stripe.value.initEmbeddedCheckout({
+            fetchClientSecret: () => fetchClientSecret(tableObj),
+        });
 
         // Mount Checkout
-        ch.mount('#checkout');
+        ch.value.mount('#checkout');
     }
 };
 
@@ -289,29 +282,32 @@ const paymentFlow = () => {
     initializeStripe(clickedTable.value);
 }
 
-const fetchClientSecret = async (tableObj :any) => {
+const fetchClientSecret = async (tableObj: any) => {
     try {
         const response = await axios.post(import.meta.env.VITE_APP_ENDPOINT + 'stripe/checkout',
-        {
-            price: tableObj?.deposit,
-            name: 'Table reservation for '+event.value.name, 
-            type: 'reservation',
-            restaurant_id: event.value.restaurant_id,
-            user_id: authStore.user?.id,
-            event_id: event.value.id,
-            table_id: clickedTable.value.id,
-        },
-        {
-            headers: {
-                "Accept": "application/json",
-                "Authorization": `Bearer ${authStore.token}`,
-            }
-        });
+            {
+                price: tableObj?.deposit + '00',
+                name: 'Table reservation for ' + event.value.name,
+                type: 'reservation',
+                male: counters.value[0],
+                female: counters.value[1],
+                restaurant_id: event.value.restaurant_id,
+                user_id: authStore.user?.id,
+                event_id: event.value.id,
+                table_id: clickedTable.value.id,
+            },
+            {
+                headers: {
+                    "Accept": "application/json",
+                    "Authorization": `Bearer ${authStore.token}`,
+                }
+            });
         const { clientSecret } = response.data;
         process.value = true;
         return clientSecret;
     } catch (error) {
         console.error('Error fetching client secret:', error);
+        authStore.logout();
     }
 };
 
@@ -324,10 +320,10 @@ const detail = async () => {
                 Accept: 'application/json',
             },
         });
-        event.value = response.data.data
-
+        event.value = response.data.data;
     } catch (error) {
         console.error(error);
+        authStore.logout();
     }
 };
 
@@ -341,9 +337,8 @@ onMounted(async () => {
 
         clickableElements.forEach((el: any) => {
             el.addEventListener('click', (e: any) => {
-        console.log(props.tables);
                 const tableId = e.currentTarget.getAttribute('table');
-                const table =  props.tables?.find((t: any) => t.id == tableId);
+                const table = props.tables?.find((t: any) => t.id == tableId);
                 openModal(table);
             });
         });
@@ -351,19 +346,21 @@ onMounted(async () => {
         console.error('Error loading SVG:', error);
     }
 
-	detail();
+    detail();
 });
 </script>
 <style scoped>
 .svg-wrapper {
     width: 100%;
 }
+
 .modifier {
-  font-size: 1.5rem;
+    font-size: 1.5rem;
 }
+
 .counter-value {
-  font-size: 1.5rem;
-  min-width: 2rem;
-  text-align: center;
+    font-size: 1.5rem;
+    min-width: 2rem;
+    text-align: center;
 }
 </style>

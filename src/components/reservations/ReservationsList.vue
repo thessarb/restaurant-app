@@ -124,7 +124,8 @@
         IonThumbnail,
         IonIcon,
         IonList,
-        IonCardSubtitle 
+        IonCardSubtitle, 
+        onIonViewWillEnter
     } from '@ionic/vue';
     import { ref, onMounted } from 'vue';
     import axios from 'axios';
@@ -234,9 +235,13 @@
             reservations.value = response.data.reservations;
         } catch (error) {
             console.error('Error fetching client secret:', error);
+            authStore.logout();
         }
     }
     onMounted(() => {
+        getReservations();
+    });
+    onIonViewWillEnter(() => {
         getReservations();
     });
 </script>

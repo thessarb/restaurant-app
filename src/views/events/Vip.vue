@@ -91,6 +91,7 @@ const detail = async () => {
 
     } catch (error) {
         console.error(error);
+        authStore.logout();
     }
 };
 
@@ -145,9 +146,9 @@ const fetchTables = async (restaurant: number | null | string) => {
             }
         });
         tables.value = response.data.tables;
-        console.log('Tables fetched:', tables.value);
     } catch (error) {
         console.error('Error fetching client secret:', error);
+        authStore.logout();
     }
 }
 // Combine both mounted hooks into one to simplify async logic

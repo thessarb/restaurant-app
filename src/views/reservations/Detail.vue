@@ -34,6 +34,7 @@ const detail = async () => {
 
     } catch (error) {
         console.error(error);
+        authStore.logout();
     }
 };
 </script>

@@ -96,8 +96,6 @@ const continueRegister = async () => {
         };
         if (run.value) {
             try {
-                console.log('imnit')
-
                 const response = await axios.post(authStore.endpoint + 'register', {
                     name: authStore.registerData.name,
                     surname: authStore.registerData.surname,
