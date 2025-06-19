@@ -124,16 +124,17 @@
         IonThumbnail,
         IonIcon,
         IonList,
-        IonCardSubtitle, 
-        onIonViewWillEnter
+        IonCardSubtitle
     } from '@ionic/vue';
-    import { ref, onMounted } from 'vue';
+    import { ref, onMounted, watch } from 'vue';
     import axios from 'axios';
     import QRCode from 'qrcode';
   
-    const selectedSegment = ref<'upcoming' | 'completed' | 'cancelled'>('upcoming')
-    import { useAuthStore } from '@/stores/authStore'
-    import { calendarOutline, ticketOutline, alarmOutline, locationOutline } from 'ionicons/icons'
+    const selectedSegment = ref<'upcoming' | 'completed' | 'cancelled'>('upcoming');
+    import { useAuthStore } from '@/stores/authStore';
+    import { calendarOutline, ticketOutline, alarmOutline, locationOutline } from 'ionicons/icons';
+    import { useRoute } from 'vue-router';
+    const route = useRoute();
 
     const selectedReservation = ref< Reservation | null >(null);
     const selectedReservationTitle = ref('');
@@ -243,8 +244,10 @@
         getReservations();
     });
 
-    onIonViewWillEnter(() => {
-        getReservations();
+    watch(() => route.fullPath, (newVal) => {
+        if (newVal === '/tabs/events') {
+            getReservations();
+        }
     });
 </script>
 <style scoped>

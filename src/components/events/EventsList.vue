@@ -56,15 +56,15 @@ import {
     IonCard,
     IonCardHeader,
     IonCardTitle,
-    IonCardContent,
     IonButton,
     IonIcon,
     IonLabel,
     IonList,
     IonItem
 } from '@ionic/vue';
+import { useRoute } from 'vue-router';
 import { calendar, location } from 'ionicons/icons';
-import { PropType, onMounted, ref } from 'vue';
+import { PropType, onMounted, ref, watch } from 'vue';
 import axios from 'axios';
 import { useAuthStore } from "@/stores/authStore";
 import { useRouter } from 'vue-router';
@@ -74,6 +74,7 @@ const baseUrl = ref(import.meta.env.VITE_APP_BASE);
 const restaurants = ref<Restaurant[]>([]);
 const eventList = ref<Event[]>([]);
 const activeButton = ref(99);
+const route = useRoute();
 
 defineProps({
     events: {
@@ -162,7 +163,14 @@ onMounted(() => {
     }
     settings();
     getEvents();
-})
+});
+
+watch(() => route.fullPath, (newVal) => {
+    if (newVal === '/tabs/events') {
+        settings();
+        getEvents();
+    }
+});
 </script>
 
 <style lang="css">
