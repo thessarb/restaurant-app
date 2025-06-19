@@ -92,10 +92,10 @@ const detail = async () => {
                 Accept: 'application/json',
             },
         });
-        event.value = response.data.data
-
+        event.value = response.data.data;
     } catch (error) {
         console.error(error);
+        authStore.logout();
     }
 };
 

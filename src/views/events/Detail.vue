@@ -34,6 +34,7 @@ const detail = async () => {
         event.value = response.data.data
     } catch (error) {
         console.error(error);
+        authStore.logout();
     }
 };  
 onMounted(() => {

@@ -25,6 +25,7 @@ const list = async () => {
         events.value = response.data.events
     } catch (error) {
         console.error(error);
+        authStore.logout();
     }
 };  
 onMounted(() => {

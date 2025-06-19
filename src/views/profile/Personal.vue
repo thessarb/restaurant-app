@@ -87,7 +87,7 @@ const profileUpdate = async () => {
         // Update local storage
         await authStore.storeUser(authStore.user);
     } catch (error: any) {
-        errors.value = error.response.data.errors
+        errors.value = error.response.data.errors;
         console.error('Email or Phone:', error);
     }
 };

@@ -19,7 +19,7 @@
                 </ion-item>
                 <ion-item class="scanner__result default-bg" v-if="reservation?.male || reservation?.female">
                     <ion-icon aria-hidden="true" :icon="peopleOutline" slot="start"></ion-icon>
-                    <ion-label>Number of guests: {{ reservation?.male + 'male'}}  {{ reservation?.female + 'female'}}</ion-label>
+                    <ion-label>Number of guests: {{ reservation?.male + ' male'}}  {{ reservation?.female + ' female'}}</ion-label>
                 </ion-item>
                 <ion-item class="scanner__result default-bg" v-if="reservation?.price">
                     <ion-icon aria-hidden="true" :icon="cashOutline" slot="start"></ion-icon>
@@ -141,6 +141,7 @@ const startScan = async () => {
             const request = await getReservation(parsedData.user_id, parsedData.reservation_id);
             if (request && !isEarlierThanNow(request.event.date_start)) {
                 reservation.value = request;
+                console.log('Reservation data:', reservation.value);
                 result.value = 'Valid';
             } else {
                 result.value = 'Invalid';
@@ -167,6 +168,7 @@ const getReservation = async (user: number, reservation: number) => {
         return response.data.reservation;
     } catch (error) {
         console.error('Error fetching client secret:', error);
+        authStore.logout();
     }
 }
 

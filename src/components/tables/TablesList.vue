@@ -220,6 +220,7 @@ const checkReservedTable = async (event: Event | null, table: Table | null) => {
         return response.data.available;
     } catch (error) {
         console.error(error);
+        authStore.logout();
     }
 };
 
@@ -285,7 +286,7 @@ const fetchClientSecret = async (tableObj: any) => {
     try {
         const response = await axios.post(import.meta.env.VITE_APP_ENDPOINT + 'stripe/checkout',
             {
-                price: parseInt(tableObj?.deposit + '00'),
+                price: tableObj?.deposit + '00',
                 name: 'Table reservation for ' + event.value.name,
                 type: 'reservation',
                 male: counters.value[0],
@@ -306,6 +307,7 @@ const fetchClientSecret = async (tableObj: any) => {
         return clientSecret;
     } catch (error) {
         console.error('Error fetching client secret:', error);
+        authStore.logout();
     }
 };
 
@@ -318,10 +320,10 @@ const detail = async () => {
                 Accept: 'application/json',
             },
         });
-        event.value = response.data.data
-
+        event.value = response.data.data;
     } catch (error) {
         console.error(error);
+        authStore.logout();
     }
 };
 

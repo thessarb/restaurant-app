@@ -129,6 +129,7 @@ const detail = async () => {
         checkReservedTickets();
     } catch (error) {
         console.error(error);
+        authStore.logout();
     }
 };
 
@@ -144,6 +145,7 @@ const checkReservedTickets = async () => {
 
     } catch (error) {
         console.error(error);
+        authStore.logout();
     }
 };
 
@@ -164,7 +166,7 @@ const fetchClientSecret = async () => {
     try {
         if (authStore?.user?.gender === 'male' || authStore?.user?.gender === null) {
             ticket.value = {
-                price: event.value.price_per_ticket + '00',
+                price: event.value.price_per_ticket + '0000',
                 name: 'Ticket for ' + event.value.name, 
                 event_id: event.value.id,
                 male: 1,
@@ -174,7 +176,7 @@ const fetchClientSecret = async () => {
             };
         } else if (authStore?.user?.gender === 'female') {
             ticket.value = {
-                price: event.value.price_per_ticket + '00',
+                price: event.value.price_per_ticket + '0000',
                 name: 'Ticket for ' + event.value.name,
                 male: 0,
                 female: 1,
@@ -196,6 +198,7 @@ const fetchClientSecret = async () => {
         return clientSecret;
     } catch (error) {
         console.error('Error fetching client secret:', error);
+        authStore.logout();
     }
 };
 
