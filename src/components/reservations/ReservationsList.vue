@@ -225,22 +225,24 @@
     })
     const getReservations = async () => {
         try {
-            const response =  await axios.get(import.meta.env.VITE_APP_ENDPOINT + `reservation/reservations?user_id=${authStore?.user?.id}`,
-            {
-                headers: {
-                    "Accept": "application/json",
-                    "Authorization": `Bearer ${authStore.token}`,
-                }
-            });
+            const response = await axios.get(import.meta.env.VITE_APP_ENDPOINT + `reservation/reservations?user_id=${authStore?.user?.id}`,
+                {
+                    headers: {
+                        "Accept": "application/json",
+                        "Authorization": `Bearer ${authStore.token}`,
+                    }
+                });
             reservations.value = response.data.reservations;
         } catch (error) {
             console.error('Error fetching client secret:', error);
             authStore.logout();
         }
     }
+
     onMounted(() => {
         getReservations();
     });
+
     onIonViewWillEnter(() => {
         getReservations();
     });
