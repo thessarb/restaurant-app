@@ -70,7 +70,7 @@
                             </ion-item>
                         </ion-list>
                         <ion-card class="default-bg ion-padding">
-                            <CheckoutPayment @updateReservation="handleUpdate" :data="checkoutData" :table="clickedTable"  :event="event" :counters="counters"/>
+                            <CheckoutPayment @updateReservation="handleUpdate" :data="checkoutData" :table="clickedTable"  :event="event" :counters="counters" source="reservation"/>
                         </ion-card>
                     </ion-col>
                 </ion-row>

@@ -40,12 +40,16 @@
 		counters: {
 			type: Array,
 		},
+		source: {
+			type: String,
+			required: true
+		}
 	});
 	const emit = defineEmits(['updateReservation'])
 
 	const items = [{ 
 		name: props.data.name,
-		amount: props.data.price 
+		amount: props.data.price + '00', // Amount in cents
 	}];
 	const message = ref('');
 	const error = ref(false);
@@ -167,16 +171,17 @@
 		isLoading.value = true;
 		message.value = '';
 		const result = await checkTicketAndTableAvailability();
+		alert(JSON.stringify(result)); // Debugging line
 		const ticket_available = result.ticket_left; //if ticket left pay continue
 		const table_reserved = result.table_reserved; //if reserved do not pay return 
-
-		if (table_reserved) {
+		alert(table_reserved && props.source === 'table');
+		if (table_reserved && props.source === 'table') {
 			error.value = true; // Ensure `error` is initialized before this line
 			emit('updateReservation', error.value)
 			return;
 		}
 
-		if (!ticket_available) {
+		if (ticket_available === false && props.source === 'ticket') {
 			error.value = true; // Ensure `error` is initialized before this line
 			message.value = 'Payment failed!. \nNo tickets available for this event. \nPlease try another event.';
 			success.value = false;

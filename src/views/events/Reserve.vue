@@ -44,7 +44,7 @@
                 female: 0,
                 restaurant_id: event.restaurant_id,
                 user_id: authStore.user?.id,
-            }" :ticket="true" :event="event"/>
+            }" :ticket="true" :event="event" source="ticket"/>
         </ion-content>
     </ion-page>
 </template>
