@@ -74,8 +74,6 @@ import { ref } from 'vue';
 import { useAuthStore } from "@/stores/authStore";
 import router from '@/router';
 const authSore = useAuthStore();
-
-
 const name = ref('')
 const surname = ref('')
 const gender = ref('male')

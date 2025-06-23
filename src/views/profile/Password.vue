@@ -59,14 +59,14 @@ const password = ref('');
 const password_confirmation = ref('');
 const success = ref('');
 interface FormErrors {
-  password?: string[];  // Email errors
-  [key: string]: string[] | undefined; // Additional dynamic keys if needed
+  password?: string[];
+  [key: string]: string[] | undefined;
 }
 const errors = ref<FormErrors>({}); 
 
 const passwordUpdate = async () => {
     try {
-        const response = await axios.post(import.meta.env.VITE_APP_ENDPOINT +'profile/' +authStore.user?.id + '/password',
+        await axios.post(import.meta.env.VITE_APP_ENDPOINT +'profile/' +authStore.user?.id + '/password',
         {
             password: password.value,
             password_confirmation: password_confirmation.value

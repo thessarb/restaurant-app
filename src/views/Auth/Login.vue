@@ -65,12 +65,9 @@ import { arrowBack, lockClosed, person } from 'ionicons/icons';
 import { ref,watch } from 'vue';
 import { useAuthStore } from "@/stores/authStore";
 import router from '@/router';
-
 const authStore = useAuthStore();
-
 const email = ref('');
 const password = ref('');
-
 watch(email, () => updateData());
 watch(password, () => updateData());
 
@@ -96,6 +93,3 @@ const login = async () => {
     }
 };
 </script>
-<style lang="css">
-
-</style>

@@ -62,10 +62,8 @@ import {
 
 import { arrowBack, person, pin } from 'ionicons/icons';
 import { ref,watch } from 'vue';
-// import { useAuthStore } from "@/stores/authStore";
 import axios from 'axios';
 import { useRouter } from 'vue-router';
-// const authStore = useAuthStore();
 
 const email = ref('');
 const opt_code = ref('');
@@ -92,7 +90,7 @@ const error = ref('');
 const step = ref('Request Update Password');
 const forgetPassword = async () => {
     try {
-        const response = await axios.put(import.meta.env.VITE_APP_ENDPOINT + 'opt_code', {
+        await axios.put(import.meta.env.VITE_APP_ENDPOINT + 'opt_code', {
             email: email.value
         });
 
@@ -112,7 +110,7 @@ const forgetPassword = async () => {
 };
 const checkAndUpdateOpt = async () => {
     try {
-        const response = await axios.put(import.meta.env.VITE_APP_ENDPOINT + 'opt_code/check', {
+        await axios.put(import.meta.env.VITE_APP_ENDPOINT + 'opt_code/check', {
             email: email.value,
             opt_code: opt_code.value,
         });

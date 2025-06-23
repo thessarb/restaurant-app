@@ -1,0 +1,40 @@
+<template>
+    <div id="payment-status">
+        <div :style="{ backgroundColor: iconColor }" id="status-icon" v-html="SuccessIcon"></div>
+        <h2 id="status-text">{{ statusText }}</h2>
+
+        <div id="details-table">
+            <table>
+                <tbody>
+                <tr>
+                    <td class="TableLabel">Name</td>
+                    <td id="intent-id" class="TableContent">{{ props.data.name }}</td>
+                </tr>
+                <tr>
+                    <td class="TableLabel">Price</td>
+                    <td id="intent-status" class="TableContent">{{ props.data.price }}$</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</template>
+
+  <script setup>
+    import { ref } from 'vue'
+    const props = defineProps({
+            data: {
+            type: Object,
+            required: true
+        }
+    })
+  const statusText = ref('Payment succeeded')
+  const iconColor = ref('#30B130')
+    // SVG icons
+    const SuccessIcon =
+    `<svg width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M15.4695 0.232963C15.8241 0.561287 15.8454 1.1149 15.5171 1.46949L6.14206 11.5945C5.97228 11.7778 5.73221 11.8799 5.48237 11.8748C5.23253 11.8698 4.99677 11.7582 4.83452 11.5681L0.459523 6.44311C0.145767 6.07557 0.18937 5.52327 0.556912 5.20951C0.924454 4.89575 1.47676 4.93936 1.79051 5.3069L5.52658 9.68343L14.233 0.280522C14.5613 -0.0740672 15.1149 -0.0953599 15.4695 0.232963Z" fill="white"/>
+    </svg>`;
+
+  </script>
+

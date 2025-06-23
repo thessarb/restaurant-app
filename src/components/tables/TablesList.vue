@@ -4,7 +4,7 @@
             <div v-if="!text" id="stuff">{{ stuff }}</div>
             <div class="svg-wrapper tablelist" ref="svgContainer" v-html="text"></div>
         </ion-row>
-        <ion-modal ref="modal" :initial-breakpoint="0.85" trigger="open-modal" @willDismiss="onWillDismiss">
+        <ion-modal style="overflow-y: auto" ref="modal" :initial-breakpoint="0.85" trigger="open-modal" @willDismiss="onWillDismiss">
             <ion-header>
                 <ion-toolbar>
                     <ion-title>{{ modalTitle }}</ion-title>
@@ -69,9 +69,9 @@
                                     :disabled="getTotal() >= limit">+</ion-button>
                             </ion-item>
                         </ion-list>
-                        <ion-card class="default-bg ion-padding" id="checkout"></ion-card>
-                        <ion-button :disabled="process" color="primary" expand="block" @click="paymentFlow"
-                            v-if="hasPositiveSum">Reserve</ion-button>
+                        <ion-card class="default-bg ion-padding">
+                            <CheckoutPayment @updateReservation="handleUpdate" :data="checkoutData" :table="clickedTable"  :event="event" :counters="counters"/>
+                        </ion-card>
                     </ion-col>
                 </ion-row>
             </ion-content>
@@ -82,17 +82,15 @@
 const props = defineProps({
     location: String,
     tables: Array,
-    // event: Object
 });
-import { ref, computed, onMounted, nextTick } from 'vue';
-import type { Ref } from 'vue';
+import { ref, Ref, computed, onMounted, nextTick } from 'vue';
 import { Storage } from '@ionic/storage';
 import { OverlayEventDetail } from '@ionic/core/components';
 import { calendarOutline, cashOutline, alarmOutline, locationOutline, documentOutline, peopleOutline, clipboardOutline } from 'ionicons/icons';
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import axios from 'axios';
 import { useAuthStore } from "@/stores/authStore";
-import { loadStripe, Stripe, StripeEmbeddedCheckout } from '@stripe/stripe-js';
+import { StripeEmbeddedCheckout } from '@stripe/stripe-js';
 import {
     IonButtons,
     IonButton,
@@ -110,10 +108,11 @@ import {
     IonRow,
     IonCard
 } from '@ionic/vue';
-
+import CheckoutPayment from '../checkout/CheckoutPayment.vue';
+const checkoutData = ref(<object>{});
 const storage = new Storage();
-const svgContainer: Ref<HTMLElement | null> = ref(null);
-const text = ref('');
+const svgContainer: Ref<HTMLElement | null> = ref(null)
+    const text = ref('');
 const message = ref('This modal example uses triggers to automatically open a modal when the button is clicked.');
 const modal = ref();
 const cancel = () => {
@@ -135,7 +134,9 @@ const hasPositiveSum = computed(() => {
     return counters.value.reduce((a, b) => a + b, 0) > 0;
 });
 const ch = ref<StripeEmbeddedCheckout | null>(null);
-
+const handleUpdate = (error: any) => {
+    reserved.value = error;
+};
 interface Table {
     id: number;
     deposit: number;
@@ -193,11 +194,14 @@ const event = ref<Event>({
     image: null
 });
 
-// const clickedTableId = ref('');
 const clickedTable = ref({} as Table);
 const openModal = async (table: any) => {
     await checkReservedTable(event.value, table);
     clickedTable.value = table;
+    checkoutData.value = {
+        name: `Table reservation for ${event.value.name}`,
+        price: table.deposit,
+    };
     if (table.restaurant_id === 1) {
         modalTitle.value = `Reserve table ${table.table_nr}`;
     } else {
@@ -219,7 +223,6 @@ const checkReservedTable = async (event: Event | null, table: Table | null) => {
         reserved.value = response.data.available.length > 0;
         return response.data.available;
     } catch (error) {
-        console.error(error);
         authStore.logout();
     }
 };
@@ -260,57 +263,7 @@ const decrement = (index: number) => {
 };
 
 const stuff = ref('Loading...');
-const stripe = ref<Stripe | null>(null);
 const process = ref(false);
-
-const initializeStripe = async (tableObj: any) => {
-    ch.value?.destroy();
-    ch.value = null;
-    stripe.value = await loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
-    if (stripe.value) {
-        ch.value = await stripe.value.initEmbeddedCheckout({
-            fetchClientSecret: () => fetchClientSecret(tableObj),
-        });
-
-        // Mount Checkout
-        ch.value.mount('#checkout');
-    }
-};
-
-
-const paymentFlow = () => {
-    initializeStripe(clickedTable.value);
-}
-
-const fetchClientSecret = async (tableObj: any) => {
-    try {
-        const response = await axios.post(import.meta.env.VITE_APP_ENDPOINT + 'stripe/checkout',
-            {
-                price: tableObj?.deposit + '00',
-                name: 'Table reservation for ' + event.value.name,
-                type: 'reservation',
-                male: counters.value[0],
-                female: counters.value[1],
-                restaurant_id: event.value.restaurant_id,
-                user_id: authStore.user?.id,
-                event_id: event.value.id,
-                table_id: clickedTable.value.id,
-            },
-            {
-                headers: {
-                    "Accept": "application/json",
-                    "Authorization": `Bearer ${authStore.token}`,
-                }
-            });
-        const { clientSecret } = response.data;
-        process.value = true;
-        return clientSecret;
-    } catch (error) {
-        console.error('Error fetching client secret:', error);
-        authStore.logout();
-    }
-};
-
 const route = useRoute();
 
 const detail = async () => {
@@ -322,7 +275,6 @@ const detail = async () => {
         });
         event.value = response.data.data;
     } catch (error) {
-        console.error(error);
         authStore.logout();
     }
 };

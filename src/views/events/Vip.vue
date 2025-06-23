@@ -8,18 +8,15 @@
         </ion-header>
         <ion-content :fullscreen="true" class="ion-padding">
             <TablesList v-if="locationId && tables" :location="String(locationId)" :tables="tables" :event="event" />
-            <!-- <ReservationDialog v-else :event="event" /> -->
         </ion-content>
     </ion-page>
 </template>
 <script setup lang="ts">
 import TablesList from '@/components/tables/TablesList.vue';
 import { ref, onMounted } from 'vue';
-// import { loadStripe, Stripe} from '@stripe/stripe-js';
-
 import axios from 'axios';
 import { useAuthStore } from "@/stores/authStore";
-import { useRoute,useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import {
     IonPage,
     IonHeader,
@@ -29,10 +26,10 @@ import {
     IonIcon
 } from '@ionic/vue';
 import { arrowBack } from 'ionicons/icons';
-// const stripe = ref<Stripe | null>(null);
-// const process = ref(false);
 const authStore = useAuthStore();
 const locationId = ref('');
+const route = useRoute();
+const tables = ref([]);
 interface Event {
     id: number;
     name: string;
@@ -71,11 +68,6 @@ const event = ref<Event>({
     image: null
 });
 
-const success = ref(false);
-const route = useRoute();
-const router = useRouter();
-// const ticket = ref();
-const tables = ref([]);
 const detail = async () => {
     try {
         const response = await axios.get(`${authStore.endpoint}event/${route.params.id}`, {
@@ -87,54 +79,11 @@ const detail = async () => {
         locationId.value = String(response.data.data?.restaurant_id);
         fetchTables(event.value?.restaurant_id);
 
-        // ticket.value = getTicket()
-
     } catch (error) {
         console.error(error);
         authStore.logout();
     }
 };
-
-// const initializeStripe = async () => {
-//     // const clientSecret = await fetchClientSecret();
-//     stripe.value = await loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
-//     if (stripe.value) {
-//         const ch = await stripe.value.initEmbeddedCheckout({
-//             fetchClientSecret,
-//         });
-
-//         // Mount Checkout
-//         ch.mount('#checkout');
-//         // const result = await stripe.value.redirectToCheckout({ sessionId: clientSecret });
-//         // if (result.error) {
-//         //     checkout.value = result.error;
-//         // } else {
-//         //     checkout.value = null;
-//         // }
-//     }
-// };
-  
-// const fetchClientSecret = async () => {
-//     try {
-//         const response = await axios.post(import.meta.env.VITE_APP_ENDPOINT + 'stripe/checkout',
-//         {
-//             price: event.value.price_per_ticket+'00',
-//             app: 'andoid'
-//         },
-//         {
-//             headers: {
-//                 "Accept": "application/json",
-//                 "Authorization": `Bearer ${authStore.token}`,
-//             }
-//         });
-//         const { clientSecret } = response.data;
-//         process.value = true;
-//         return clientSecret;
-//     } catch (error) {
-//         console.error('Error fetching client secret:', error);
-//     }
-// };
-
 
 const fetchTables = async (restaurant: number | null | string) => {
     try {
@@ -151,7 +100,7 @@ const fetchTables = async (restaurant: number | null | string) => {
         authStore.logout();
     }
 }
-// Combine both mounted hooks into one to simplify async logic
+
 onMounted(() => {
     detail();
 });  

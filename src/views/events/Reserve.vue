@@ -34,22 +34,24 @@
                         </ion-item>
                     </ion-list>
                 </ion-card-content>
-                <ion-button v-if="event?.price_per_ticket && tickets > 0" :disabled="process" color="primary" expand="block" @click="paymentFlow">Buy Ticket</ion-button>
-                <ion-card class="default-bg ion-padding" id="checkout">
-                </ion-card>
-                <section v-if="success" id="success" class="hidden">
-                    <p>
-                        We appreciate your business! A confirmation email will be sent to <span id="customer-email"></span>.
-                        If you have any questions, please email via <a :href="'mailto:'+customerEmail">{{ customerEmail }}</a> to <a href="mailto:admin@email.com">admin@email.com</a>.
-                    </p>
-                </section>
+                <ion-button v-if="event?.price_per_ticket && tickets > 0 && !showCheckout" :disabled="process" color="primary" expand="block" @click="showCheckout = true">Buy Ticket</ion-button>
             </ion-card>
+            <CheckoutPayment v-if="showCheckout" :data="{
+                name: `Ticket for ${event.name}`,
+                price: event?.price_per_ticket,
+                event_id: event.id,
+                male: 1,
+                female: 0,
+                restaurant_id: event.restaurant_id,
+                user_id: authStore.user?.id,
+            }" :ticket="true" :event="event"/>
         </ion-content>
     </ion-page>
 </template>
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { loadStripe, Stripe, StripeEmbeddedCheckout} from '@stripe/stripe-js';
+import { ref, onMounted, watch } from 'vue';
+import { StripeEmbeddedCheckout} from '@stripe/stripe-js';
+import CheckoutPayment from '@/components/checkout/CheckoutPayment.vue';
 import axios from 'axios';
 import { useAuthStore } from "@/stores/authStore";
 import { useRoute, useRouter } from 'vue-router'
@@ -66,20 +68,20 @@ import {
     IonList,
     IonCardContent,
     IonItem,
-    IonLabel
+    IonLabel,
+    onIonViewWillLeave
 } from '@ionic/vue';
-// import ReservationDialog from '@/components/events/ReservationDialog.vue';
-
-const stripe = ref<Stripe | null>(null);
 const process = ref(false);
-const customerEmail = ref('');
 const authStore = useAuthStore();
 const type = ref('standart');
-const success = ref(false);
 const route = useRoute();
 const tickets = ref(0);
-const ticket = ref<Object | null>();
-
+const showCheckout = ref(false);
+const embedStripe = ref<StripeEmbeddedCheckout | null>(null);
+const router = useRouter();
+watch(() => showCheckout.value, (newVal) => {
+  showCheckout.value = newVal
+}, { immediate: true })
 interface Event {
   id: number;
   name: string;
@@ -148,65 +150,7 @@ const checkReservedTickets = async () => {
         authStore.logout();
     }
 };
-const embedStripe = ref<StripeEmbeddedCheckout | null>(null);
-const initializeStripe = async () => {
-    // const clientSecret = await fetchClientSecret();
-    stripe.value = await loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
-    if (stripe.value) {
-        const ch = await stripe.value.initEmbeddedCheckout({
-            fetchClientSecret,
-        });
 
-        // Mount Checkout
-        ch.mount('#checkout');
-        embedStripe.value = ch;
-    }
-};
-  
-const fetchClientSecret = async () => {
-    try {
-        if (authStore?.user?.gender === 'male' || authStore?.user?.gender === null) {
-            ticket.value = {
-                price: event.value.price_per_ticket + '0000',
-                name: 'Ticket for ' + event.value.name, 
-                event_id: event.value.id,
-                male: 1,
-                female: 0,
-                restaurant_id: event.value.restaurant_id,
-                user_id: authStore.user?.id,
-            };
-        } else if (authStore?.user?.gender === 'female') {
-            ticket.value = {
-                price: event.value.price_per_ticket + '0000',
-                name: 'Ticket for ' + event.value.name,
-                male: 0,
-                female: 1,
-                event_id: event.value.id,
-                restaurant_id: event.value.restaurant_id,
-                user_id: authStore.user?.id,
-            };
-        }
-        const response = await axios.post(import.meta.env.VITE_APP_ENDPOINT + 'stripe/checkout',
-        ticket.value,
-        {
-            headers: {
-                "Accept": "application/json",
-                "Authorization": `Bearer ${authStore.token}`,
-            }
-        });
-        const { clientSecret } = response.data;
-        process.value = true;
-        return clientSecret;
-    } catch (error) {
-        console.error('Error fetching client secret:', error);
-        authStore.logout();
-    }
-};
-
-const paymentFlow = () => {
-    initializeStripe();
-}
-const router = useRouter();
 const arrowBackAction = () => {
     router.go(-2);
     embedStripe.value?.destroy();
@@ -215,5 +159,9 @@ const arrowBackAction = () => {
 onMounted(() => {
     detail();
 });  
+
+onIonViewWillLeave(() => {
+    showCheckout.value = false;
+});
 
 </script>

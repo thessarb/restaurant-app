@@ -86,6 +86,3 @@ const continueRegister = () => {
     if(run.value) router.push({path: 'security'})
 }
 </script>
-<style lang="css">
-
-</style>

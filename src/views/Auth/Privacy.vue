@@ -11,7 +11,6 @@
                 <ion-card-header>
                     <ion-card-title>Privacy Policy</ion-card-title>
                 </ion-card-header>
-
                 <ion-card-content v-html="privacy"/>
             </ion-card>
         </ion-content>
@@ -50,6 +49,7 @@ const settings = async () => {
         console.error('Error fetching settings:', error);
     }
 };
+
 onMounted(() => {
     settings()
 })

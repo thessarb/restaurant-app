@@ -53,16 +53,15 @@ import { ref } from 'vue';
 import { useAuthStore } from '@/stores/authStore';
 import axios from 'axios';
 interface FormErrors {
-  email?: string[];
-  phone?: string[];
-  [key: string]: string[] | undefined;
+    email?: string[];
+    phone?: string[];
+    [key: string]: string[] | undefined;
 }
 const authStore = useAuthStore();
 const email = ref(authStore.user?.email);
 const phone = ref(authStore.user?.phone);
 const success = ref('');
 const errors = ref<FormErrors>({}); 
-
 const profileUpdate = async () => {
     try {
         await axios.post(import.meta.env.VITE_APP_ENDPOINT +'profile/' +authStore.user?.id + '/details',
@@ -84,7 +83,6 @@ const profileUpdate = async () => {
         };
         email.value = authStore.user?.email;
         phone.value = authStore.user?.phone;
-        // Update local storage
         await authStore.storeUser(authStore.user);
     } catch (error: any) {
         errors.value = error.response.data.errors;

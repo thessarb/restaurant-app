@@ -80,9 +80,9 @@ import {
     IonLabel
 } from '@ionic/vue';
 import { useAuthStore } from "@/stores/authStore";
-const authStore = useAuthStore();
 import axios from 'axios';
-
+const authStore = useAuthStore();
+const result = ref('');
 interface Event {
     id: number;
     name: string;
@@ -127,9 +127,7 @@ interface Reservation {
     reservation_date: string
 }
 
-const result = ref('');
 const reservation = ref<Reservation | null>(null);
-
 const startScan = async () => {
     try {
         reservation.value = null;
@@ -141,7 +139,6 @@ const startScan = async () => {
             const request = await getReservation(parsedData.user_id, parsedData.reservation_id);
             if (request && !isEarlierThanNow(request.event.date_start)) {
                 reservation.value = request;
-                console.log('Reservation data:', reservation.value);
                 result.value = 'Valid';
             } else {
                 result.value = 'Invalid';
@@ -174,10 +171,8 @@ const getReservation = async (user: number, reservation: number) => {
 
 const isEarlierThanNow = (dateTimeStr: string): boolean => {
     const isoString = dateTimeStr.replace(' ', 'T');
-
     const dateToCheck = new Date(isoString);
     const now = new Date();
-
     return dateToCheck.getTime() < now.getTime();
 }
 
@@ -186,7 +181,7 @@ const parseSimpleObject = (str: string): { [key: string]: any } => {
     str = str.trim();
 
     if (str.startsWith('{') && str.endsWith('}')) {
-        str = str.slice(1, -1); // remove outer {}
+        str = str.slice(1, -1);
     } else {
         throw new Error("Invalid object format");
     }
@@ -201,12 +196,11 @@ const parseSimpleObject = (str: string): { [key: string]: any } => {
         const key = rawKey.trim();
         let value: any = rawValue.trim();
 
-        // Try to infer type
         if (value === 'true') value = true;
         else if (value === 'false') value = false;
         else if (value === 'null') value = null;
         else if (!isNaN(Number(value))) value = Number(value);
-        else value = value.replace(/^['"]|['"]$/g, ''); // remove quotes if present
+        else value = value.replace(/^['"]|['"]$/g, '');
 
         obj[key] = value;
     }

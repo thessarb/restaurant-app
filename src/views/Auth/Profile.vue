@@ -86,14 +86,13 @@ import { informationCircleOutline, lockClosedOutline, logOutOutline, personOutli
 import { useAuthStore } from "@/stores/authStore";
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
-
 const authStore = useAuthStore();
 const user = ref(authStore.user);
+const upcomingReservations = ref(0);
+const totalReservations = ref(0);
 const logout = () => {
     authStore.logout();
 }
-const upcomingReservations = ref(0);
-const totalReservations = ref(0);
 
 interface Reservation {
     id: string | number

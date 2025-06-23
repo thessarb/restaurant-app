@@ -55,7 +55,7 @@ import axios from 'axios';
 import { useAuthStore } from "@/stores/authStore";
 import { useRoute } from 'vue-router'
 import { arrowBack, diamond, ticket } from 'ionicons/icons';
-
+const route = useRoute();
 const authStore = useAuthStore();
 interface Event {
     id: number;
@@ -82,8 +82,6 @@ const event = ref<Event>({
     updated_at: "2025-03-29T12:17:50.000000Z",
     image: null
 });
-
-const route = useRoute();
 
 const detail = async () => {
     try {
