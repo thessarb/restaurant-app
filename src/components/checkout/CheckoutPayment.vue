@@ -171,10 +171,8 @@
 		isLoading.value = true;
 		message.value = '';
 		const result = await checkTicketAndTableAvailability();
-		alert(JSON.stringify(result)); // Debugging line
 		const ticket_available = result.ticket_left; //if ticket left pay continue
 		const table_reserved = result.table_reserved; //if reserved do not pay return 
-		alert(table_reserved && props.source === 'table');
 		if (table_reserved && props.source === 'table') {
 			error.value = true; // Ensure `error` is initialized before this line
 			emit('updateReservation', error.value)
@@ -237,8 +235,10 @@
 </script>
   
 <style scoped>
+
 form {
 	padding: unset !important;
+	width: 100%;
 	align-self: center;
 	box-shadow: 0px 0px 0px 0.5px rgba(50, 50, 93, 0.1),
 		0px 2px 5px 0px rgba(50, 50, 93, 0.1), 0px 1px 1.5px 0px rgba(0, 0, 0, 0.07);
@@ -470,7 +470,7 @@ td {
 
 @media only screen and (max-width: 600px) {
 	form, #payment-status{
-		width: 80vw;
+		width: 100%;
 		min-width: initial;
 	}
 }

@@ -4,7 +4,7 @@
             <div v-if="!text" id="stuff">{{ stuff }}</div>
             <div class="svg-wrapper tablelist" ref="svgContainer" v-html="text"></div>
         </ion-row>
-        <ion-modal style="overflow-y: auto" ref="modal" :initial-breakpoint="0.85" trigger="open-modal" @willDismiss="onWillDismiss">
+        <ion-modal :expand-to-scroll="false" ref="modal" :initial-breakpoint="0.85" trigger="open-modal" @willDismiss="onWillDismiss">
             <ion-header>
                 <ion-toolbar>
                     <ion-title>{{ modalTitle }}</ion-title>
@@ -69,8 +69,10 @@
                                     :disabled="getTotal() >= limit">+</ion-button>
                             </ion-item>
                         </ion-list>
-                        <ion-card class="default-bg ion-padding">
-                            <CheckoutPayment @updateReservation="handleUpdate" :data="checkoutData" :table="clickedTable"  :event="event" :counters="counters" source="reservation"/>
+                        <ion-card>
+                            <ion-card-content class="card__content">
+                                <CheckoutPayment @updateReservation="handleUpdate" :data="checkoutData" :table="clickedTable"  :event="event" :counters="counters" source="reservation"/>
+                            </ion-card-content>
                         </ion-card>
                     </ion-col>
                 </ion-row>
@@ -106,7 +108,8 @@ import {
     IonItem,
     IonText,
     IonRow,
-    IonCard
+    IonCard,
+    IonCardContent
 } from '@ionic/vue';
 import CheckoutPayment from '../checkout/CheckoutPayment.vue';
 const checkoutData = ref(<object>{});
@@ -302,6 +305,9 @@ onMounted(async () => {
 });
 </script>
 <style scoped>
+.card__content {
+    padding: 0 !important;
+}
 .svg-wrapper {
     width: 100%;
 }

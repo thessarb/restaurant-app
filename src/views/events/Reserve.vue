@@ -36,15 +36,19 @@
                 </ion-card-content>
                 <ion-button v-if="event?.price_per_ticket && tickets > 0 && !showCheckout" :disabled="process" color="primary" expand="block" @click="showCheckout = true">Buy Ticket</ion-button>
             </ion-card>
-            <CheckoutPayment v-if="showCheckout" :data="{
-                name: `Ticket for ${event.name}`,
-                price: event?.price_per_ticket,
-                event_id: event.id,
-                male: 1,
-                female: 0,
-                restaurant_id: event.restaurant_id,
-                user_id: authStore.user?.id,
-            }" :ticket="true" :event="event" source="ticket"/>
+            <ion-card  v-if="showCheckout">
+                <ion-card-content>
+                    <CheckoutPayment :data="{
+                        name: `Ticket for ${event.name}`,
+                        price: event?.price_per_ticket,
+                        event_id: event.id,
+                        male: 1,
+                        female: 0,
+                        restaurant_id: event.restaurant_id,
+                        user_id: authStore.user?.id,
+                    }" :ticket="true" :event="event" source="ticket"/>
+                </ion-card-content>
+            </ion-card>
         </ion-content>
     </ion-page>
 </template>
